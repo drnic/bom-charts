@@ -42,10 +42,14 @@ $(function() {
   }
 
   function addStatusBar() {
-    var statusBar = $('<p class="status-bar">Forecast valid for <span id="forecast-valid"></span></p>');
+    var statusBar = $("<p/>");
+    statusBar.addClass("status-bar");
+    statusBar.html('Forecast valid for <span id="forecast-valid" /> | UTC <span id="utc-now" /></p>');
     statusBar.appendTo($("#contents"));
 
     var now = new Date();
+    $("#utc-now").text(now.getUTCHours() + ":" + now.getUTCMinutes());
+
     var forecastEndTimes = [5, 11, 17, 23];
     var hoursRemaining = now.getUTCHours() % 6;
     if (hoursRemaining === 0) {
