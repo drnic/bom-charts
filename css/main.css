@@ -4,6 +4,21 @@ img.fullscreen{
   object-fit: cover;
 }
 
+img.chart{
+  display: block;
+}
+
 #area-map {
   display: none;
+}
+
+.status-bar {
+  margin: 0;
+  text-align: center;
+}
+.forecast-almost-expired {
+  color: red;
+}
+.forecast-expiring {
+  color: orange;
 }

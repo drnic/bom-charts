@@ -1,9 +1,7 @@
 $(function() {
-
   // Based off http://www.bom.gov.au/scripts/aviation/forecasts/gaf-pub.js
   function getGAFforArea(area) {
-    var now = new Date();
-    var nowUTCHours = now.getUTCHours();
+    var nowUTCHours = new Date().getUTCHours();
 
     WAN    = ['IDY42054', 'IDY42055', 'IDY42056', 'IDY42057']; //area id #0 (WA - North)
     WAS    = ['IDY42050', 'IDY42051', 'IDY42052', 'IDY42053']; //area id #1 (WA - South)
@@ -32,14 +30,34 @@ $(function() {
     }
 
     // algorithm from assign_products function in gaf-pub.js
-    if (nowUTCHours > 5 && nowUTCHours <= 11) {
+    if (nowUTCHours => 5 && nowUTCHours < 11) {
       return areaMapping[area][0];
-    } else if (nowUTCHours > 11 && nowUTCHours <= 17) {
+    } else if (nowUTCHours => 11 && nowUTCHours < 17) {
       return areaMapping[area][1];
-    } else if (nowUTCHours > 17 && nowUTCHours <= 23) {
+    } else if (nowUTCHours => 17 && nowUTCHours < 23) {
       return areaMapping[area][2];
     } else {
       return areaMapping[area][3];
+    }
+  }
+
+  function addStatusBar() {
+    var statusBar = $('<p class="status-bar">Forecast valid for <span id="forecast-valid"></span></p>');
+    statusBar.appendTo($("#contents"));
+
+    var now = new Date();
+    var forecastEndTimes = [5, 11, 17, 23];
+    var hoursRemaining = now.getUTCHours() % 6;
+    if (hoursRemaining === 0) {
+      var timeRemaining = 60 - now.getUTCMinutes();
+      $("#forecast-valid").text(timeRemaining + " mins");
+      statusBar.addClass("forecast-almost-expired");
+    } else if (hoursRemaining === 1) {
+      var timeRemaining = 120 - now.getUTCMinutes();
+      $("#forecast-valid").text(timeRemaining + " mins");
+      statusBar.addClass("forecast-expiring");
+    } else {
+      $("#forecast-valid").text(hoursRemaining + "+ hr");
     }
   }
 
@@ -59,11 +77,16 @@ $(function() {
     }
   };
 
+
   var gafArea = getUrlParameter('area');
   var gafImageCode = getGAFforArea(gafArea);
   if (gafImageCode === undefined) {
     $("#area-map").show();
   } else {
+    $("#contents").html("");
+
+    addStatusBar();
+
     var gafImage = $("<img>");
     gafImage.addClass("fullscreen");
     gafImage.attr("src", "http://www.bom.gov.au/fwo/aviation/" + gafImageCode + ".png");
