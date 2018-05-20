@@ -65,6 +65,10 @@ $(function() {
     }
   }
 
+  function updateTitleForGAF(area) {
+    $("title").text("BOM GAF " + area);
+  }
+
   // From https://stackoverflow.com/a/21903119/36170
   function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -88,7 +92,7 @@ $(function() {
     $("#area-map").show();
   } else {
     $("#contents").html("");
-
+    updateTitleForGAF(gafArea);
     addStatusBar();
 
     var gafImage = $("<img>");
