@@ -13,6 +13,20 @@
   <script src="../js/main.js"></script>
 </head>
 <body>
-  <div id="contents"></div>
+  <div id="contents">
+    <img id="area-map" name="area-map" class="img center" src="http://www.bom.gov.au/images/aviation/forecasts/gaf/gaf_national_map.gif" alt="Graphical Area Forecasts Map"  width="715" height="600" border="0" usemap="#m_gaf_national_map" />
+    <map name="m_gaf_national_map" id="m_gaf_national_map">
+      <area shape="poly" coords="505,484,597,484,582,541,564,568,532,560,505,484" href="?area=TAS" class="area" id="this-TAS" title="TAS" alt="TAS GAF" />
+      <area shape="poly" coords="479,480,480,389,555,428,607,456,598,481,479,480" href="?area=VIC" class="area" id="this-VIC" title="VIC" alt="VIC GAF" />
+      <area shape="poly" coords="560,423,599,313,659,301,662,309,631,395,609,451,560,423" href="?area=NSW-E" class="area" id="this-NSW-E" title="NSW-E" alt="NSW-E GAF" />
+      <area shape="poly" coords="477,383,477,314,592,314,554,421,477,383" href="?area=NSW-W" id="this-NSW-W" class="area" title="NSW-W" alt="NSW-W GAF" />
+      <area shape="poly" coords="438,264,439,227,633,227,658,295,598,307,479,308,478,263,438,264" href="?area=QLD-S" class="area" id="this-QLD-S" title="QLD-S" alt="QLD-S GAF" />
+      <area shape="poly" coords="145,422,113,380,93,236,314,237,314,372,244,403,145,422" href="?area=WA-S" class="area" id="this-WA-S" title="WA-S" alt="WA-S GAF" />
+      <area shape="poly" coords="439,221,439,97,479,37,492,32,500,34,514,31,518,33,514,44,514,54,515,58,515,68,515,71,561,136,565,144,567,156,628,221,439,221" href="?area=QLD-N" class="area" id="this-QLD-N" title="QLD-N" alt="QLD-N GAF" />
+      <area shape="poly" coords="319,370,320,268,475,267,475,479,391,413,342,365,319,370" href="?area=SA" class="area" title="SA" id="this-SA"  alt="SA GAF" />
+      <area shape="poly" coords="265,53,290,35,472,42,434,96,433,262,321,262,321,107,310,105,296,91,283,89,254,93" href="?area=NT" class="area" id="this-NT" title="NT" alt="NT GAF" />
+      <area shape="poly" coords="94,232,92,221,106,194,159,152,249,98,291,96,306,107,315,111,314,231,94,232" href="?area=WA-N" class="area" title="WA-N" id="this-WA-N"  alt="WA-N GAF" />
+    </map>
+  </div>
 </body>
 </html>

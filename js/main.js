@@ -16,14 +16,14 @@ $(function() {
     VIC    = ['IDY42066', 'IDY42067', 'IDY42068', 'IDY42069']; //area id #8 (VIC)
     TAS    = ['IDY42070', 'IDY42071', 'IDY42072', 'IDY42073']; //area id #9 (TAS)
     areaMapping = {
-      'WAN':  WAN,
-      'WAS':  WAS,
+      'WA-N':  WAN,
+      'WA-S':  WAS,
       'NT':   NT,
-      'QLDN': QLDN,
-      'QLDS': QLDS,
+      'QLD-N': QLDN,
+      'QLD-S': QLDS,
       'SA':   SA,
-      'NSWW': NSWW,
-      'NSWE': NSWE,
+      'NSW-W': NSWW,
+      'NSW-E': NSWE,
       'VIC':  VIC,
       'TAS':  TAS,
     }
@@ -62,10 +62,14 @@ $(function() {
   var gafArea = getUrlParameter('area');
   var gafImageCode = getGAFforArea(gafArea);
   if (gafImageCode === undefined) {
-    console.log("Show map to allow selection of GAF")
+    $("#area-map").show();
   } else {
-    var gafImage = $('<img>');
+    var gafImage = $("<img>");
+    gafImage.addClass("fullscreen");
     gafImage.attr("src", "http://www.bom.gov.au/fwo/aviation/" + gafImageCode + ".png");
-    gafImage.appendTo($('#contents'));
+    gafImage.appendTo($("#contents"));
+
+    $("html,body").css("margin", 0);
+    $("html,body").css("height", "100%");
   }
 });
