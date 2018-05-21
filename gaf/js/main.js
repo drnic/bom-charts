@@ -121,7 +121,7 @@ $(function() {
     nextGAF.appendTo($("#contents"));
 
     addToHomescreen({
-      appID: 'com.starkandwayne.bom-charts.' + gafArea
+      appID: 'com.starkandwayne.bom-charts.gaf.' + gafArea
     });
 
     startAutoRefresh();
