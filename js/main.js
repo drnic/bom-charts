@@ -52,18 +52,18 @@ $(function() {
     var now = new Date();
     $("#utc-now").text(now.toUTCString().slice(17, -7));
 
-    var forecastEndTimes = [5, 11, 17, 23];
-    var hoursRemaining = now.getUTCHours() % 6;
-    if (hoursRemaining === 0) {
+    // var forecastEndTimes = [5, 11, 17, 23];
+    var fullHoursRemaining = (28 + now.getUTCHours()) % 6;
+    if (fullHoursRemaining === 0) {
       var timeRemaining = 60 - now.getUTCMinutes();
       $("#forecast-valid").text(timeRemaining + " mins");
       statusBar.addClass("forecast-almost-expired");
-    } else if (hoursRemaining === 1) {
+    } else if (fullHoursRemaining === 1) {
       var timeRemaining = 120 - now.getUTCMinutes();
       $("#forecast-valid").text(timeRemaining + " mins");
       statusBar.addClass("forecast-expiring");
     } else {
-      $("#forecast-valid").text(hoursRemaining + "+ hr");
+      $("#forecast-valid").text(fullHoursRemaining + "+ hr");
     }
   }
 
