@@ -76,6 +76,10 @@ $(function() {
     $("title").text("GAF " + area);
   }
 
+  function startAutoRefresh() {
+    $('<meta http-equiv="Refresh" content="60;">').appendTo($('head'));
+  }
+
   // From https://stackoverflow.com/a/21903119/36170
   function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -120,6 +124,6 @@ $(function() {
       appID: 'com.starkandwayne.bom-charts.' + gafArea
     });
 
-    $('<meta http-equiv="Refresh" content="60;">').appendTo($('head'));
+    startAutoRefresh();
   }
 });
