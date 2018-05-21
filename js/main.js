@@ -119,5 +119,7 @@ $(function() {
     addToHomescreen({
       appID: 'com.starkandwayne.bom-charts.' + gafArea
     });
-    }
+
+    $('<meta http-equiv="Refresh" content="60;">').appendTo($('head'));
+  }
 });
