@@ -1,4 +1,6 @@
 $(function() {
+  $("#area-map").maphilight({strokeColor: '297dd3', fade: false});
+
   // Based off http://www.bom.gov.au/scripts/aviation/forecasts/gaf-pub.js
   function getGAFforArea(area) {
     var nowUTCHours = new Date().getUTCHours();
