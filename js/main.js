@@ -67,6 +67,11 @@ $(function() {
     }
   }
 
+  function addAreaMobileIcon(area) {
+    $('<link rel="icon" sizes="128x128" href="../images/icons/' + area + '.png">').appendTo("head");
+    $('<link rel="apple-touch-icon" href="../images/icons/' + area + '.png" />').appendTo("head");
+  }
+
   function updateTitleForGAF(area) {
     $("title").text("BOM GAF " + area);
   }
