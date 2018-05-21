@@ -94,26 +94,27 @@ $(function() {
 
 
   var gafArea = getUrlParameter('area');
-  var forecastRange = getUrlParameter('range');
-  if (forecastRange !== 'next') {
-    forecastRange = 'current';
-  }
   var gafImageCodes = getGAFforArea(gafArea);
   if (gafImageCodes === undefined) {
     $("#area-map").show();
   } else {
     $("#contents").html("");
+    $("html,body").css("margin", 0);
+    $("html,body").css("height", "100%");
+
     addAreaMobileIcon(gafArea);
     updateTitleForGAF(gafArea);
     addStatusBar();
 
-    var gafImage = $("<img>");
-    gafImage.addClass("fullscreen");
-    gafImage.attr("src", "http://www.bom.gov.au/fwo/aviation/" + gafImageCodes[forecastRange] + ".png");
-    gafImage.appendTo($("#contents"));
+    var currentGAF = $("<img>");
+    currentGAF.addClass("fullscreen");
+    currentGAF.attr("src", "http://www.bom.gov.au/fwo/aviation/" + gafImageCodes.current + ".png");
+    currentGAF.appendTo($("#contents"));
 
-    $("html,body").css("margin", 0);
-    $("html,body").css("height", "100%");
+    var nextGAF = $("<img>");
+    nextGAF.addClass("fullscreen");
+    nextGAF.attr("src", "http://www.bom.gov.au/fwo/aviation/" + gafImageCodes.next + ".png");
+    nextGAF.appendTo($("#contents"));
 
     addToHomescreen({
       appID: 'com.starkandwayne.bom-charts.' + gafArea
