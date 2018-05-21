@@ -3,13 +3,11 @@ $(function() {
 
   // Based off http://www.bom.gov.au/scripts/aviation/forecasts/gaf-pub.js
   function getGAFforArea(area) {
-    var nowUTCHours = new Date().getUTCHours();
-
     WAN    = ['IDY42054', 'IDY42055', 'IDY42056', 'IDY42057']; //area id #0 (WA - North)
     WAS    = ['IDY42050', 'IDY42051', 'IDY42052', 'IDY42053']; //area id #1 (WA - South)
     NT     = ['IDY42058', 'IDY42059', 'IDY42060', 'IDY42061']; //area id #2 (NT)
     QLDN   = ['IDY42074', 'IDY42075', 'IDY42076', 'IDY42077']; //area id #3 (QLD - North)
-    QLDS   = ['IDY42078', 'IDY42079', 'IDY42080', 'IDY42081']; //area id #4 (QLD - South
+    QLDS   = ['IDY42078', 'IDY42079', 'IDY42080', 'IDY42081']; //area id #4 (QLD - South)
     SA     = ['IDY42062', 'IDY42063', 'IDY42064', 'IDY42065']; //area id #5 (SA)
     NSWW   = ['IDY42086', 'IDY42087', 'IDY42088', 'IDY42089']; //area id #6 (NSW - West)
     NSWE   = ['IDY42082', 'IDY42083', 'IDY42084', 'IDY42085']; //area id #7 (NSW - East)
@@ -18,25 +16,27 @@ $(function() {
     areaMapping = {
       'WA-N':  WAN,
       'WA-S':  WAS,
-      'NT':   NT,
+      'NT':    NT,
       'QLD-N': QLDN,
       'QLD-S': QLDS,
-      'SA':   SA,
+      'SA':    SA,
       'NSW-W': NSWW,
       'NSW-E': NSWE,
-      'VIC':  VIC,
-      'TAS':  TAS,
+      'VIC':   VIC,
+      'TAS':   TAS,
     }
     if (areaMapping[area] === undefined) {
       return undefined;
     }
 
+    var nowUTCHours = new Date().getUTCHours();
+
     // algorithm from assign_products function in gaf-pub.js
-    if (nowUTCHours => 5 && nowUTCHours < 11) {
+    if (nowUTCHours >= 5 && nowUTCHours < 11) {
       return {current: areaMapping[area][0], next: areaMapping[area][1]};
-    } else if (nowUTCHours => 11 && nowUTCHours < 17) {
+    } else if (nowUTCHours >= 11 && nowUTCHours < 17) {
       return {current: areaMapping[area][1], next: areaMapping[area][2]};
-    } else if (nowUTCHours => 17 && nowUTCHours < 23) {
+    } else if (nowUTCHours >= 17 && nowUTCHours < 23) {
       return {current: areaMapping[area][2], next: areaMapping[area][3]};
     } else {
       return {current: areaMapping[area][3], next: areaMapping[area][0]};
