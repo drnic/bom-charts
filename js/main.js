@@ -73,7 +73,7 @@ $(function() {
   }
 
   function updateTitleForGAF(area) {
-    $("title").text("BOM GAF " + area);
+    $("title").text("GAF " + area);
   }
 
   // From https://stackoverflow.com/a/21903119/36170
@@ -114,5 +114,9 @@ $(function() {
 
     $("html,body").css("margin", 0);
     $("html,body").css("height", "100%");
-  }
+
+    addToHomescreen({
+      appID: 'com.starkandwayne.bom-charts.' + gafArea
+    });
+    }
 });
