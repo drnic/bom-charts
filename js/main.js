@@ -53,7 +53,7 @@ $(function() {
     $("#utc-now").text(now.toUTCString().slice(17, -7));
 
     // var forecastEndTimes = [5, 11, 17, 23];
-    var fullHoursRemaining = (28 + now.getUTCHours()) % 6;
+    var fullHoursRemaining = (24 + 23 - 1 - now.getUTCHours()) % 6;
     if (fullHoursRemaining === 0) {
       var timeRemaining = 60 - now.getUTCMinutes();
       $("#forecast-valid").text(timeRemaining + " mins");
