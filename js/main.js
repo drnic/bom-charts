@@ -33,13 +33,13 @@ $(function() {
 
     // algorithm from assign_products function in gaf-pub.js
     if (nowUTCHours => 5 && nowUTCHours < 11) {
-      return areaMapping[area][0];
+      return {current: areaMapping[area][0], next: areaMapping[area][1]};
     } else if (nowUTCHours => 11 && nowUTCHours < 17) {
-      return areaMapping[area][1];
+      return {current: areaMapping[area][1], next: areaMapping[area][2]};
     } else if (nowUTCHours => 17 && nowUTCHours < 23) {
-      return areaMapping[area][2];
+      return {current: areaMapping[area][2], next: areaMapping[area][3]};
     } else {
-      return areaMapping[area][3];
+      return {current: areaMapping[area][3], next: areaMapping[area][0]};
     }
   }
 
@@ -94,17 +94,22 @@ $(function() {
 
 
   var gafArea = getUrlParameter('area');
-  var gafImageCode = getGAFforArea(gafArea);
-  if (gafImageCode === undefined) {
+  var forecastRange = getUrlParameter('range');
+  if (forecastRange !== 'next') {
+    forecastRange = 'current';
+  }
+  var gafImageCodes = getGAFforArea(gafArea);
+  if (gafImageCodes === undefined) {
     $("#area-map").show();
   } else {
     $("#contents").html("");
+    addAreaMobileIcon(gafArea);
     updateTitleForGAF(gafArea);
     addStatusBar();
 
     var gafImage = $("<img>");
     gafImage.addClass("fullscreen");
-    gafImage.attr("src", "http://www.bom.gov.au/fwo/aviation/" + gafImageCode + ".png");
+    gafImage.attr("src", "http://www.bom.gov.au/fwo/aviation/" + gafImageCodes[forecastRange] + ".png");
     gafImage.appendTo($("#contents"));
 
     $("html,body").css("margin", 0);
