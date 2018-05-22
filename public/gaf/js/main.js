@@ -50,7 +50,7 @@ $(function() {
     statusBar.appendTo($("#contents"));
 
     var now = new Date();
-    $("#utc-now").text(now.toUTCString().slice(17, -7));
+    $("#utc-now").text("" + now.getUTCDate() + now.getUTCHours() + now.getUTCMinutes());
 
     // var forecastEndTimes = [5, 11, 17, 23];
     var fullHoursRemaining = (24 + 23 - 1 - now.getUTCHours()) % 6;
