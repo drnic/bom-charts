@@ -21,19 +21,29 @@ func messageResponse(message string) *basicResponse {
 	return &basicResponse{Message: message}
 }
 
-func getGAF(params martini.Params, r render.Render) {
-	gafPage, err := gaf.NewPage(params["pagecode"])
+func getGAFImages(params martini.Params, r render.Render) {
+	areaForecast, err := gaf.NewAreaForecast(params["pagecode"])
 	if err != nil {
 		r.JSON(500, errorResponse(err))
+		return
 	}
-	r.Header().Add("Content-Type", "application/json")
-	r.Text(200, gafPage.JSON)
+	r.JSON(200, areaForecast)
+}
+
+func getGAFHTML(params martini.Params, r render.Render) {
+	areaForecast, err := gaf.NewAreaForecast(params["pagecode"])
+	if err != nil {
+		r.JSON(500, errorResponse(err))
+		return
+	}
+	r.HTML(200, "gaf", areaForecast)
 }
 
 func getAIRMET(r render.Render) {
 	airmet, err := airmet.NewAirmet()
 	if err != nil {
 		r.JSON(500, errorResponse(err))
+		return
 	}
 	r.JSON(200, airmet)
 }
@@ -45,9 +55,10 @@ func main() {
 		IndentJSON: true, // Output human readable JSON
 	}))
 
+	m.Get("/gaf/:area", getGAFHTML)
 	m.Group("/api", func(api martini.Router) {
 		api.Group("/gaf", func(r martini.Router) {
-			r.Get("/:pagecode.json", getGAF)
+			r.Get("/:pagecode.json", getGAFImages)
 		})
 		api.Get("/airmet", getAIRMET)
 	})

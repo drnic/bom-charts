@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bf:area-forecast xmlns:bf="http://www.airservicesaustralia.com/met/xsd" xsi:schemaLocation="http://www.airservicesaustralia.com/met/xsd" issued-at="2018-05-21T22:42:10Z" from="2018-05-22T05:00:00Z" till="2018-05-22T11:00:00Z" area-id="NSW-E" correction="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<bf:area-forecast xmlns:bf="http://www.airservicesaustralia.com/met/xsd" xsi:schemaLocation="http://www.airservicesaustralia.com/met/xsd" issued-at="2018-05-22T04:52:54Z" from="2018-05-22T05:00:00Z" till="2018-05-22T11:00:00Z" area-id="NSW-E" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
  <bf:standard-inclusion>
 TS / CB / TCU imply SEV ICE and SEV TURB.
 CU / SC / AC imply MOD TURB.
@@ -54,13 +54,15 @@ GAF data provided by Australian Bureau of Meteorology.</bf:standard-inclusion>
    <bf:cld-ice-turb>SCT CU/SC 3000/7000FT</bf:cld-ice-turb>
   </bf:wx-cond>
   <bf:wx-cond>
-   <bf:cld-ice-turb>MOD TURB BLW 10000FT </bf:cld-ice-turb>
+   <bf:cld-ice-turb>MOD TURB BLW 10000FT (SEV IN S)</bf:cld-ice-turb>
+   <bf:cld-ice-turb>MOD MTW ABV 6000FT E OF YCRG/AVBEG</bf:cld-ice-turb>
+   <bf:cld-ice-turb> </bf:cld-ice-turb>
   </bf:wx-cond>
   <bf:wx-cond>
    <bf:scf-vis-wx>0200M ISOL FG IN A1 FM 10Z</bf:scf-vis-wx>
    <bf:cld-ice-turb>BKN ST 1000/5000FT</bf:cld-ice-turb>
   </bf:wx-cond>
-  <bf:fz-lvl>ABV 10000FT (10000FT IN S)</bf:fz-lvl>
+  <bf:fz-lvl>ABV 10000FT (10000FT IN S, 8500FT IN A2 FM 09Z)</bf:fz-lvl>
   <bf:sub-area id="A1">
    <bf:boundary>
     <bf:point latitude="-37.47" longitude="149.87"/>
@@ -224,8 +226,9 @@ GAF data provided by Australian Bureau of Meteorology.</bf:standard-inclusion>
    <bf:point latitude="-32.67" longitude="148.46"/>
   </bf:boundary>
   <bf:wx-cond>
-   <bf:cld-ice-turb>MOD TURB BLW 9000FT SW OF YMOR/YWOL</bf:cld-ice-turb>
+   <bf:cld-ice-turb>MOD TURB BLW 9000FT SW OF YMOR/YWOL (SEV IN S)</bf:cld-ice-turb>
    <bf:cld-ice-turb>MOD TURB BLW 6000FT WI 30NM LAND/SEA N OF SUG AND S OF YCFS FM 08Z</bf:cld-ice-turb>
+   <bf:cld-ice-turb>MOD MTW ABV 6000FT S OF BLW</bf:cld-ice-turb>
   </bf:wx-cond>
   <bf:wx-cond>
    <bf:scf-vis-wx>&amp;gt;10KM NIL</bf:scf-vis-wx>

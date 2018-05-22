@@ -1,44 +1,38 @@
 package gaf
 
 import (
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strings"
-
-	xj "github.com/basgys/goxml2json"
 )
 
 // Page describes a request/current Graphical Area Forecast (GAF)
-type Page struct {
-	Code   string
-	RawXML []byte
-	JSON   string
+type AreaForecast struct {
+	AreaID   string `xml:"area-id,attr"`
+	IssuedAt string `xml:"issued-at,attr"`
+	Till     string `xml:"till,attr"`
+}
+
+type Point struct {
+	Latitude  string `xml:"latitude,attr"`
+	Longitude string `xml:"longitude,attr"`
 }
 
 // NewPage is the constructor for a Page
-func NewPage(pagecode string) (page *Page, err error) {
-	page = &Page{Code: pagecode, JSON: "{}"}
-	url := fmt.Sprintf("http://www.bom.gov.au/fwo/aviation/%s.xml", page.Code)
+func NewAreaForecast(pagecode string) (forecast *AreaForecast, err error) {
+	url := fmt.Sprintf("http://www.bom.gov.au/fwo/aviation/%s.xml", pagecode)
 	resp, err := http.Get(url)
 	if err != nil {
-		return page, err
+		return nil, err
 	}
 	defer resp.Body.Close()
-	page.RawXML, err = ioutil.ReadAll(resp.Body)
+	rawXML, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return page, err
+		return nil, err
 	}
-	return page, page.convertFromXML()
-}
 
-// JSON is converted from RawXML
-func (page *Page) convertFromXML() error {
-	xml := strings.NewReader(string(page.RawXML))
-	json, err := xj.Convert(xml)
-	if err != nil {
-		return err
-	}
-	page.JSON = json.String()
-	return nil
+	forecast = &AreaForecast{}
+	err = xml.Unmarshal(rawXML, forecast)
+	return forecast, err
 }

@@ -39,9 +39,8 @@ var _ = Describe("Page", func() {
 		httpmock.RegisterResponder("GET", "http://www.bom.gov.au/fwo/aviation/IDY42081.xml",
 			httpmock.NewStringResponder(200, string(xmlTestdata)))
 
-		page, err := NewPage("IDY42081")
+		forecast, err := NewAreaForecast("IDY42081")
 		Ω(err).ShouldNot(HaveOccurred())
-		Expect(page.Code).To(Equal("IDY42081"))
-		Expect(page.RawXML).To(Equal(xmlTestdata))
+		Expect(forecast.AreaID).To(Equal("QLD-S"))
 	})
 })
