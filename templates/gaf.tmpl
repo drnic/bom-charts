@@ -9,6 +9,7 @@
   <script src="main.js"></script>
 </head>
 <body>
+  <p>From {{.From}} to {{.Till}}:</p>
   <table border=1>
     <tr>
       <th>Area</th>
@@ -23,12 +24,20 @@
       {{range $index, $wxCond := .WxCond}}
       <tr>
         {{if $index}}
-        <td>{{$wxCond.SurfaceVisWx}}</td>
-        <td>{{$wxCond.CloudIceTurbulence}}</td>
-        {{else}}
+        <td>
+            {{range $wxCond.SurfaceVisWx}}{{.}}<br/>{{end}}
+          </td>
+          <td>
+            {{range $wxCond.CloudIceTurbulence}}{{.}}<br/>{{end}}
+          </td>
+          {{else}}
         <td rowspan={{$wxConds}}>{{$areaID}}</td>
-        <td>{{$wxCond.SurfaceVisWx}}</td>
-        <td>{{$wxCond.CloudIceTurbulence}}</td>
+        <td>
+          {{range $wxCond.SurfaceVisWx}}{{.}}<br/>{{end}}
+        </td>
+        <td>
+          {{range $wxCond.CloudIceTurbulence}}{{.}}<br/>{{end}}
+        </td>
         <td rowspan={{$wxConds}}>{{$freezingLevel}}</td>
         {{end}}
       </tr>
