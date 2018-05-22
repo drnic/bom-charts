@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
+
+	xj "github.com/basgys/goxml2json"
 )
 
 // Page describes a request/current Graphical Area Forecast (GAF)
@@ -31,5 +34,11 @@ func NewPage(pagecode string) (page *Page, err error) {
 
 // JSON is converted from RawXML
 func (page *Page) convertFromXML() error {
+	xml := strings.NewReader(string(page.RawXML))
+	json, err := xj.Convert(xml)
+	if err != nil {
+		return err
+	}
+	page.JSON = json.String()
 	return nil
 }

@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/basgys/goxml2json"
+  packages = ["."]
+  revision = "652b277a9313806ef04f7c0cb0205dd455c4f344"
+  version = "v1.1.0"
+
+[[projects]]
   name = "github.com/codegangsta/inject"
   packages = ["."]
   revision = "37d7f8432a3e684eef9b2edece76bdfa6ac85b39"
@@ -13,9 +19,51 @@
   revision = "49411a5b646861ad29a6ddd5351717a0a9c49b94"
   version = "v1.0"
 
+[[projects]]
+  name = "github.com/onsi/ginkgo"
+  packages = [".","config","internal/codelocation","internal/containernode","internal/failer","internal/leafnodes","internal/remote","internal/spec","internal/spec_iterator","internal/specrunner","internal/suite","internal/testingtproxy","internal/writer","reporters","reporters/stenographer","reporters/stenographer/support/go-colorable","reporters/stenographer/support/go-isatty","types"]
+  revision = "fa5fabab2a1bfbd924faf4c067d07ae414e2aedf"
+  version = "v1.5.0"
+
+[[projects]]
+  name = "github.com/onsi/gomega"
+  packages = [".","format","internal/assertion","internal/asyncassertion","internal/oraclematcher","internal/testingtsupport","matchers","matchers/support/goraph/bipartitegraph","matchers/support/goraph/edge","matchers/support/goraph/node","matchers/support/goraph/util","types"]
+  revision = "62bff4df71bdbc266561a0caee19f0594b17c240"
+  version = "v1.4.0"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/net"
+  packages = ["html","html/atom","html/charset"]
+  revision = "8e0cdda24ed423affc8f35c241e5e9b16180338e"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = ["unix"]
+  revision = "7c87d13f8e835d2fb3a70a2912c811ed0c1d241b"
+
+[[projects]]
+  name = "golang.org/x/text"
+  packages = ["encoding","encoding/charmap","encoding/htmlindex","encoding/internal","encoding/internal/identifier","encoding/japanese","encoding/korean","encoding/simplifiedchinese","encoding/traditionalchinese","encoding/unicode","internal/gen","internal/tag","internal/utf8internal","language","runes","transform","unicode/cldr"]
+  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
+  version = "v0.3.0"
+
+[[projects]]
+  branch = "v1"
+  name = "gopkg.in/jarcoal/httpmock.v1"
+  packages = ["."]
+  revision = "eb84b840d3d6889d2458ceed28e3c6f0d109f6c8"
+
+[[projects]]
+  name = "gopkg.in/yaml.v2"
+  packages = ["."]
+  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
+  version = "v2.2.1"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "55e9cc4bb1048e2f39b3db4467f07f0f82b8c2651b501f763004002c2b6b20df"
+  inputs-digest = "bb5c907259872d70bd7f5c1cdf6b9fae75ff0e795c0768e25d040b53700c1161"
   solver-name = "gps-cdcl"
   solver-version = 1
