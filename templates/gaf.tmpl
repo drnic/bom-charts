@@ -25,18 +25,18 @@
       <tr>
         {{if $index}}
         <td>
-            {{range $wxCond.SurfaceVisWx}}{{.}}<br/>{{end}}
+            {{range $wxCond.SurfaceVisWx}}{{.Text}}<br/>{{end}}
           </td>
           <td>
-            {{range $wxCond.CloudIceTurbulence}}{{.}}<br/>{{end}}
+            {{range $wxCond.CloudIceTurbulence}}{{.Text}}<br/>{{end}}
           </td>
           {{else}}
         <td rowspan={{$wxConds}}>{{$areaID}}</td>
         <td>
-          {{range $wxCond.SurfaceVisWx}}{{.}}<br/>{{end}}
+          {{range $wxCond.SurfaceVisWx}}{{.Text}}<br/>{{end}}
         </td>
         <td>
-          {{range $wxCond.CloudIceTurbulence}}{{.}}<br/>{{end}}
+          {{range $wxCond.CloudIceTurbulence}}{{.Text}}<br/>{{end}}
         </td>
         <td rowspan={{$wxConds}}>{{$freezingLevel}}</td>
         {{end}}

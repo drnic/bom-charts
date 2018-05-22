@@ -3,6 +3,7 @@ package gaf
 import (
 	"encoding/xml"
 	"fmt"
+	"html"
 	"io/ioutil"
 	"net/http"
 )
@@ -77,7 +78,7 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *RawGAFAreaForecast) {
 		area := &GAFArea{}
 		forecast.Areas[i] = area
 		area.ID = rawArea.ID
-		area.FreezingLevel = rawArea.FreezingLevel
+		area.FreezingLevel = html.UnescapeString(rawArea.FreezingLevel)
 		area.WxCond = make([]*GAFWxCond, len(rawArea.WxCond))
 		for j, rawWxCond := range rawArea.WxCond {
 			wxCond := &GAFWxCond{}
@@ -86,7 +87,7 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *RawGAFAreaForecast) {
 			wxCond.SurfaceVisWx = make([]*GAFSurfaceVisWx, len(rawWxCond.SurfaceVisWx))
 			for k, rawSurface := range rawWxCond.SurfaceVisWx {
 				surfaceVisWx := &GAFSurfaceVisWx{
-					Text: rawSurface,
+					Text: html.UnescapeString(rawSurface),
 				}
 				wxCond.SurfaceVisWx[k] = surfaceVisWx
 			}
@@ -94,7 +95,7 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *RawGAFAreaForecast) {
 			wxCond.CloudIceTurbulence = make([]*GAFCloudIceTurbulence, len(rawWxCond.CloudIceTurbulence))
 			for k, rawCloud := range rawWxCond.CloudIceTurbulence {
 				cloud := &GAFCloudIceTurbulence{
-					Text: rawCloud,
+					Text: html.UnescapeString(rawCloud),
 				}
 				wxCond.CloudIceTurbulence[k] = cloud
 			}
