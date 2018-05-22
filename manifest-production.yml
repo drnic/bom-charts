@@ -1,7 +1,6 @@
 applications:
 - name: bom-charts
-  buildpack: staticfile_buildpack
-  path: public
+  buildpack: go_buildpack
   disk_quota: 1G
   instances: 1
   memory: 64M
