@@ -99,11 +99,14 @@ $(function() {
     airmet.appendTo(airmetDiv);
     $.get("/api/airmet", function (data) {
       var airmet = $("#airmet pre");
-      airmet.addClass("alert");
       if (data.error) {
+        airmet.addClass("alert");
         airmet.text(data.error);
       } else if ($.inArray(area, data["remarked-gafs"]) != -1) {
+        airmet.addClass("alert");
         airmet.text(data.message);
+      } else {
+        airmet.text("No AIRMET for " + area);
       }
     })
   }
