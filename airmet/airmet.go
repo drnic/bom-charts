@@ -1,6 +1,9 @@
 package airmet
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/PuerkitoBio/goquery"
 )
 
@@ -20,6 +23,17 @@ func NewAirmet() (airmet *Airmet, err error) {
 	}
 
 	airmet.Message = doc.Find("span.info").First().Text()
+
+	if airmet.Message == "" {
+		airmet.Message, err = doc.Find("p.product").Last().Html()
+		if err != nil {
+			return nil, err
+		}
+		fmt.Printf("%#v\n", airmet.Message)
+	}
+
+	airmet.BrisbaneRegionAnyAlerts = strings.Contains(airmet.Message, "YBBB")
+	airmet.MelbourneRegionAnyAlerts = strings.Contains(airmet.Message, "YMMM")
 
 	return airmet, nil
 }
