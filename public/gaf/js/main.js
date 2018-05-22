@@ -90,7 +90,7 @@ $(function() {
     nextGAF.appendTo($("#contents"));
   }
 
-  function fetchAIRMET() {
+  function fetchAIRMET(area) {
     var airmetDiv = $("<div/>");
     airmetDiv.attr("id", "airmet");
     airmetDiv.addClass("airmet");
@@ -100,10 +100,10 @@ $(function() {
     $.get("/api/airmet", function (data) {
       var airmet = $("#airmet pre");
       airmet.addClass("alert");
-      if (data.error === undefined) {
-        airmet.text(data.message);
-      } else {
+      if (data.error) {
         airmet.text(data.error);
+      } else if ($.inArray(area, data["remarked-gafs"]) != -1) {
+        airmet.text(data.message);
       }
     })
   }
@@ -137,7 +137,7 @@ $(function() {
     addHTMLMetadata(gafArea);
     addStatusBar();
     startAutoRefresh();
-    fetchAIRMET();
+    fetchAIRMET(gafArea);
     insertGAFImages(gafImageCodes);
 
     addToHomescreen({
