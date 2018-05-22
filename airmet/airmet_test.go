@@ -42,8 +42,8 @@ var _ = Describe("Airmet", func() {
 		airmet, err := NewAirmet()
 		Ω(err).ShouldNot(HaveOccurred())
 
-		Expect(airmet.BrisbaneRegionAny).To(BeFalse())
-		Expect(airmet.MelbourneRegionAny).To(BeFalse())
+		Expect(airmet.BrisbaneRegionAnyAlerts).To(BeFalse())
+		Expect(airmet.MelbourneRegionAnyAlerts).To(BeFalse())
 
 		Expect(airmet.Message).To(Equal("Nil current AIRMET."))
 	})

@@ -39,7 +39,8 @@ func getAIRMET() string {
 	if err != nil {
 		return errorResponse(err)
 	}
-	return messageResponse(airmet.Message)
+	j, _ := json.Marshal(airmet)
+	return string(j)
 }
 
 func main() {

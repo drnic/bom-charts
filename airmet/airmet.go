@@ -6,10 +6,9 @@ import (
 
 // Airmet describes the fetched HTML and the enclosed encoded message
 type Airmet struct {
-	RawHTML            []byte
-	Message            string
-	BrisbaneRegionAny  bool
-	MelbourneRegionAny bool
+	Message                  string `json:"message"`
+	BrisbaneRegionAnyAlerts  bool   `json:"brisbane_region_any_alert"`
+	MelbourneRegionAnyAlerts bool   `json:"melbourne_region_any_alert"`
 }
 
 // NewAirmet is the constructor of Airmet and fetches latest raw HTML
