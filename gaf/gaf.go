@@ -75,10 +75,11 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *RawGAFAreaForecast) {
 
 	forecast.Areas = make([]*GAFArea, len(raw.Areas))
 	for i, rawArea := range raw.Areas {
-		area := &GAFArea{}
+		area := &GAFArea{
+			ID:            rawArea.ID,
+			FreezingLevel: html.UnescapeString(rawArea.FreezingLevel),
+		}
 		forecast.Areas[i] = area
-		area.ID = rawArea.ID
-		area.FreezingLevel = html.UnescapeString(rawArea.FreezingLevel)
 		area.WxCond = make([]*GAFWxCond, len(rawArea.WxCond))
 		for j, rawWxCond := range rawArea.WxCond {
 			wxCond := &GAFWxCond{}
