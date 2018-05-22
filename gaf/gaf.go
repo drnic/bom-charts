@@ -8,21 +8,21 @@ import (
 )
 
 // Page describes a request/current Graphical Area Forecast (GAF)
-type AreaForecast struct {
-	AreaID            string `xml:"area-id,attr" json:"area-id`
-	From              string `xml:"from,attr" json:"from"`
-	IssuedAt          string `xml:"issued-at,attr" json:"issued-at"`
-	StandardInclusion string `xml:"standard-inclusion" json:"standard-inclusion"`
-	Till              string `xml:"till,attr" json:"till"`
-	Area              []Area `xml:"area" json:"area"`
+type GAFAreaForecast struct {
+	AreaID            string    `xml:"area-id,attr" json:"area-id`
+	From              string    `xml:"from,attr" json:"from"`
+	IssuedAt          string    `xml:"issued-at,attr" json:"issued-at"`
+	StandardInclusion string    `xml:"standard-inclusion" json:"standard-inclusion"`
+	Till              string    `xml:"till,attr" json:"till"`
+	Area              []GAFArea `xml:"area" json:"area"`
 }
 
-type Point struct {
+type GAFPoint struct {
 	Latitude  string `xml:"latitude,attr" json:"latitude"`
 	Longitude string `xml:"longitude,attr" json:"longitude"`
 }
 
-type Area struct {
+type GAFArea struct {
 	ID     string `xml:"id,attr" json:"id"`
 	WxCond []struct {
 		SurfaceVisWx       []string `xml:"scf-vis-wx" json:"surface-vis-wx"`
@@ -32,7 +32,7 @@ type Area struct {
 }
 
 // NewPage is the constructor for a Page
-func NewAreaForecast(pagecode string) (forecast *AreaForecast, err error) {
+func NewAreaForecast(pagecode string) (forecast *GAFAreaForecast, err error) {
 	url := fmt.Sprintf("http://www.bom.gov.au/fwo/aviation/%s.xml", pagecode)
 	fmt.Println("GET ", url)
 	resp, err := http.Get(url)
@@ -46,7 +46,7 @@ func NewAreaForecast(pagecode string) (forecast *AreaForecast, err error) {
 		return nil, err
 	}
 
-	forecast = &AreaForecast{}
+	forecast = &GAFAreaForecast{}
 	err = xml.Unmarshal(rawXML, forecast)
 	return forecast, err
 

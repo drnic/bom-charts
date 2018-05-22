@@ -33,7 +33,12 @@ func getGAFImages(params martini.Params, r render.Render) {
 }
 
 func getGAFHTML(params martini.Params, r render.Render) {
-	areaForecast, err := gaf.NewAreaForecast(params["pagecode"])
+	area, err := gaf.NewArea(params["area"])
+	if err != nil {
+		r.JSON(500, errorResponse(err))
+		return
+	}
+	areaForecast, err := gaf.NewAreaForecast(area.CurrentGAFCode)
 	if err != nil {
 		r.JSON(500, errorResponse(err))
 		return
@@ -58,7 +63,7 @@ func main() {
 		IndentJSON: true, // Output human readable JSON
 	}))
 
-	m.Get("/gaf/:pagecode", getGAFHTML)
+	m.Get("/gaf/:area", getGAFHTML)
 	m.Group("/api", func(api martini.Router) {
 		api.Group("/gaf", func(r martini.Router) {
 			r.Get("/:pagecode.json", getGAFImages)
