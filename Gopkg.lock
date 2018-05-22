@@ -2,6 +2,18 @@
 
 
 [[projects]]
+  name = "github.com/PuerkitoBio/goquery"
+  packages = ["."]
+  revision = "a86ea073017a6beddef78c8659e7224e8ca634b0"
+  version = "v1.4.0"
+
+[[projects]]
+  name = "github.com/andybalholm/cascadia"
+  packages = ["."]
+  revision = "901648c87902174f774fac311d7f176f8647bdaa"
+  version = "v1.0.0"
+
+[[projects]]
   name = "github.com/basgys/goxml2json"
   packages = ["."]
   revision = "652b277a9313806ef04f7c0cb0205dd455c4f344"
@@ -64,6 +76,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "bb5c907259872d70bd7f5c1cdf6b9fae75ff0e795c0768e25d040b53700c1161"
+  inputs-digest = "75e869b09e1981dadceb5c77a53cfff693f45b46241fc2cd436fef9ab8a3f3a9"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -1,8 +1,7 @@
 package airmet
 
 import (
-	"io/ioutil"
-	"net/http"
+	"github.com/PuerkitoBio/goquery"
 )
 
 // Airmet describes the fetched HTML and the enclosed encoded message
@@ -16,15 +15,12 @@ type Airmet struct {
 // NewAirmet is the constructor of Airmet and fetches latest raw HTML
 func NewAirmet() (airmet *Airmet, err error) {
 	airmet = &Airmet{}
-	resp, err := http.Get("http://www.bom.gov.au/aviation/warnings/airmet/")
+	doc, err := goquery.NewDocument("http://www.bom.gov.au/aviation/warnings/airmet/")
 	if err != nil {
-		return airmet, err
-	}
-	defer resp.Body.Close()
-	airmet.RawHTML, err = ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return airmet, err
+		return nil, err
 	}
 
-	return airmet, err
+	airmet.Message = doc.Find("span.info").First().Text()
+
+	return airmet, nil
 }

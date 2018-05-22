@@ -44,5 +44,7 @@ var _ = Describe("Airmet", func() {
 
 		Expect(airmet.BrisbaneRegionAny).To(BeFalse())
 		Expect(airmet.MelbourneRegionAny).To(BeFalse())
+
+		Expect(airmet.Message).To(Equal("Nil current AIRMET."))
 	})
 })
