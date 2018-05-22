@@ -42,8 +42,6 @@ var _ = Describe("Airmet", func() {
 		airmet, err := NewAirmet()
 		Ω(err).ShouldNot(HaveOccurred())
 
-		Expect(airmet.BrisbaneRegionAnyAlerts).To(BeFalse())
-		Expect(airmet.MelbourneRegionAnyAlerts).To(BeFalse())
 		Expect(airmet.RemarkedGAFs).To(Equal([]string{}))
 
 		Expect(airmet.Message).To(Equal("Nil current AIRMET."))
@@ -70,9 +68,6 @@ YMMM MELBOURNE FIR SFC VIS 0500M [FG] OBS AT 0950Z WI S3700 E14430 -
 S3630 E14500 - S3650 E14550 - S3720 E14510 STNR NC
 RMK: GAF VIC=
 --------------------------------------------------------------------`))
-
-		Expect(airmet.BrisbaneRegionAnyAlerts).To(BeFalse())
-		Expect(airmet.MelbourneRegionAnyAlerts).To(BeTrue())
 
 		Expect(airmet.RemarkedGAFs).To(Equal([]string{"VIC"}))
 	})
