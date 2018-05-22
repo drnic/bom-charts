@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/drnic/bom-charts/airmet"
 
 	"github.com/drnic/bom-charts/gaf"
@@ -36,6 +38,7 @@ func getGAFHTML(params martini.Params, r render.Render) {
 		r.JSON(500, errorResponse(err))
 		return
 	}
+	fmt.Printf("%#v\n", areaForecast)
 	r.HTML(200, "gaf", areaForecast)
 }
 
@@ -55,7 +58,7 @@ func main() {
 		IndentJSON: true, // Output human readable JSON
 	}))
 
-	m.Get("/gaf/:area", getGAFHTML)
+	m.Get("/gaf/:pagecode", getGAFHTML)
 	m.Group("/api", func(api martini.Router) {
 		api.Group("/gaf", func(r martini.Router) {
 			r.Get("/:pagecode.json", getGAFImages)

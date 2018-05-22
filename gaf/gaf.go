@@ -34,11 +34,13 @@ type Area struct {
 // NewPage is the constructor for a Page
 func NewAreaForecast(pagecode string) (forecast *AreaForecast, err error) {
 	url := fmt.Sprintf("http://www.bom.gov.au/fwo/aviation/%s.xml", pagecode)
+	fmt.Println("GET ", url)
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
+	fmt.Println(resp)
 	rawXML, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
