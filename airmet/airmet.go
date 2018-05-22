@@ -4,13 +4,16 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+
+	"github.com/drnic/bom-charts/gaf"
 )
 
 // Airmet describes the fetched HTML and the enclosed encoded message
 type Airmet struct {
-	Message                  string `json:"message"`
-	BrisbaneRegionAnyAlerts  bool   `json:"brisbane_region_any_alert"`
-	MelbourneRegionAnyAlerts bool   `json:"melbourne_region_any_alert"`
+	Message                  string   `json:"message"`
+	BrisbaneRegionAnyAlerts  bool     `json:"brisbane-region-any-alert"`
+	MelbourneRegionAnyAlerts bool     `json:"melbourne-region-any-alert"`
+	RemarkedGAFs             []string `json:"remarked-gafs"`
 }
 
 // NewAirmet is the constructor of Airmet and fetches latest raw HTML
@@ -33,6 +36,14 @@ func NewAirmet() (airmet *Airmet, err error) {
 	airmet.Message = strings.Replace(airmet.Message, "<br/>", "\n", -1)
 	airmet.BrisbaneRegionAnyAlerts = strings.Contains(airmet.Message, "YBBB")
 	airmet.MelbourneRegionAnyAlerts = strings.Contains(airmet.Message, "YMMM")
+
+	// TODO: find specific "RMK: GAF" line and only do Contains in it
+	airmet.RemarkedGAFs = []string{}
+	for _, area := range gaf.Areas {
+		if strings.Contains(airmet.Message, area) {
+			airmet.RemarkedGAFs = append(airmet.RemarkedGAFs, area)
+		}
+	}
 
 	return airmet, nil
 }

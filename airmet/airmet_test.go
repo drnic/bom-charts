@@ -44,6 +44,7 @@ var _ = Describe("Airmet", func() {
 
 		Expect(airmet.BrisbaneRegionAnyAlerts).To(BeFalse())
 		Expect(airmet.MelbourneRegionAnyAlerts).To(BeFalse())
+		Expect(airmet.RemarkedGAFs).To(Equal([]string{}))
 
 		Expect(airmet.Message).To(Equal("Nil current AIRMET."))
 	})
@@ -72,5 +73,7 @@ RMK: GAF VIC=
 
 		Expect(airmet.BrisbaneRegionAnyAlerts).To(BeFalse())
 		Expect(airmet.MelbourneRegionAnyAlerts).To(BeTrue())
+
+		Expect(airmet.RemarkedGAFs).To(Equal([]string{"VIC"}))
 	})
 })
