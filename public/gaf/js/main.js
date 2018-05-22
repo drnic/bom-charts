@@ -91,12 +91,14 @@ $(function() {
   }
 
   function fetchAIRMET() {
+    var airmetDiv = $("<div/>");
+    airmetDiv.attr("id", "airmet");
+    airmetDiv.addClass("airmet");
+    airmetDiv.appendTo("#contents");
     var airmet = $("<pre/>");
-    airmet.attr("id", "airmet");
-    airmet.addClass("airmet");
-    airmet.appendTo("#contents");
+    airmet.appendTo(airmetDiv);
     $.get("/api/airmet", function (data) {
-      var airmet = $("#airmet");
+      var airmet = $("#airmet pre");
       airmet.addClass("alert");
       if (data.error === undefined) {
         airmet.text(data.message);

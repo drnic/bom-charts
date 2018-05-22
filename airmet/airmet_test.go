@@ -63,7 +63,12 @@ var _ = Describe("Airmet", func() {
 		airmet, err := NewAirmet()
 		Ω(err).ShouldNot(HaveOccurred())
 
-		Expect(airmet.Message).To(Equal("Received at 20:00, 22/05/18<br/>YMMM AIRMET 01 VALID 220959/221359 YMRF-<br/>YMMM MELBOURNE FIR SFC VIS 0500M [FG] OBS AT 0950Z WI S3700 E14430 -<br/>S3630 E14500 - S3650 E14550 - S3720 E14510 STNR NC<br/>RMK: GAF VIC=<br/>--------------------------------------------------------------------"))
+		Expect(airmet.Message).To(Equal(`Received at 20:00, 22/05/18
+YMMM AIRMET 01 VALID 220959/221359 YMRF-
+YMMM MELBOURNE FIR SFC VIS 0500M [FG] OBS AT 0950Z WI S3700 E14430 -
+S3630 E14500 - S3650 E14550 - S3720 E14510 STNR NC
+RMK: GAF VIC=
+--------------------------------------------------------------------`))
 
 		Expect(airmet.BrisbaneRegionAnyAlerts).To(BeFalse())
 		Expect(airmet.MelbourneRegionAnyAlerts).To(BeTrue())

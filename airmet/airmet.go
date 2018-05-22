@@ -1,7 +1,6 @@
 package airmet
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -29,9 +28,9 @@ func NewAirmet() (airmet *Airmet, err error) {
 		if err != nil {
 			return nil, err
 		}
-		fmt.Printf("%#v\n", airmet.Message)
 	}
 
+	airmet.Message = strings.Replace(airmet.Message, "<br/>", "\n", -1)
 	airmet.BrisbaneRegionAnyAlerts = strings.Contains(airmet.Message, "YBBB")
 	airmet.MelbourneRegionAnyAlerts = strings.Contains(airmet.Message, "YMMM")
 

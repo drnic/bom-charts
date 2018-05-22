@@ -26,6 +26,10 @@ img.chart{
   margin: 0;
   text-align: center;
 }
+.airmet pre {
+  display: inline-block;
+  text-align: left;
+}
 .alert {
   color: red;
 }
