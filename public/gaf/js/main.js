@@ -90,6 +90,22 @@ $(function() {
     nextGAF.appendTo($("#contents"));
   }
 
+  function fetchAIRMET() {
+    var airmet = $("<pre/>");
+    airmet.attr("id", "airmet");
+    airmet.addClass("airmet");
+    airmet.appendTo("#contents");
+    $.get("/api/airmet", function (data) {
+      var airmet = $("#airmet");
+      airmet.addClass("alert");
+      if (data.error === undefined) {
+        airmet.text(data.message);
+      } else {
+        airmet.text(data.error);
+      }
+    })
+  }
+
   // From https://stackoverflow.com/a/21903119/36170
   function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -119,6 +135,7 @@ $(function() {
     addHTMLMetadata(gafArea);
     addStatusBar();
     startAutoRefresh();
+    fetchAIRMET();
     insertGAFImages(gafImageCodes);
 
     addToHomescreen({

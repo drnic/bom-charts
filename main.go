@@ -1,12 +1,11 @@
 package main
 
 import (
-	"encoding/json"
-
 	"github.com/drnic/bom-charts/airmet"
 
 	"github.com/drnic/bom-charts/gaf"
 	"github.com/go-martini/martini"
+	"github.com/martini-contrib/render"
 )
 
 type basicResponse struct {
@@ -14,38 +13,36 @@ type basicResponse struct {
 	Error   string `json:"error,omitempty"`
 }
 
-func errorResponse(err error) string {
-	res := &basicResponse{Error: err.Error()}
-	j, _ := json.Marshal(res)
-	return string(j)
+func errorResponse(err error) *basicResponse {
+	return &basicResponse{Error: err.Error()}
 }
 
-func messageResponse(message string) string {
-	res := &basicResponse{Message: message}
-	j, _ := json.Marshal(res)
-	return string(j)
+func messageResponse(message string) *basicResponse {
+	return &basicResponse{Message: message}
 }
 
-func getGAF(params martini.Params) string {
+func getGAF(params martini.Params, r render.Render) {
 	gafPage, err := gaf.NewPage(params["pagecode"])
 	if err != nil {
-		return errorResponse(err)
+		r.JSON(500, errorResponse(err))
 	}
-	return string(gafPage.JSON)
+	r.JSON(200, gafPage.JSON)
 }
 
-func getAIRMET() string {
+func getAIRMET(r render.Render) {
 	airmet, err := airmet.NewAirmet()
 	if err != nil {
-		return errorResponse(err)
+		r.JSON(500, errorResponse(err))
 	}
-	j, _ := json.Marshal(airmet)
-	return string(j)
+	r.JSON(200, airmet)
 }
 
 func main() {
 	m := martini.Classic()
 	m.Use(martini.Static("assets"))
+	m.Use(render.Renderer(render.Options{
+		IndentJSON: true, // Output human readable JSON
+	}))
 
 	m.Group("/api", func(api martini.Router) {
 		api.Group("/gaf", func(r martini.Router) {

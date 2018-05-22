@@ -22,3 +22,10 @@ img.chart{
 .forecast-expiring {
   color: orange;
 }
+.airmet {
+  margin: 0;
+  text-align: center;
+}
+.alert {
+  color: red;
+}

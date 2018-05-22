@@ -32,6 +32,12 @@
   version = "v1.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/martini-contrib/render"
+  packages = ["."]
+  revision = "ec18f8345a1181146728238980606fb1d6f40e8c"
+
+[[projects]]
   name = "github.com/onsi/ginkgo"
   packages = [".","config","internal/codelocation","internal/containernode","internal/failer","internal/leafnodes","internal/remote","internal/spec","internal/spec_iterator","internal/specrunner","internal/suite","internal/testingtproxy","internal/writer","reporters","reporters/stenographer","reporters/stenographer/support/go-colorable","reporters/stenographer/support/go-isatty","types"]
   revision = "fa5fabab2a1bfbd924faf4c067d07ae414e2aedf"
@@ -42,6 +48,12 @@
   packages = [".","format","internal/assertion","internal/asyncassertion","internal/oraclematcher","internal/testingtsupport","matchers","matchers/support/goraph/bipartitegraph","matchers/support/goraph/edge","matchers/support/goraph/node","matchers/support/goraph/util","types"]
   revision = "62bff4df71bdbc266561a0caee19f0594b17c240"
   version = "v1.4.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/oxtoacart/bpool"
+  packages = ["."]
+  revision = "4e1c5567d7c2dd59fa4c7c83d34c2f3528b025d6"
 
 [[projects]]
   branch = "master"
@@ -76,6 +88,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "75e869b09e1981dadceb5c77a53cfff693f45b46241fc2cd436fef9ab8a3f3a9"
+  inputs-digest = "0d2665994f536839e4cc8fe8eca0f3c9332a63c535603fa11a036422a7ac03e1"
   solver-name = "gps-cdcl"
   solver-version = 1
