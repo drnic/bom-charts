@@ -67,17 +67,27 @@ $(function() {
     }
   }
 
-  function addAreaMobileIcon(area) {
+  function addHTMLMetadata(area) {
     $('<link rel="icon" sizes="128x128" href="../images/icons/' + area + '.png">').appendTo("head");
     $('<link rel="apple-touch-icon" href="../images/icons/' + area + '.png" />').appendTo("head");
-  }
 
-  function updateTitleForGAF(area) {
     $("title").text("GAF " + area);
   }
 
   function startAutoRefresh() {
     $('<meta http-equiv="Refresh" content="60;">').appendTo($('head'));
+  }
+
+  function insertGAFImages(gafImageCodes) {
+    var currentGAF = $("<img>");
+    currentGAF.addClass("fullscreen");
+    currentGAF.attr("src", "http://www.bom.gov.au/fwo/aviation/" + gafImageCodes.current + ".png");
+    currentGAF.appendTo($("#contents"));
+
+    var nextGAF = $("<img>");
+    nextGAF.addClass("fullscreen");
+    nextGAF.attr("src", "http://www.bom.gov.au/fwo/aviation/" + gafImageCodes.next + ".png");
+    nextGAF.appendTo($("#contents"));
   }
 
   // From https://stackoverflow.com/a/21903119/36170
@@ -106,24 +116,14 @@ $(function() {
     $("html,body").css("margin", 0);
     $("html,body").css("height", "100%");
 
-    addAreaMobileIcon(gafArea);
-    updateTitleForGAF(gafArea);
+    addHTMLMetadata(gafArea);
     addStatusBar();
-
-    var currentGAF = $("<img>");
-    currentGAF.addClass("fullscreen");
-    currentGAF.attr("src", "http://www.bom.gov.au/fwo/aviation/" + gafImageCodes.current + ".png");
-    currentGAF.appendTo($("#contents"));
-
-    var nextGAF = $("<img>");
-    nextGAF.addClass("fullscreen");
-    nextGAF.attr("src", "http://www.bom.gov.au/fwo/aviation/" + gafImageCodes.next + ".png");
-    nextGAF.appendTo($("#contents"));
+    startAutoRefresh();
+    insertGAFImages(gafImageCodes);
 
     addToHomescreen({
       appID: 'com.starkandwayne.bom-charts.gaf.' + gafArea
     });
 
-    startAutoRefresh();
   }
 });
