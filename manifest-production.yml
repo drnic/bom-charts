@@ -5,7 +5,7 @@ applications:
   instances: 1
   memory: 64M
   routes:
-  - route: bom-charts-staging.cfapps.io
+  - route: bom-charts.cfapps.io
   stack: cflinuxfs2
   env:
     GOPACKAGENAME: github.com/drnic/bom-charts
