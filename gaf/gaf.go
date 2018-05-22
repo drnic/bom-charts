@@ -7,32 +7,38 @@ import (
 	"net/http"
 )
 
-// Page describes a request/current Graphical Area Forecast (GAF)
-type GAFAreaForecast struct {
-	AreaID            string    `xml:"area-id,attr" json:"area-id`
-	From              string    `xml:"from,attr" json:"from"`
-	IssuedAt          string    `xml:"issued-at,attr" json:"issued-at"`
-	StandardInclusion string    `xml:"standard-inclusion" json:"standard-inclusion"`
-	Till              string    `xml:"till,attr" json:"till"`
-	Area              []GAFArea `xml:"area" json:"area"`
-}
-
-type GAFPoint struct {
-	Latitude  string `xml:"latitude,attr" json:"latitude"`
-	Longitude string `xml:"longitude,attr" json:"longitude"`
+// AreaForecast describes a request/current Graphical Area Forecast (GAF)
+type AreaForecast struct {
+	AreaID            string     `json:"area-id"`
+	From              string     `json:"from"`
+	IssuedAt          string     `json:"issued-at"`
+	StandardInclusion string     `json:"standard-inclusion"`
+	Till              string     `json:"till"`
+	Areas             []*GAFArea `json:"areas"`
 }
 
 type GAFArea struct {
-	ID     string `xml:"id,attr" json:"id"`
-	WxCond []struct {
-		SurfaceVisWx       []string `xml:"scf-vis-wx" json:"surface-vis-wx"`
-		CloudIceTurbulence []string `xml:"cld-ice-turb" json:"cloud-ice-turb"`
-	} `xml:"wx-cond" json:"wx-cond"`
-	FreezingLevel string `xml:"fz-lvl" json:"freezing-level"`
+	ID            string       `json:"id"`
+	WxCond        []*GAFWxCond `json:"wx-cond"`
+	FreezingLevel string       `json:"freezing-level"`
 }
 
-// NewPage is the constructor for a Page
-func NewAreaForecast(pagecode string) (forecast *GAFAreaForecast, err error) {
+type GAFWxCond struct {
+	SurfaceVisWx       []*GAFSurfaceVisWx       `json:"surface-vis-wx"`
+	CloudIceTurbulence []*GAFCloudIceTurbulence `json:"cloud-ice-turb"`
+}
+
+type GAFSurfaceVisWx struct {
+	Text              string `json:"text"`
+	SurfaceVisibility int    `json:"surface-vis"`
+}
+
+type GAFCloudIceTurbulence struct {
+	Text string `json:"text"`
+}
+
+// NewAreaForecast is the constructor for a AreaForecast
+func NewAreaForecast(pagecode string) (forecast *AreaForecast, err error) {
 	url := fmt.Sprintf("http://www.bom.gov.au/fwo/aviation/%s.xml", pagecode)
 	fmt.Println("GET ", url)
 	resp, err := http.Get(url)
@@ -46,9 +52,52 @@ func NewAreaForecast(pagecode string) (forecast *GAFAreaForecast, err error) {
 		return nil, err
 	}
 
-	forecast = &GAFAreaForecast{}
-	err = xml.Unmarshal(rawXML, forecast)
-	return forecast, err
+	rawForecast := &RawGAFAreaForecast{}
+	if err = xml.Unmarshal(rawXML, rawForecast); err != nil {
+		return forecast, err
+	}
+
+	forecast = &AreaForecast{}
+	forecast.copyFromRawForecast(rawForecast)
 
 	// TODO - sort WxCond by visibility (>10KM, 8000M, 2000M, "")
+	// TODO - convert HTML to ASCII (&gt;)
+	return forecast, nil
+}
+
+func (forecast *AreaForecast) copyFromRawForecast(raw *RawGAFAreaForecast) {
+	forecast.AreaID = raw.AreaID
+	forecast.From = raw.From
+	forecast.IssuedAt = raw.IssuedAt
+	forecast.StandardInclusion = raw.StandardInclusion
+	forecast.Till = raw.Till
+
+	forecast.Areas = make([]*GAFArea, len(raw.Areas))
+	for i, rawArea := range raw.Areas {
+		area := &GAFArea{}
+		forecast.Areas[i] = area
+		area.ID = rawArea.ID
+		area.FreezingLevel = rawArea.FreezingLevel
+		area.WxCond = make([]*GAFWxCond, len(rawArea.WxCond))
+		for j, rawWxCond := range rawArea.WxCond {
+			wxCond := &GAFWxCond{}
+			area.WxCond[j] = wxCond
+
+			wxCond.SurfaceVisWx = make([]*GAFSurfaceVisWx, len(rawWxCond.SurfaceVisWx))
+			for k, rawSurface := range rawWxCond.SurfaceVisWx {
+				surfaceVisWx := &GAFSurfaceVisWx{
+					Text: rawSurface,
+				}
+				wxCond.SurfaceVisWx[k] = surfaceVisWx
+			}
+
+			wxCond.CloudIceTurbulence = make([]*GAFCloudIceTurbulence, len(rawWxCond.CloudIceTurbulence))
+			for k, rawCloud := range rawWxCond.CloudIceTurbulence {
+				cloud := &GAFCloudIceTurbulence{
+					Text: rawCloud,
+				}
+				wxCond.CloudIceTurbulence[k] = cloud
+			}
+		}
+	}
 }

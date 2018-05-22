@@ -17,7 +17,7 @@
       <th>Cloud, Icing, & Turbulance</th>
       <th rows=2>Freezing level</th>
     </tr>
-    {{range .Area}}
+    {{range .Areas}}
       {{$areaID := .ID}}
       {{$wxConds := .WxCond | len}}
       {{$freezingLevel := .FreezingLevel}}
