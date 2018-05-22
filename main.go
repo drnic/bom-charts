@@ -26,7 +26,8 @@ func getGAF(params martini.Params, r render.Render) {
 	if err != nil {
 		r.JSON(500, errorResponse(err))
 	}
-	r.JSON(200, gafPage.JSON)
+	r.Header().Add("Content-Type", "application/json")
+	r.Text(200, gafPage.JSON)
 }
 
 func getAIRMET(r render.Render) {
