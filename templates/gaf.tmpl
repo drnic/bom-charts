@@ -24,17 +24,13 @@
       {{range $index, $wxCond := .WxCond}}
       <tr>
         {{if $index}}
+        <td>{{$wxCond.SurfaceVisWx.Text}}</td>
         <td>
-            {{range $wxCond.SurfaceVisWx}}{{.Text}}<br/>{{end}}
-          </td>
-          <td>
-            {{range $wxCond.CloudIceTurbulence}}{{.Text}}<br/>{{end}}
-          </td>
-          {{else}}
-        <td rowspan={{$wxConds}}>{{$areaID}}</td>
-        <td>
-          {{range $wxCond.SurfaceVisWx}}{{.Text}}<br/>{{end}}
+          {{range $wxCond.CloudIceTurbulence}}{{.Text}}<br/>{{end}}
         </td>
+        {{else}}
+        <td rowspan={{$wxConds}}>{{$areaID}}</td>
+        <td>{{$wxCond.SurfaceVisWx.Text}}</td>
         <td>
           {{range $wxCond.CloudIceTurbulence}}{{.Text}}<br/>{{end}}
         </td>

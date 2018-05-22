@@ -6,6 +6,11 @@ import (
 	"html"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"regexp"
+	"sort"
+	"strconv"
+	"strings"
 )
 
 // AreaForecast describes a request/current Graphical Area Forecast (GAF)
@@ -25,13 +30,13 @@ type GAFArea struct {
 }
 
 type GAFWxCond struct {
-	SurfaceVisWx       []*GAFSurfaceVisWx       `json:"surface-vis-wx"`
+	SurfaceVisWx       GAFSurfaceVisWx          `json:"surface-vis-wx"`
 	CloudIceTurbulence []*GAFCloudIceTurbulence `json:"cloud-ice-turb"`
 }
 
 type GAFSurfaceVisWx struct {
 	Text              string `json:"text"`
-	SurfaceVisibility int    `json:"surface-vis"`
+	SurfaceVisibility int64  `json:"surface-vis"`
 }
 
 type GAFCloudIceTurbulence struct {
@@ -85,12 +90,9 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *RawGAFAreaForecast) {
 			wxCond := &GAFWxCond{}
 			area.WxCond[j] = wxCond
 
-			wxCond.SurfaceVisWx = make([]*GAFSurfaceVisWx, len(rawWxCond.SurfaceVisWx))
-			for k, rawSurface := range rawWxCond.SurfaceVisWx {
-				surfaceVisWx := &GAFSurfaceVisWx{
-					Text: html.UnescapeString(rawSurface),
-				}
-				wxCond.SurfaceVisWx[k] = surfaceVisWx
+			if len(rawWxCond.SurfaceVisWx) > 0 {
+				wxCond.SurfaceVisWx.Text = html.UnescapeString(rawWxCond.SurfaceVisWx[0])
+				wxCond.SurfaceVisWx.Decode()
 			}
 
 			wxCond.CloudIceTurbulence = make([]*GAFCloudIceTurbulence, len(rawWxCond.CloudIceTurbulence))
@@ -98,8 +100,35 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *RawGAFAreaForecast) {
 				cloud := &GAFCloudIceTurbulence{
 					Text: html.UnescapeString(rawCloud),
 				}
+				cloud.Decode()
 				wxCond.CloudIceTurbulence[k] = cloud
 			}
 		}
+
+		sort.Slice(area.WxCond, func(i, j int) bool {
+			return area.WxCond[i].SurfaceVisWx.SurfaceVisibility > area.WxCond[j].SurfaceVisWx.SurfaceVisibility
+		})
 	}
+}
+
+// Decode extracts metadata from surface-visibility-wx raw text
+func (surface *GAFSurfaceVisWx) Decode() {
+	if strings.Contains(surface.Text, "10KM") {
+		surface.SurfaceVisibility = 10000
+	} else {
+		r, _ := regexp.Compile("([0-9]+)M")
+		matches := r.FindStringSubmatch(surface.Text)
+		if len(matches) == 2 {
+			i, err := strconv.ParseInt(matches[1], 10, 64)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Could not find surface visibility from %s. Error: %s", surface.Text, err)
+			} else {
+				surface.SurfaceVisibility = i
+			}
+		}
+	}
+}
+
+// Decode extracts metadata from cloud-ice-turbulence raw text
+func (cloud *GAFCloudIceTurbulence) Decode() {
 }
