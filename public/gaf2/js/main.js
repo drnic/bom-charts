@@ -77,6 +77,27 @@ $(function () {
       }
     });
 
+    areaCenter = turf.center(areaGeoJSON, 1);
+    areaCenter.properties = {
+      "title": id
+    }
+    map.addLayer({
+      "id": "label-" + id,
+      "type": "symbol",
+      "source": {
+          "type": "geojson",
+          "data": areaCenter
+      },
+      "layout": {
+          "icon-image": "{icon}-15",
+          "text-field": "{title}",
+          "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+          "text-offset": [0, 0.6],
+          "text-anchor": "top"
+      }
+    });
+
+
     var gafPageCode = document.gafPageCode
     var areaID = area["area-id"];
     var subAreaID = area["sub-area-id"]; // only if this is a sub-area zone
@@ -95,8 +116,8 @@ $(function () {
       if (subAreaID) {
         table.find('.sub-area-mentioned-' + subAreaID).removeClass("sub-area-selected");
       }
-  });
-}
+    });
+  }
 
   map.on('load', function () {
     map.addSource('dem', {
@@ -124,5 +145,4 @@ $(function () {
       });
     }
   });
-
 });
