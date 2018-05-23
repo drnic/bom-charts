@@ -71,7 +71,6 @@ $(function () {
       "id": layerID,
       "type": "fill",
       "source": {"type": "geojson", "data": areaGeoJSON},
-      "layout": {},
       "paint": {
         "fill-color": fillColor,
         "fill-opacity": 0.5
@@ -82,7 +81,7 @@ $(function () {
     var areaID = area["area-id"];
 
     map.on("mousemove", layerID, function(e) {
-      $('.area-' + gafPageCode + '-' + areaID).css("background-color", "#224572");
+      $('.area-' + gafPageCode + '-' + areaID).css("background-color", "#7588A1");
     });
 
     map.on("mouseleave", layerID, function() {

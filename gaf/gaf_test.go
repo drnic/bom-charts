@@ -55,6 +55,18 @@ var _ = Describe("Page", func() {
 		Expect(int(aRegion.WxCond[1].SurfaceVisWx.SurfaceVisibility)).To(Equal(4000))
 		Expect(int(aRegion.WxCond[2].SurfaceVisWx.SurfaceVisibility)).To(Equal(200))
 		Expect(int(aRegion.WxCond[3].SurfaceVisWx.SurfaceVisibility)).To(Equal(0))
+		Expect(aRegion.WxCond[0].SurfaceVisWx.SubAreasMentioned).To(BeNil())
+		Expect(aRegion.WxCond[1].SurfaceVisWx.SubAreasMentioned).To(Equal([]string{"A1", "A2"}))
+		Expect(aRegion.WxCond[2].SurfaceVisWx.SubAreasMentioned).To(Equal([]string{"A1"}))
+		Expect(aRegion.WxCond[3].SurfaceVisWx.SubAreasMentioned).To(BeNil())
+
+		Expect(aRegion.WxCond[0].CloudIceTurbulence[0].SubAreasMentioned).To(Equal([]string{"A1"}))
+		Expect(aRegion.WxCond[0].CloudIceTurbulence[1].SubAreasMentioned).To(BeNil())
+		Expect(aRegion.WxCond[1].CloudIceTurbulence[0].SubAreasMentioned).To(BeNil())
+		Expect(aRegion.WxCond[1].CloudIceTurbulence[1].SubAreasMentioned).To(BeNil())
+		Expect(aRegion.WxCond[2].CloudIceTurbulence[0].SubAreasMentioned).To(BeNil())
+		Expect(aRegion.WxCond[3].CloudIceTurbulence[0].SubAreasMentioned).To(BeNil())
+
 		Expect(aRegion.Boundary.Points[0]).To(Equal([]float64{152.67, -34.33}))
 		Expect(len(aRegion.SubAreas)).To(Equal(2))
 		Expect(aRegion.SubAreas[0].AreaID).To(Equal("A"))

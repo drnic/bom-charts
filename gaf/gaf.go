@@ -45,12 +45,14 @@ type GAFWxCond struct {
 }
 
 type GAFSurfaceVisWx struct {
-	Text              string `json:"text"`
-	SurfaceVisibility int64  `json:"surface-vis"`
+	Text              string   `json:"text"`
+	SurfaceVisibility int64    `json:"surface-vis"`
+	SubAreasMentioned []string `json:"sub-areas-mentioned,omitempty"`
 }
 
 type GAFCloudIceTurbulence struct {
-	Text string `json:"text"`
+	Text              string   `json:"text"`
+	SubAreasMentioned []string `json:"sub-areas-mentioned,omitempty"`
 }
 
 type GAFBoundary struct {
@@ -121,7 +123,7 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *rawGAFAreaForecast) {
 
 			if len(rawWxCond.SurfaceVisWx) > 0 {
 				wxCond.SurfaceVisWx.Text = html.UnescapeString(rawWxCond.SurfaceVisWx[0])
-				wxCond.SurfaceVisWx.Decode()
+				wxCond.SurfaceVisWx.Decode(area)
 			}
 
 			wxCond.CloudIceTurbulence = make([]*GAFCloudIceTurbulence, len(rawWxCond.CloudIceTurbulence))
@@ -129,7 +131,7 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *rawGAFAreaForecast) {
 				cloud := &GAFCloudIceTurbulence{
 					Text: html.UnescapeString(rawCloud),
 				}
-				cloud.Decode()
+				cloud.Decode(area)
 				wxCond.CloudIceTurbulence[k] = cloud
 			}
 		}
@@ -152,11 +154,11 @@ func (Boundary *GAFBoundary) copyFromRawForecast(raw rawGAFBoundary) {
 }
 
 // Decode extracts metadata from surface-visibility-wx raw text
-func (surface *GAFSurfaceVisWx) Decode() {
+func (surface *GAFSurfaceVisWx) Decode(area *GAFArea) {
 	if strings.Contains(surface.Text, "10KM") {
 		surface.SurfaceVisibility = 10000
 	} else {
-		r, _ := regexp.Compile("([0-9]+)M")
+		r := regexp.MustCompile("([0-9]+)M")
 		matches := r.FindStringSubmatch(surface.Text)
 		if len(matches) == 2 {
 			i, err := strconv.ParseInt(matches[1], 10, 64)
@@ -167,8 +169,13 @@ func (surface *GAFSurfaceVisWx) Decode() {
 			}
 		}
 	}
+
+	r := regexp.MustCompile(fmt.Sprintf("%s([0-9])", area.AreaID))
+	surface.SubAreasMentioned = r.FindAllString(surface.Text, -1)
 }
 
 // Decode extracts metadata from cloud-ice-turbulence raw text
-func (cloud *GAFCloudIceTurbulence) Decode() {
+func (cloud *GAFCloudIceTurbulence) Decode(area *GAFArea) {
+	r := regexp.MustCompile(fmt.Sprintf("%s([0-9])", area.AreaID))
+	cloud.SubAreasMentioned = r.FindAllString(cloud.Text, -1)
 }
