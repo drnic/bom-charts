@@ -94,6 +94,10 @@ $(function () {
         setupGAFBoundary(map, data);
         data["areas"].forEach(area => {
           setupAreaBoundary(map, area);
+
+          area["sub-areas"].forEach(subArea => {
+            setupAreaBoundary(map, subArea);
+          });
         });
       });
     }

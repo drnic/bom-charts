@@ -26,10 +26,16 @@ type AreaForecast struct {
 }
 
 type GAFArea struct {
-	ID            string       `json:"id"`
-	WxCond        []*GAFWxCond `json:"wx-cond"`
-	FreezingLevel string       `json:"freezing-level"`
-	Boundary      *GAFBoundary `json:"boundary"`
+	ID            string        `json:"id"`
+	WxCond        []*GAFWxCond  `json:"wx-cond"`
+	FreezingLevel string        `json:"freezing-level"`
+	Boundary      *GAFBoundary  `json:"boundary"`
+	SubAreas      []*GAFSubArea `json:"sub-areas"`
+}
+
+type GAFSubArea struct {
+	ID       string       `json:"id"`
+	Boundary *GAFBoundary `json:"boundary"`
 }
 
 type GAFWxCond struct {
@@ -65,7 +71,7 @@ func NewAreaForecast(pagecode string) (forecast *AreaForecast, err error) {
 		return nil, err
 	}
 
-	rawForecast := &RawGAFAreaForecast{}
+	rawForecast := &rawGAFAreaForecast{}
 	if err = xml.Unmarshal(rawXML, rawForecast); err != nil {
 		return forecast, err
 	}
@@ -76,7 +82,7 @@ func NewAreaForecast(pagecode string) (forecast *AreaForecast, err error) {
 	return forecast, nil
 }
 
-func (forecast *AreaForecast) copyFromRawForecast(raw *RawGAFAreaForecast) {
+func (forecast *AreaForecast) copyFromRawForecast(raw *rawGAFAreaForecast) {
 	forecast.AreaID = raw.AreaID
 	forecast.From = raw.From
 	forecast.IssuedAt = raw.IssuedAt
@@ -95,6 +101,13 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *RawGAFAreaForecast) {
 
 		area.Boundary = &GAFBoundary{}
 		area.Boundary.copyFromRawForecast(rawArea.Boundary)
+
+		area.SubAreas = make([]*GAFSubArea, len(rawArea.SubAreas))
+		for j, rawSubArea := range rawArea.SubAreas {
+			area.SubAreas[j] = &GAFSubArea{ID: rawSubArea.ID}
+			area.SubAreas[j].Boundary = &GAFBoundary{}
+			area.SubAreas[j].Boundary.copyFromRawForecast(rawSubArea.Boundary)
+		}
 
 		forecast.Areas[i] = area
 		area.WxCond = make([]*GAFWxCond, len(rawArea.WxCond))
@@ -125,7 +138,7 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *RawGAFAreaForecast) {
 
 }
 
-func (Boundary *GAFBoundary) copyFromRawForecast(raw RawGAFBoundary) {
+func (Boundary *GAFBoundary) copyFromRawForecast(raw rawGAFBoundary) {
 	Boundary.Points = make([][]float64, len(raw.Points))
 	for i, rawPoint := range raw.Points {
 		Boundary.Points[i] = []float64{0, 0}
