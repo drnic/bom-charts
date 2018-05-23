@@ -13,16 +13,28 @@
     {{$freezingLevel := .FreezingLevel -}}
     {{range $index, $wxCond := .WxCond -}}
     <tr class="area-{{$pageCode}}-{{$areaID}}">
-      {{- if $index -}}
-        <td>{{$wxCond.SurfaceVisWx.Text}}</td>
+      {{- if $index}}
+        <td class="{{range $wxCond.SurfaceVisWx.SubAreasMentioned -}}sub-area-mentioned-{{.}} {{end}}">
+          {{$wxCond.SurfaceVisWx.Text}}
+        </td>
         <td>
-          {{range $wxCond.CloudIceTurbulence}}{{.Text}}<br/>{{end}}
+          {{range $wxCond.CloudIceTurbulence -}}
+          <div class="{{range .SubAreasMentioned -}}sub-area-mentioned-{{.}} {{end}}">
+          {{.Text}}
+          </div>
+          {{end -}}
         </td>
       {{else -}}
         <td rowspan={{$wxConds}}>{{$areaID}}</td>
-        <td>{{$wxCond.SurfaceVisWx.Text}}</td>
+        <td class="{{range $wxCond.SurfaceVisWx.SubAreasMentioned -}}sub-area-mentioned-{{.}} {{end}}">
+          {{$wxCond.SurfaceVisWx.Text}}
+        </td>
         <td>
-          {{range $wxCond.CloudIceTurbulence}}{{.Text}}<br/>{{end}}
+          {{range $wxCond.CloudIceTurbulence -}}
+          <div class="{{range .SubAreasMentioned -}}sub-area-mentioned-{{.}} {{end}}">
+          {{.Text}}
+          </div>
+          {{end -}}
         </td>
         <td rowspan={{$wxConds}}>{{$freezingLevel}}</td>
       {{end -}}

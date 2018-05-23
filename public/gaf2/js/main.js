@@ -79,13 +79,22 @@ $(function () {
 
     var gafPageCode = document.gafPageCode
     var areaID = area["area-id"];
+    var subAreaID = area["sub-area-id"]; // only if this is a sub-area zone
 
     map.on("mousemove", layerID, function(e) {
-      $('.area-' + gafPageCode + '-' + areaID).css("background-color", "#7588A1");
+      table = $('#gaf-' + gafPageCode);
+      table.find('.area-' + gafPageCode + '-' + areaID).css("background-color", "#7588A1");
+      if (subAreaID) {
+        table.find('.sub-area-mentioned-' + subAreaID).addClass("sub-area-selected");
+      }
     });
 
     map.on("mouseleave", layerID, function() {
-      $('.area-' + gafPageCode + '-' + areaID).css("background-color", "#fff");
+      table = $('#gaf-' + gafPageCode);
+      table.find('.area-' + gafPageCode + '-' + areaID).css("background-color", "#fff");
+      if (subAreaID) {
+        table.find('.sub-area-mentioned-' + subAreaID).removeClass("sub-area-selected");
+      }
   });
 }
 
