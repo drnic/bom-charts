@@ -45,7 +45,7 @@ var _ = Describe("Page", func() {
 		Expect(forecast.From).To(Equal("2018-05-22T05:00:00Z"))
 		Expect(forecast.Till).To(Equal("2018-05-22T11:00:00Z"))
 		Expect(len(forecast.Boundary.Points)).To(Equal(7))
-		Expect(forecast.Boundary.Points[0]).To(Equal([]float64{-34.33, 152.67}))
+		Expect(forecast.Boundary.Points[0]).To(Equal([]float64{152.67, -34.33}))
 
 		aRegion := forecast.Areas[0]
 		Expect(aRegion.ID).To(Equal("A"))

@@ -15,6 +15,7 @@ import (
 
 // AreaForecast describes a request/current Graphical Area Forecast (GAF)
 type AreaForecast struct {
+	PageCode          string       `json:"page-code"`
 	AreaID            string       `json:"area-id"`
 	From              string       `json:"from"`
 	IssuedAt          string       `json:"issued-at"`
@@ -68,7 +69,7 @@ func NewAreaForecast(pagecode string) (forecast *AreaForecast, err error) {
 		return forecast, err
 	}
 
-	forecast = &AreaForecast{}
+	forecast = &AreaForecast{PageCode: pagecode}
 	forecast.copyFromRawForecast(rawForecast)
 
 	return forecast, nil
@@ -123,8 +124,8 @@ func (Boundary *GAFBoundary) copyFromRawForecast(raw RawGAFBoundary) {
 	Boundary.Points = make([][]float64, len(raw.Points))
 	for i, rawPoint := range raw.Points {
 		Boundary.Points[i] = []float64{0, 0}
-		Boundary.Points[i][0], _ = strconv.ParseFloat(rawPoint.Latitude, 64)
-		Boundary.Points[i][1], _ = strconv.ParseFloat(rawPoint.Longitude, 64)
+		Boundary.Points[i][0], _ = strconv.ParseFloat(rawPoint.Longitude, 64)
+		Boundary.Points[i][1], _ = strconv.ParseFloat(rawPoint.Latitude, 64)
 	}
 }
 

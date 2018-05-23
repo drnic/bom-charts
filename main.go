@@ -69,7 +69,7 @@ func main() {
 		IndentJSON: true, // Output human readable JSON
 	}))
 
-	m.Get("/gaf/:area", getGAFHTML)
+	m.Get("/gaf2/:area", getGAFHTML)
 	m.Group("/api", func(api martini.Router) {
 		api.Group("/gaf", func(r martini.Router) {
 			r.Get("/:pagecode.json", getGAFImages)
