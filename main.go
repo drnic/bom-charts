@@ -32,9 +32,12 @@ func getGAFImages(params martini.Params, r render.Render) {
 
 func getGAFHTML(params martini.Params, r render.Render) {
 	gafs := struct {
+		Areas   []string
 		Current *gaf.AreaForecast
 		Next    *gaf.AreaForecast
-	}{}
+	}{
+		Areas: gaf.Areas,
+	}
 	area, err := gaf.NewArea(params["area"])
 	if err != nil {
 		r.JSON(500, errorResponse(err))

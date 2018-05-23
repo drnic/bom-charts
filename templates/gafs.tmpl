@@ -12,6 +12,11 @@
   <link href='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css' rel='stylesheet' />
 </head>
 <body>
+  <p>|
+    {{range .Areas}}
+    <a href="/gaf2/{{.}}">{{.}}</a> |
+    {{end}}
+  </p>
   <div id='map' style='width: 600px; height: 400px;'></div>
   <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiZHJuaWMiLCJhIjoiY2poaWRidWpyMG02dzM3bXBtMmtiMWdjaiJ9.MowHdxFXszibdQ48A255-Q';
