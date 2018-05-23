@@ -45,12 +45,7 @@ type GAFCloudIceTurbulence struct {
 }
 
 type GAFBoundary struct {
-	Points []*GAFPoint `json:"points"`
-}
-
-type GAFPoint struct {
-	Latitude  string `json:"latitude"`
-	Longitude string `json:"longitude"`
+	Points [][]float64 `json:"points"`
 }
 
 // NewAreaForecast is the constructor for a AreaForecast
@@ -125,12 +120,11 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *RawGAFAreaForecast) {
 }
 
 func (Boundary *GAFBoundary) copyFromRawForecast(raw RawGAFBoundary) {
-	Boundary.Points = make([]*GAFPoint, len(raw.Points))
+	Boundary.Points = make([][]float64, len(raw.Points))
 	for i, rawPoint := range raw.Points {
-		Boundary.Points[i] = &GAFPoint{
-			Latitude:  rawPoint.Latitude,
-			Longitude: rawPoint.Longitude,
-		}
+		Boundary.Points[i] = []float64{0, 0}
+		Boundary.Points[i][0], _ = strconv.ParseFloat(rawPoint.Latitude, 64)
+		Boundary.Points[i][1], _ = strconv.ParseFloat(rawPoint.Longitude, 64)
 	}
 }
 
