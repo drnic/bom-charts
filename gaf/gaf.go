@@ -15,12 +15,13 @@ import (
 
 // AreaForecast describes a request/current Graphical Area Forecast (GAF)
 type AreaForecast struct {
-	AreaID            string     `json:"area-id"`
-	From              string     `json:"from"`
-	IssuedAt          string     `json:"issued-at"`
-	StandardInclusion string     `json:"standard-inclusion"`
-	Till              string     `json:"till"`
-	Areas             []*GAFArea `json:"areas"`
+	AreaID            string       `json:"area-id"`
+	From              string       `json:"from"`
+	IssuedAt          string       `json:"issued-at"`
+	StandardInclusion string       `json:"standard-inclusion"`
+	Till              string       `json:"till"`
+	Areas             []*GAFArea   `json:"areas"`
+	Boundary          *GAFBoundary `json:"boundary"`
 }
 
 type GAFArea struct {
@@ -41,6 +42,15 @@ type GAFSurfaceVisWx struct {
 
 type GAFCloudIceTurbulence struct {
 	Text string `json:"text"`
+}
+
+type GAFBoundary struct {
+	Points []*GAFPoint `json:"points"`
+}
+
+type GAFPoint struct {
+	Latitude  string `json:"latitude"`
+	Longitude string `json:"longitude"`
 }
 
 // NewAreaForecast is the constructor for a AreaForecast
@@ -66,8 +76,6 @@ func NewAreaForecast(pagecode string) (forecast *AreaForecast, err error) {
 	forecast = &AreaForecast{}
 	forecast.copyFromRawForecast(rawForecast)
 
-	// TODO - sort WxCond by visibility (>10KM, 8000M, 2000M, "")
-	// TODO - convert HTML to ASCII (&gt;)
 	return forecast, nil
 }
 
@@ -77,6 +85,9 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *RawGAFAreaForecast) {
 	forecast.IssuedAt = raw.IssuedAt
 	forecast.StandardInclusion = raw.StandardInclusion
 	forecast.Till = raw.Till
+
+	forecast.Boundary = &GAFBoundary{}
+	forecast.Boundary.copyFromRawForecast(raw.Boundary)
 
 	forecast.Areas = make([]*GAFArea, len(raw.Areas))
 	for i, rawArea := range raw.Areas {
@@ -108,6 +119,18 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *RawGAFAreaForecast) {
 		sort.Slice(area.WxCond, func(i, j int) bool {
 			return area.WxCond[i].SurfaceVisWx.SurfaceVisibility > area.WxCond[j].SurfaceVisWx.SurfaceVisibility
 		})
+
+	}
+
+}
+
+func (Boundary *GAFBoundary) copyFromRawForecast(raw RawGAFBoundary) {
+	Boundary.Points = make([]*GAFPoint, len(raw.Points))
+	for i, rawPoint := range raw.Points {
+		Boundary.Points[i] = &GAFPoint{
+			Latitude:  rawPoint.Latitude,
+			Longitude: rawPoint.Longitude,
+		}
 	}
 }
 
