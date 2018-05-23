@@ -43,10 +43,10 @@ $(function() {
     }
   }
 
-  function addStatusBar() {
+  function addStatusBar(area) {
     var statusBar = $("<p/>");
     statusBar.addClass("status-bar");
-    statusBar.html('Forecast valid for <span id="forecast-valid" /> | UTC <span id="utc-now" /></p>');
+    statusBar.html('Forecast valid for <span id="forecast-valid" /> | UTC <span id="utc-now" /> | <a href="/gaf2/' + area + '">Interactive</a></p>');
     statusBar.appendTo($("#contents"));
 
     var now = new Date();
@@ -138,7 +138,7 @@ $(function() {
     $("html,body").css("height", "100%");
 
     addHTMLMetadata(gafArea);
-    addStatusBar();
+    addStatusBar(gafArea);
     startAutoRefresh();
     fetchAIRMET(gafArea);
     insertGAFImages(gafImageCodes);
