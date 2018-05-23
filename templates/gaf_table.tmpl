@@ -1,5 +1,5 @@
 <p>From {{.From}} to {{.Till}}:</p>
-{{$pageCode := .PageCode}}
+{{$pageCode := .PageCode -}}
 <table border=1 id="gaf-{{$pageCode}}">
   <tr>
     <th>Area</th>
@@ -7,26 +7,26 @@
     <th>Cloud, Icing, & Turbulance</th>
     <th rows=2>Freezing level</th>
   </tr>
-  {{range .Areas}}
-    {{$areaID := .AreaID}}
-    {{$wxConds := .WxCond | len}}
-    {{$freezingLevel := .FreezingLevel}}
-    {{range $index, $wxCond := .WxCond}}
+  {{range .Areas -}}
+    {{$areaID := .AreaID -}}
+    {{$wxConds := .WxCond | len -}}
+    {{$freezingLevel := .FreezingLevel -}}
+    {{range $index, $wxCond := .WxCond -}}
     <tr class="area-{{$pageCode}}-{{$areaID}}">
-      {{if $index}}
+      {{- if $index -}}
         <td>{{$wxCond.SurfaceVisWx.Text}}</td>
         <td>
           {{range $wxCond.CloudIceTurbulence}}{{.Text}}<br/>{{end}}
         </td>
-      {{else}}
+      {{else -}}
         <td rowspan={{$wxConds}}>{{$areaID}}</td>
         <td>{{$wxCond.SurfaceVisWx.Text}}</td>
         <td>
           {{range $wxCond.CloudIceTurbulence}}{{.Text}}<br/>{{end}}
         </td>
         <td rowspan={{$wxConds}}>{{$freezingLevel}}</td>
-      {{end}}
+      {{end -}}
     </tr>
-    {{end}}
-  {{end}}
+    {{end -}}
+  {{end -}}
 </table>
