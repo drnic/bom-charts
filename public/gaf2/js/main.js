@@ -83,7 +83,7 @@ $(function () {
 
     map.on("mousemove", layerID, function(e) {
       table = $('#gaf-' + gafPageCode);
-      table.find('.area-' + gafPageCode + '-' + areaID).css("background-color", "#7588A1");
+      table.find('.area-' + gafPageCode + '-' + areaID).addClass("area-selected");
       if (subAreaID) {
         table.find('.sub-area-mentioned-' + subAreaID).addClass("sub-area-selected");
       }
@@ -91,7 +91,7 @@ $(function () {
 
     map.on("mouseleave", layerID, function() {
       table = $('#gaf-' + gafPageCode);
-      table.find('.area-' + gafPageCode + '-' + areaID).css("background-color", "#fff");
+      table.find('.area-' + gafPageCode + '-' + areaID).removeClass("area-selected");
       if (subAreaID) {
         table.find('.sub-area-mentioned-' + subAreaID).removeClass("sub-area-selected");
       }
