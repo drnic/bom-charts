@@ -10,21 +10,22 @@ type RawGAFAreaForecast struct {
 	Boundary          RawGAFBoundary `xml:"boundary"`
 }
 
+type RawGAFArea struct {
+	ID            string         `xml:"id,attr"`
+	WxCond        []RawGAFWxCond `xml:"wx-cond"`
+	FreezingLevel string         `xml:"fz-lvl"`
+	Boundary      RawGAFBoundary `xml:"boundary"`
+}
+
+type RawGAFWxCond struct {
+	SurfaceVisWx       []string `xml:"scf-vis-wx"`
+	CloudIceTurbulence []string `xml:"cld-ice-turb"`
+}
+
 type RawGAFBoundary struct {
 	Points []RawGAFPoint `xml:"point"`
 }
 type RawGAFPoint struct {
 	Latitude  string `xml:"latitude,attr"`
 	Longitude string `xml:"longitude,attr"`
-}
-
-type RawGAFArea struct {
-	ID            string         `xml:"id,attr"`
-	WxCond        []RawGAFWxCond `xml:"wx-cond"`
-	FreezingLevel string         `xml:"fz-lvl"`
-}
-
-type RawGAFWxCond struct {
-	SurfaceVisWx       []string `xml:"scf-vis-wx"`
-	CloudIceTurbulence []string `xml:"cld-ice-turb"`
 }

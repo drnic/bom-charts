@@ -29,6 +29,7 @@ type GAFArea struct {
 	ID            string       `json:"id"`
 	WxCond        []*GAFWxCond `json:"wx-cond"`
 	FreezingLevel string       `json:"freezing-level"`
+	Boundary      *GAFBoundary `json:"boundary"`
 }
 
 type GAFWxCond struct {
@@ -91,6 +92,10 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *RawGAFAreaForecast) {
 			ID:            rawArea.ID,
 			FreezingLevel: html.UnescapeString(rawArea.FreezingLevel),
 		}
+
+		area.Boundary = &GAFBoundary{}
+		area.Boundary.copyFromRawForecast(rawArea.Boundary)
+
 		forecast.Areas[i] = area
 		area.WxCond = make([]*GAFWxCond, len(rawArea.WxCond))
 		for j, rawWxCond := range rawArea.WxCond {
