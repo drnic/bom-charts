@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/drnic/bom-charts/airmet"
 
 	"github.com/drnic/bom-charts/gaf"
@@ -33,18 +31,21 @@ func getGAFImages(params martini.Params, r render.Render) {
 }
 
 func getGAFHTML(params martini.Params, r render.Render) {
+	gafs := struct {
+		Current *gaf.AreaForecast
+		Next    *gaf.AreaForecast
+	}{}
 	area, err := gaf.NewArea(params["area"])
 	if err != nil {
 		r.JSON(500, errorResponse(err))
 		return
 	}
-	areaForecast, err := gaf.NewAreaForecast(area.CurrentGAFCode)
+	gafs.Current, err = gaf.NewAreaForecast(area.CurrentGAFCode)
 	if err != nil {
 		r.JSON(500, errorResponse(err))
 		return
 	}
-	fmt.Printf("%#v\n", areaForecast)
-	r.HTML(200, "gaf", areaForecast)
+	r.HTML(200, "gafs", gafs)
 }
 
 func getAIRMET(r render.Render) {
