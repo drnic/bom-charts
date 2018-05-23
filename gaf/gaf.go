@@ -16,7 +16,7 @@ import (
 // AreaForecast describes a request/current Graphical Area Forecast (GAF)
 type AreaForecast struct {
 	PageCode          string       `json:"page-code"`
-	AreaID            string       `json:"area-id"`
+	GAFAreaID         string       `json:"gaf-area-id"`
 	From              string       `json:"from"`
 	IssuedAt          string       `json:"issued-at"`
 	StandardInclusion string       `json:"standard-inclusion"`
@@ -26,7 +26,7 @@ type AreaForecast struct {
 }
 
 type GAFArea struct {
-	ID            string        `json:"id"`
+	AreaID        string        `json:"area-id"`
 	WxCond        []*GAFWxCond  `json:"wx-cond"`
 	FreezingLevel string        `json:"freezing-level"`
 	Boundary      *GAFBoundary  `json:"boundary"`
@@ -34,8 +34,9 @@ type GAFArea struct {
 }
 
 type GAFSubArea struct {
-	ID       string       `json:"id"`
-	Boundary *GAFBoundary `json:"boundary"`
+	AreaID    string       `json:"area-id"`
+	SubAreaID string       `json:"sub-area-id"`
+	Boundary  *GAFBoundary `json:"boundary"`
 }
 
 type GAFWxCond struct {
@@ -83,7 +84,7 @@ func NewAreaForecast(pagecode string) (forecast *AreaForecast, err error) {
 }
 
 func (forecast *AreaForecast) copyFromRawForecast(raw *rawGAFAreaForecast) {
-	forecast.AreaID = raw.AreaID
+	forecast.GAFAreaID = raw.AreaID
 	forecast.From = raw.From
 	forecast.IssuedAt = raw.IssuedAt
 	forecast.StandardInclusion = raw.StandardInclusion
@@ -95,7 +96,7 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *rawGAFAreaForecast) {
 	forecast.Areas = make([]*GAFArea, len(raw.Areas))
 	for i, rawArea := range raw.Areas {
 		area := &GAFArea{
-			ID:            rawArea.ID,
+			AreaID:        rawArea.ID,
 			FreezingLevel: html.UnescapeString(rawArea.FreezingLevel),
 		}
 
@@ -104,7 +105,10 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *rawGAFAreaForecast) {
 
 		area.SubAreas = make([]*GAFSubArea, len(rawArea.SubAreas))
 		for j, rawSubArea := range rawArea.SubAreas {
-			area.SubAreas[j] = &GAFSubArea{ID: rawSubArea.ID}
+			area.SubAreas[j] = &GAFSubArea{
+				AreaID:    area.AreaID,
+				SubAreaID: rawSubArea.ID,
+			}
 			area.SubAreas[j].Boundary = &GAFBoundary{}
 			area.SubAreas[j].Boundary.copyFromRawForecast(rawSubArea.Boundary)
 		}

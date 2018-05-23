@@ -18,7 +18,9 @@
     {{end}}
   </p>
 
-  <img src="http://www.bom.gov.au/fwo/aviation/{{.Current.PageCode}}.png" style="width: 800px; float: right;" />
+  <!--
+    <img src="http://www.bom.gov.au/fwo/aviation/{{.Current.PageCode}}.png" style="width: 800px; float: right;" />
+  -->
   <div id='map' style='width: 400px; height: 400px;'></div>
   <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiZHJuaWMiLCJhIjoiY2poaWRidWpyMG02dzM3bXBtMmtiMWdjaiJ9.MowHdxFXszibdQ48A255-Q';
@@ -30,7 +32,7 @@
     });
   </script>
   <script>
-  document.gafAreaCode = "{{.Current.AreaID}}";
+  document.gafAreaCode = "{{.Current.GAFAreaID}}";
   document.gafPageCode = "{{.Current.PageCode}}";
   </script>
 

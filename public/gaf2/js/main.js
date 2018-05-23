@@ -53,11 +53,14 @@ $(function () {
       "C":  "#93B3DC",
       "C1": "#1D7AF4"
     };
-    var fillColor = fillColor || colours[area.id] || "#627BC1";
+
+    var id = area["sub-area-id"] || area["area-id"];
+    var layerID = "area-fills-" + id;
+    var fillColor = fillColor || colours[id] || "#627BC1";
 
     var areaGeoJSON = {
       "type": "Feature",
-      "properties": {},
+      "properties": area,
       "geometry": {
         "type": "Polygon",
         "coordinates": [gafBoundary]
@@ -65,7 +68,7 @@ $(function () {
     }
 
     map.addLayer({
-      "id": "area-fills-" + area["id"],
+      "id": layerID,
       "type": "fill",
       "source": {"type": "geojson", "data": areaGeoJSON},
       "layout": {},
@@ -74,7 +77,18 @@ $(function () {
         "fill-opacity": 0.5
       }
     });
-  }
+
+    var gafPageCode = document.gafPageCode
+    var areaID = area["area-id"];
+
+    map.on("mousemove", layerID, function(e) {
+      $('.area-' + gafPageCode + '-' + areaID).css("background-color", "#224572");
+    });
+
+    map.on("mouseleave", layerID, function() {
+      $('.area-' + gafPageCode + '-' + areaID).css("background-color", "#fff");
+  });
+}
 
   map.on('load', function () {
     map.addSource('dem', {
