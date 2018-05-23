@@ -40,8 +40,20 @@ $(function () {
     });
   }
 
-  function setupAreaBoundary(map, area) {
+  function setupAreaBoundary(map, area, fillColor) {
     var gafBoundary = area["boundary"]["points"];
+
+    var colours = {
+      "A":  "#22569A",
+      "A1": "#4974AC",
+      "A2": "#224572",
+      "B":  "#7588A1",
+      "B1": "#0C4289",
+      "B2": "#689FE8",
+      "C":  "#93B3DC",
+      "C1": "#1D7AF4"
+    };
+    var fillColor = fillColor || colours[area.id] || "#627BC1";
 
     var areaGeoJSON = {
       "type": "Feature",
@@ -58,20 +70,8 @@ $(function () {
       "source": {"type": "geojson", "data": areaGeoJSON},
       "layout": {},
       "paint": {
-          "fill-color": "#627BC1",
-          "fill-opacity": 0.5
-      }
-  });
-
-    map.addLayer({
-      "id": "area-" + area["id"],
-      "type": "line",
-      "source": {"type": "geojson", "data": areaGeoJSON},
-      "layout": {
-        "line-join": "round", "line-cap": "round"
-      },
-      "paint": {
-        "line-color": "#aaa", "line-width": 3
+        "fill-color": fillColor,
+        "fill-opacity": 0.5
       }
     });
   }
