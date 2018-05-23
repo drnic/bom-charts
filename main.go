@@ -45,6 +45,11 @@ func getGAFHTML(params martini.Params, r render.Render) {
 		r.JSON(500, errorResponse(err))
 		return
 	}
+	gafs.Next, err = gaf.NewAreaForecast(area.NextGAFCode)
+	if err != nil {
+		r.JSON(500, errorResponse(err))
+		return
+	}
 	r.HTML(200, "gafs", gafs)
 }
 
