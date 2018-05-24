@@ -9,14 +9,14 @@ import (
 
 // CloudIcingTurbParser contains Cloud/Icing/Turbulance data
 type CloudIcingTurbParser struct {
-	PrimaryLayer CloudLayer `json:"primary-layer"`
+	Cloud CloudLayer `json:"cloud"`
 }
 
 type CloudLayer struct {
-	CloudAmount string `json:"amount"`
-	CloudType   string `json:"type"`
-	CloudBase   uint64 `json:"base"`
-	CloudTop    uint64 `json:"top"`
+	Amount string `json:"amount"`
+	Type   string `json:"type"`
+	Base   uint64 `json:"base"`
+	Top    uint64 `json:"top"`
 }
 
 var simpleRE *regexp.Regexp
@@ -33,10 +33,10 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 	parser = &CloudIcingTurbParser{}
 
 	if matches := simpleRE.FindAllStringSubmatch(text, -1); matches != nil {
-		parser.PrimaryLayer.CloudAmount = matches[0][1]
-		parser.PrimaryLayer.CloudType = matches[0][2]
-		parser.PrimaryLayer.CloudBase, _ = strconv.ParseUint(matches[0][3], 10, 64)
-		parser.PrimaryLayer.CloudTop, _ = strconv.ParseUint(matches[0][4], 10, 64)
+		parser.Cloud.Amount = matches[0][1]
+		parser.Cloud.Type = matches[0][2]
+		parser.Cloud.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
+		parser.Cloud.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
 	}
 
 	return
