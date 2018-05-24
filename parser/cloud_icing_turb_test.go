@@ -15,10 +15,10 @@ var _ = Describe("CloudIcingTurbParser", func() {
 		Expect(*p.Cloud).To(Equal(CloudLayer{"BKN", "ST", 1000, 5000}))
 	})
 
-	It("Parses BKN ST 1000/5000FT LAND", func() {
-		text := "BKN ST 1000/5000FT LAND"
+	It("Parses BKN CU/SC 1000/5000FT LAND", func() {
+		text := "BKN CU/SC 1000/5000FT LAND"
 		p, _ := NewCloudIcingTurbParser(text)
-		Expect(*p.Cloud).To(Equal(CloudLayer{"BKN", "ST", 1000, 5000}))
+		Expect(*p.Cloud).To(Equal(CloudLayer{"BKN", "CU/SC", 1000, 5000}))
 	})
 
 	It("Parses SCT CU/SC 3000/ABV10000FT", func() {
@@ -41,6 +41,7 @@ var _ = Describe("CloudIcingTurbParser", func() {
 	// OCNL TCU 2500/ABV10000FT (WDSPR B1 FM 11Z, OCNL B1 FM 15Z)
 	// * look for "EMBD"
 
+	// BKN AC/AS ABV10000FT
 	// SCT CU/SC 5000/8000FT IN A1 ONLY
 	// SCT CU/SC 3000/8000FT (BKN IN A1)
 	// SCT ST 1500/2500FT LAND (BKN A2)
