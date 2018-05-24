@@ -9,7 +9,7 @@ import (
 
 // CloudIcingTurbParser contains Cloud/Icing/Turbulance data
 type CloudIcingTurbParser struct {
-	Cloud CloudLayer `json:"cloud"`
+	Cloud *CloudLayer `json:"cloud,omitempty"`
 }
 
 type CloudLayer struct {
@@ -33,6 +33,7 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 	parser = &CloudIcingTurbParser{}
 
 	if matches := simpleRE.FindAllStringSubmatch(text, -1); matches != nil {
+		parser.Cloud = &CloudLayer{}
 		parser.Cloud.Amount = matches[0][1]
 		parser.Cloud.Type = matches[0][2]
 		parser.Cloud.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
