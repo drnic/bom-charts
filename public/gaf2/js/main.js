@@ -1,6 +1,13 @@
 $(function () {
 
-  function setupGAFBoundary(map, data) {
+  function randomID() {
+    // Math.random should be unique because of its seeding algorithm.
+    // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+    // after the decimal.
+    return '_' + Math.random().toString(36).substr(2, 9);
+  };
+  
+  function setupGAFBoundary(map, areaCode, data) {
     var gafBoundary = data["boundary"]["points"];
 
     var areaGeoJSON = {
@@ -13,7 +20,7 @@ $(function () {
     }
 
     map.addLayer({
-      "id": "gaf",
+      "id": "gaf-" + areaCode,
       "type": "line",
       "source": {
         "type": "geojson", "data": areaGeoJSON
@@ -22,9 +29,13 @@ $(function () {
         "line-join": "round", "line-cap": "round"
       },
       "paint": {
-        "line-color": "#888", "line-width": 4
+        "line-color": "#888", "line-width": 1
       }
     });
+  }
+
+  function zoomGAFArea(map, areaCode, data) {
+    var gafBoundary = data["boundary"]["points"];
 
     // Pass the first coordinates in the LineString to `lngLatBounds` &
     // wrap each coordinate pair in `extend` to include them in the bounds
@@ -32,7 +43,7 @@ $(function () {
     // to the bounds of multiple Points or Polygon geomteries - it just
     // requires wrapping all the coordinates with the extend method.
     var bounds = gafBoundary.reduce(function(bounds, coord) {
-        return bounds.extend(coord);
+      return bounds.extend(coord);
     }, new mapboxgl.LngLatBounds(gafBoundary[0], gafBoundary[0]));
 
     map.fitBounds(bounds, {
@@ -40,9 +51,10 @@ $(function () {
     });
   }
 
-  function setupAreaBoundary(map, area, fillColor) {
+  function setupAreaBoundary(map, areaCode, area, fillColor) {
     var gafBoundary = area["boundary"]["points"];
 
+    // TODO: these are very arbitrary variations of blue during dev/test
     var colours = {
       "A":  "#22569A",
       "A1": "#4974AC",
@@ -55,7 +67,9 @@ $(function () {
     };
 
     var id = area["sub-area-id"] || area["area-id"];
-    var layerID = "area-fills-" + id;
+    var baseID = randomID();
+    var layerID = "area-fills-" + baseID;
+    var labelID = "label-" + baseID;
     var fillColor = fillColor || colours[id] || "#627BC1";
 
     var areaGeoJSON = {
@@ -80,7 +94,7 @@ $(function () {
     areaCenter = turf.center(areaGeoJSON, 1);
     areaCenter.properties = {"title": id}
     map.addLayer({
-      "id": "label-" + id,
+      "id": labelID,
       "type": "symbol",
       "source": {
           "type": "geojson",
@@ -128,17 +142,21 @@ $(function () {
       // where hillshading sits in the Mapbox Outdoors style
     }, 'waterway-river-canal-shadow');
 
-    if (document.gafPageCode) {
-      $.get("/api/gaf/" + document.gafPageCode + ".json", function(data) {
-        setupGAFBoundary(map, data);
+    var gafAreaCodes = ["WA-N", "WA-S", "NT", "QLD-N", "QLD-S", "SA", "NSW-W", "NSW-E", "VIC", "TAS"];
+    gafAreaCodes.forEach(gafAreaCode => {
+      $.get("/api/gafarea/" + gafAreaCode + "/current.json", function(data) {
+        setupGAFBoundary(map, gafAreaCode, data);
         data["areas"].forEach(area => {
-          setupAreaBoundary(map, area);
+          setupAreaBoundary(map, gafAreaCode, area);
 
           area["sub-areas"].forEach(subArea => {
-            setupAreaBoundary(map, subArea);
+            setupAreaBoundary(map, gafAreaCode, subArea);
           });
         });
+        if (document.gafAreaCode == gafAreaCode) {
+          zoomGAFArea(map, gafAreaCode, data);
+        }
       });
-    }
+    });
   });
 });
