@@ -11,6 +11,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/drnic/bom-charts/parser"
 )
 
 // AreaForecast describes a request/current Graphical Area Forecast (GAF)
@@ -51,8 +53,9 @@ type GAFSurfaceVisWx struct {
 }
 
 type GAFCloudIceTurbulence struct {
-	Text              string   `json:"text"`
-	SubAreasMentioned []string `json:"sub-areas-mentioned,omitempty"`
+	Text              string                       `json:"text"`
+	SubAreasMentioned []string                     `json:"sub-areas-mentioned,omitempty"`
+	Parsed            *parser.CloudIcingTurbParser `json:"parsed"`
 }
 
 type GAFBoundary struct {
@@ -178,4 +181,6 @@ func (surface *GAFSurfaceVisWx) Decode(area *GAFArea) {
 func (cloud *GAFCloudIceTurbulence) Decode(area *GAFArea) {
 	r := regexp.MustCompile(fmt.Sprintf("%s([0-9])", area.AreaID))
 	cloud.SubAreasMentioned = r.FindAllString(cloud.Text, -1)
+
+	cloud.Parsed, _ = parser.NewCloudIcingTurbParser(cloud.Text)
 }

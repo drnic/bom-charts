@@ -9,14 +9,14 @@ import (
 
 // CloudIcingTurbParser contains Cloud/Icing/Turbulance data
 type CloudIcingTurbParser struct {
-	PrimaryLayer CloudLayer
+	PrimaryLayer CloudLayer `json:"primary-layer"`
 }
 
 type CloudLayer struct {
-	CloudAmount string
-	CloudType   string
-	CloudBase   uint64
-	CloudTop    uint64
+	CloudAmount string `json:"amount"`
+	CloudType   string `json:"type"`
+	CloudBase   uint64 `json:"base"`
+	CloudTop    uint64 `json:"top"`
 }
 
 var simpleRE *regexp.Regexp
