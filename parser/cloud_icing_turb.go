@@ -9,7 +9,8 @@ import (
 
 // CloudIcingTurbParser contains Cloud/Icing/Turbulance data
 type CloudIcingTurbParser struct {
-	Cloud *CloudLayer `json:"cloud,omitempty"`
+	Cloud   *CloudLayer `json:"cloud,omitempty"`
+	Cumulus *CloudLayer `json:"cumulus,omitempty"`
 }
 
 type CloudLayer struct {
@@ -20,12 +21,17 @@ type CloudLayer struct {
 }
 
 var simpleRE *regexp.Regexp
+var cumulusRE *regexp.Regexp
 
 func init() {
 	cloudAmountRE := "(FEW|SCT|BKN|OVC)"
 	cloudTypeRE := "([A-Z/]+)"
 	cloudBaseTopRE := "(\\d+)/(?:ABV)?(\\d+)FT"
 	simpleRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE)
+
+	cumulusCoverageRE := "(ISOL|OCNL|FREQ)"
+	cumulusTypeRE := "(CB|TCU)"
+	cumulusRE = regexp.MustCompile(cumulusCoverageRE + " +" + cumulusTypeRE + " +" + cloudBaseTopRE)
 }
 
 // NewCloudIcingTurbParser parses Cloud/Icing/Turbulance text
@@ -38,6 +44,14 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 		parser.Cloud.Type = matches[0][2]
 		parser.Cloud.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
 		parser.Cloud.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
+	}
+
+	if matches := cumulusRE.FindAllStringSubmatch(text, -1); matches != nil {
+		parser.Cumulus = &CloudLayer{}
+		parser.Cumulus.Amount = matches[0][1]
+		parser.Cumulus.Type = matches[0][2]
+		parser.Cumulus.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
+		parser.Cumulus.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
 	}
 
 	return

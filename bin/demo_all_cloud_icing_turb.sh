@@ -12,7 +12,7 @@ SERVER_URL=${SERVER_URL:-http://localhost:3000}
 
 for areaCode in "${gafAreaCodes[@]}"; do
   for period in current next; do
-    echo "Area ${areaCode}/Period ${period}:"
+    echo "Area ${areaCode}/${period}:"
     result=$(curl -s ${SERVER_URL}/api/gafarea/${areaCode}/current.json | jq -rc '.areas[]["wx-cond"][]["cloud-ice-turb"]')
 
     echo "$result" | jq -rc ".[] | {text, parsed}"
