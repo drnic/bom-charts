@@ -53,24 +53,30 @@ $(function () {
 
   function setupAreaBoundary(map, areaCode, area, fillColor) {
     var gafBoundary = area["boundary"]["points"];
+    if (area["wx-cond"] === undefined || area["wx-cond"].length === 0 ||
+        area["wx-cond"][0]["cloud-ice-turb"].length === 0) {
+      return;
+    }
+    var areaPrimaryCloudIcingTurb = area["wx-cond"][0]["cloud-ice-turb"][0].parsed;
 
-    // TODO: these are very arbitrary variations of blue during dev/test
     var colours = {
-      "A":  "#22569A",
-      "A1": "#4974AC",
-      "A2": "#224572",
-      "B":  "#7588A1",
-      "B1": "#0C4289",
-      "B2": "#689FE8",
-      "C":  "#93B3DC",
-      "C1": "#1D7AF4"
+      "FEW": "#AADFAA",
+      "SCT": "#A5DFC3",
+      "BKN": "#AFA5DF",
+      "OVC": "#DFA5B7",
+      "cumulus": "#C9390E"
     };
 
     var id = area["sub-area-id"] || area["area-id"];
     var baseID = randomID();
     var layerID = "area-fills-" + baseID;
     var labelID = "label-" + baseID;
-    var fillColor = fillColor || colours[id] || "#627BC1";
+    var fillColor = "";
+    if (areaPrimaryCloudIcingTurb.hasOwnProperty("cumulus")) {
+      fillColor = colours["cumulus"];
+    } else if (areaPrimaryCloudIcingTurb.hasOwnProperty("cloud")) {
+      fillColor = colours[areaPrimaryCloudIcingTurb.cloud.amount];
+    }
 
     var areaGeoJSON = {
       "type": "Feature",
