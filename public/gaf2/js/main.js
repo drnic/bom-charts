@@ -6,7 +6,7 @@ $(function () {
     // after the decimal.
     return '_' + Math.random().toString(36).substr(2, 9);
   };
-  
+
   function setupGAFBoundary(map, areaCode, data) {
     var gafBoundary = data["boundary"]["points"];
 
