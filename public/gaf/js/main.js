@@ -1,3 +1,9 @@
+Number.prototype.pad = function(size) {
+  var s = String(this);
+  while (s.length < (size || 2)) {s = "0" + s;}
+  return s;
+}
+
 $(function() {
   $("#area-map").maphilight({strokeColor: '297dd3', fade: false});
 
@@ -50,7 +56,7 @@ $(function() {
     statusBar.appendTo($("#contents"));
 
     var now = new Date();
-    $("#utc-now").text("" + now.getUTCDate() + now.getUTCHours() + now.getUTCMinutes());
+    $("#utc-now").text(now.getUTCDate().pad(2) + now.getUTCHours().pad(2) + now.getUTCMinutes().pad(2));
 
     // var forecastEndTimes = [5, 11, 17, 23];
     var fullHoursRemaining = (24 + 23 - 1 - now.getUTCHours()) % 6;
