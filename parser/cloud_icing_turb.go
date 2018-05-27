@@ -13,6 +13,7 @@ type CloudIcingTurbParser struct {
 	Cumulus *CloudLayer `json:"cumulus,omitempty"`
 }
 
+// CloudLayer describes a layer of cloud AMSL
 type CloudLayer struct {
 	Amount string `json:"amount"`
 	Type   string `json:"type"`
