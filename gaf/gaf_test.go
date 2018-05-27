@@ -50,6 +50,12 @@ var _ = Describe("Page", func() {
 		aRegion := forecast.Areas[0]
 		Expect(aRegion.AreaID).To(Equal("A"))
 		Expect(aRegion.FreezingLevel).To(Equal("ABV 10000FT (10000FT IN S, 8500FT IN A2 FM 09Z)"))
+
+		// BKN ST 2000/6000FT IN A1
+		// SCT CU/SC 3000/7000FT
+		Expect(aRegion.CloudBase).To(Equal(uint64(2000)))
+		Expect(aRegion.CloudTop).To(Equal(uint64(7000)))
+
 		Expect(len(aRegion.WxCond)).To(Equal(4))
 		Expect(int(aRegion.WxCond[0].SurfaceVisWx.SurfaceVisibility)).To(Equal(10000))
 		Expect(int(aRegion.WxCond[1].SurfaceVisWx.SurfaceVisibility)).To(Equal(4000))
@@ -81,5 +87,9 @@ var _ = Describe("Page", func() {
 		Expect(len(bRegion.WxCond)).To(Equal(2))
 		Expect(bRegion.Boundary.Points[0]).To(Equal([]float64{148.45, -32.70}))
 		Expect(len(bRegion.SubAreas)).To(Equal(0))
+
+		// FEW CU/SC 3000/6000FT
+		Expect(bRegion.CloudBase).To(Equal(uint64(3000)))
+		Expect(bRegion.CloudTop).To(Equal(uint64(6000)))
 	})
 })

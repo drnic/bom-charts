@@ -32,6 +32,8 @@ type GAFArea struct {
 	WxCond        []*GAFWxCond  `json:"wx-cond"`
 	FreezingLevel string        `json:"freezing-level"`
 	Boundary      *GAFBoundary  `json:"boundary"`
+	CloudBase     uint64        `json:"cloud-base,omitempty"`
+	CloudTop      uint64        `json:"cloud-top,omitempty"`
 	SubAreas      []*GAFSubArea `json:"sub-areas"`
 }
 
@@ -39,6 +41,8 @@ type GAFSubArea struct {
 	AreaID    string       `json:"area-id"`
 	SubAreaID string       `json:"sub-area-id"`
 	Boundary  *GAFBoundary `json:"boundary"`
+	CloudBase uint64       `json:"cloud-base,omitempty"`
+	CloudTop  uint64       `json:"cloud-top,omitempty"`
 }
 
 type GAFWxCond struct {
@@ -143,6 +147,7 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *rawGAFAreaForecast) {
 			return area.WxCond[i].SurfaceVisWx.SurfaceVisibility > area.WxCond[j].SurfaceVisWx.SurfaceVisibility
 		})
 
+		area.DecodeCloudLayers()
 	}
 
 }
@@ -153,6 +158,32 @@ func (Boundary *GAFBoundary) copyFromRawForecast(raw rawGAFBoundary) {
 		Boundary.Points[i] = []float64{0, 0}
 		Boundary.Points[i][0], _ = strconv.ParseFloat(rawPoint.Longitude, 64)
 		Boundary.Points[i][1], _ = strconv.ParseFloat(rawPoint.Latitude, 64)
+	}
+}
+
+// DecodeCloudLayers takes the major layer and finds the lowest base and highest top
+func (area *GAFArea) DecodeCloudLayers() {
+	if len(area.WxCond) > 0 {
+		area.CloudBase = 1000000
+		area.CloudTop = 0
+		for _, cloudLayer := range area.WxCond[0].CloudIceTurbulence {
+			if cloudLayer.Parsed.Cloud != nil {
+				if area.CloudBase > cloudLayer.Parsed.Cloud.Base {
+					area.CloudBase = cloudLayer.Parsed.Cloud.Base
+				}
+				if area.CloudTop < cloudLayer.Parsed.Cloud.Top {
+					area.CloudTop = cloudLayer.Parsed.Cloud.Top
+				}
+			}
+			if cloudLayer.Parsed.Cumulus != nil {
+				if area.CloudBase > cloudLayer.Parsed.Cumulus.Base {
+					area.CloudBase = cloudLayer.Parsed.Cumulus.Base
+				}
+				if area.CloudTop < cloudLayer.Parsed.Cumulus.Top {
+					area.CloudTop = cloudLayer.Parsed.Cumulus.Top
+				}
+			}
+		}
 	}
 }
 
