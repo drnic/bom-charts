@@ -163,7 +163,7 @@ func (Boundary *GAFBoundary) copyFromRawForecast(raw rawGAFBoundary) {
 
 // DecodeCloudLayers takes the major layer and finds the lowest base and highest top
 func (area *GAFArea) DecodeCloudLayers() {
-	if len(area.WxCond) > 0 {
+	if len(area.WxCond) > 0 && len(area.WxCond[0].CloudIceTurbulence) > 0 {
 		area.CloudBase = 1000000
 		area.CloudTop = 0
 		for _, cloudLayer := range area.WxCond[0].CloudIceTurbulence {

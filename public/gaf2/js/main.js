@@ -53,30 +53,32 @@ $(function () {
 
   function setupAreaBoundary(map, areaCode, area, fillColor) {
     var gafBoundary = area["boundary"]["points"];
-    if (area["wx-cond"] === undefined || area["wx-cond"].length === 0 ||
-        area["wx-cond"][0]["cloud-ice-turb"].length === 0) {
-      return;
-    }
-    var areaPrimaryCloudIcingTurb = area["wx-cond"][0]["cloud-ice-turb"][0].parsed;
-
-    var colours = {
-      "FEW": "#AADFAA",
-      "SCT": "#A5DFC3",
-      "BKN": "#AFA5DF",
-      "OVC": "#DFA5B7",
-      "cumulus": "#C9390E"
-    };
 
     var id = area["sub-area-id"] || area["area-id"];
     var baseID = randomID();
     var layerID = "area-fills-" + baseID;
     var labelID = "label-" + baseID;
-    var fillColor = "";
-    if (areaPrimaryCloudIcingTurb.hasOwnProperty("cumulus")) {
-      fillColor = colours["cumulus"];
-    } else if (areaPrimaryCloudIcingTurb.hasOwnProperty("cloud")) {
-      fillColor = colours[areaPrimaryCloudIcingTurb.cloud.amount];
+
+    // 1000ft AGL matches to .height-1 in main.css
+    var areaCloudLayerBase = area["cloud-base"] === undefined ? 10000 : area["cloud-base"];
+    var areaCloudLayerBaseCode = Math.round(areaCloudLayerBase / 1000);
+    var cssHeightColors = {
+      1: "#BB0EC9",
+      2: "#E30A35",
+      3: "#590AE3",
+      4: "#0ABCE3",
+      5: "#99DAAA",
+      6: "#99DAAA",
+      7: "#99DAAA",
+      8: "#99DAAA",
+      9: "#99DAAA",
+      10: "#99DAAA",
     }
+    var fillColor = cssHeightColors[areaCloudLayerBaseCode];
+    console.log(areaCode);
+    console.log(area);
+    console.log(areaCloudLayerBaseCode);
+    console.log(fillColor);
 
     var areaGeoJSON = {
       "type": "Feature",
