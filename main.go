@@ -81,7 +81,7 @@ func getGAFHTML(params martini.Params, r render.Render) {
 		r.JSON(500, errorResponse(err))
 		return
 	}
-	r.HTML(200, "gafs", gafs)
+	r.HTML(200, "gaf2/index", gafs)
 }
 
 func getAIRMET(r render.Render) {
