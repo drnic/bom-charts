@@ -41,6 +41,8 @@
   document.gafPageCode = "{{.Current.PageCode}}";
   </script>
 
+  {{template "gaf2/color_legend"  }}
+
 
   {{template "gaf2/gaf_table" .Current}}
   {{template "gaf2/gaf_table" .Next}}

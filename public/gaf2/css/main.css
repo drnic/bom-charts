@@ -5,3 +5,32 @@
 .sub-area-selected {
   background-color: #1D7AF4;
 }
+
+.height-1 {
+  background-color: #BB0EC9;
+}
+.height-2 {
+  background-color: #E30A35;
+}
+.height-3 {
+  background-color: #590AE3;
+}
+.height-4 {
+  background-color: #0ABCE3;
+}
+.height-5 {
+  background-color: #99DAAA;
+}
+.height-6 {
+  background-color: #99DAAA;
+}
+.height-7 {
+  background-color: #99DAAA;
+}
+.height-8 {
+  background-color: #99DAAA;
+}
+
+table.color-legend tbody tr td {
+  height: 1em;
+}
