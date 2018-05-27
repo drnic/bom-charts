@@ -184,6 +184,11 @@ func (area *GAFArea) DecodeCloudLayers() {
 				}
 			}
 		}
+		// TODO: explicitly parse out subarea alternate heights
+		for _, subarea := range area.SubAreas {
+			subarea.CloudBase = area.CloudBase
+			subarea.CloudTop = area.CloudTop
+		}
 	}
 }
 
