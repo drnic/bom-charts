@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>turf-intersect</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css' rel='stylesheet' />
+<script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+<style>
+  body { margin:0; padding:0; }
+  #map { position:absolute; top:0; bottom:0; width:100%; }
+</style>
+</head>
+<body>
+<div id='map'></div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiZHJuaWMiLCJhIjoiY2poaWRidWpyMG02dzM3bXBtMmtiMWdjaiJ9.MowHdxFXszibdQ48A255-Q';
+// var map = new mapboxgl.Map({
+//     container: 'map',
+//     style: 'mapbox://styles/mapbox/cjaudgl840gn32rnrepcb9b9g',
+//     center: [35.463453, -100.514914],
+//     zoom: 5
+//   });
+
+var poly1 = turf.polygon([[
+  [-122.801742, 45.48565],
+  [-122.801742, 45.60491],
+  [-122.584762, 45.60491],
+  [-122.584762, 45.48565],
+  [-122.801742, 45.48565]
+]]);
+
+var poly2 = turf.polygon([[
+  [-122.520217, 45.535693],
+  [-122.64038, 45.553967],
+  [-122.720031, 45.526554],
+  [-122.669906, 45.507309],
+  [-122.723464, 45.446643],
+  [-122.532577, 45.408574],
+  [-122.487258, 45.477466],
+  [-122.520217, 45.535693]
+]]);
+
+var union = turf.union(poly1, poly2);
+var intersection = turf.intersect(poly1, poly2);
+
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/cjaudgl840gn32rnrepcb9b9g',
+    zoom: 1
+  });
+
+map.on('load', function () {
+  var poly1_color = "#555";
+  var poly2_color = "#700";
+  var intersection_color = "#00f";
+
+  map.addLayer({
+    "id": "poly1",
+    "type": "fill",
+    "source": {"type": "geojson", "data": poly1},
+    "paint": {
+      "fill-color": poly1_color,
+      "fill-opacity": 0.5
+    }
+  });
+
+  map.addLayer({
+    "id": "poly2",
+    "type": "fill",
+    "source": {"type": "geojson", "data": poly2},
+    "paint": {
+      "fill-color": poly1_color,
+      "fill-opacity": 0.5
+    }
+  });
+
+  map.addLayer({
+    "id": "intersection",
+    "type": "fill",
+    "source": {"type": "geojson", "data": intersection},
+    "paint": {
+      "fill-color": intersection_color,
+      "fill-opacity": 0.5
+    }
+  });
+
+
+  var unionPoints = union.geometry.coordinates;
+  console.log(unionPoints);
+
+  map.fitBounds(union.geometry.coordinates[0], {
+    padding: 200
+  });
+});
+
+
+
+</script>
+</body>
+</html>
