@@ -59,10 +59,11 @@ $(function () {
     var layerID = "area-fills-" + baseID;
     var labelID = "label-" + baseID;
 
-    // 1000ft AGL matches to .height-1 in main.css
+    // 1000ft AMSL matches to .height-1 in main.css
     var areaCloudLayerBase = area["cloud-base"] === undefined ? 10000 : area["cloud-base"];
     var areaCloudLayerBaseCode = Math.round(areaCloudLayerBase / 1000);
     var cssHeightColors = {
+      0: "#BB0EC9",
       1: "#BB0EC9",
       2: "#E30A35",
       3: "#590AE3",
