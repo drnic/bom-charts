@@ -162,7 +162,7 @@ $(function () {
       });
     });
 
-    $.get("/json/lsalt-au.json", function (data) {
+    $.get("/json/lsalt-au.json?" + new Date().getTime(), function (data) {
       data.forEach(lsaltGrid => {
         var grid = lsaltGrid["grid"]
         var lsalt = lsaltGrid["lsalt-100ft"];
