@@ -18,14 +18,12 @@ class Coordinate
 	end
 
 	def to_skyvector_coords
-		north_south = (longitude < 0) ? "S" : "N"
-		abs_long = longitude.abs
-		long_minutes = ((abs_long - abs_long.to_i) * 60).to_i
-
-		east_west = "E"
 		abs_lat = latitude.abs
 		lat_minutes = ((abs_lat - abs_lat.to_i) * 60).to_i
-		"%d%.2d%s%d%.2d%s" % [abs_long, long_minutes, north_south, abs_lat, lat_minutes, east_west]
+
+		abs_long = longitude.abs
+		long_minutes = ((abs_long - abs_long.to_i) * 60).to_i
+		"%d%.2d%s%d%.2d%s" % [abs_lat, lat_minutes, "S", abs_long, long_minutes, "E"]
 	end
 
 	def to_skyvector

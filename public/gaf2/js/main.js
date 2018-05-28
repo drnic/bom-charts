@@ -203,7 +203,6 @@ $(function () {
     $.get("/json/lsalt-au.json", function (data) {
       data.forEach(lsaltGrid => {
         var grid = lsaltGrid["grid"]
-        console.log(grid);
         var lsalt = lsaltGrid["lsalt-100ft"];
         var baseID = randomID();
 
