@@ -7,22 +7,29 @@ $(function () {
     return '_' + Math.random().toString(36).substr(2, 9);
   };
 
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   function setupGAFBoundary(map, areaCode, data) {
     var gafBoundary = data["boundary"]["points"];
+
+    map.addSource("gaf-" + areaCode, {
+      "type": "geojson",
+      "data": {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+          "type": "LineString",
+          "coordinates": gafBoundary
+        }
+      }
+    });
 
     map.addLayer({
       "id": "gaf-" + areaCode,
       "type": "line",
-      "source": {
-        "type": "geojson", "data": {
-          "type": "Feature",
-          "properties": {},
-          "geometry": {
-            "type": "LineString",
-            "coordinates": gafBoundary
-          }
-        }
-      },
+      "source": "gaf-" + areaCode,
       "layout": {
         "line-join": "round", "line-cap": "round"
       },
@@ -162,13 +169,29 @@ $(function () {
       });
     });
 
-    $.get("/json/lsalt-qld-s.json?" + new Date().getTime(), function (data) {
+    var gafAreaCode = "QLD-S";
+    $.get("/json/lsalt-" + gafAreaCode + ".json?" + new Date().getTime(), function (data) {
+      // TODO: better way to wait for source to be defined
+      var gafAreaSource = map.getSource("gaf-" + gafAreaCode);
+      while (gafAreaSource === undefined) {
+        sleep(100);
+        var gafAreaSource = map.getSource("gaf-" + gafAreaCode);
+      }
+      var gafAreaPolygon = turf.polygon([gafAreaSource._data.geometry.coordinates]);
+
       data.forEach(lsaltGrid => {
         var grid = lsaltGrid["grid"]
         var lsalt = lsaltGrid["lsalt-100ft"];
         var baseID = randomID();
 
-        
+        var lsaltPolygon = turf.polygon([grid]);
+
+        var lsaltIntersection = turf.intersect(gafAreaPolygon, lsaltPolygon)
+        if (lsaltIntersection == undefined) {
+          console.log("lsalt grid outside area: ", lsaltGrid);
+          return;
+        }
+
         map.addLayer({
           "id": "lsalt-" + baseID,
           "type": "line",
