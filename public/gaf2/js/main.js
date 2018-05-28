@@ -10,20 +10,18 @@ $(function () {
   function setupGAFBoundary(map, areaCode, data) {
     var gafBoundary = data["boundary"]["points"];
 
-    var areaGeoJSON = {
-      "type": "Feature",
-      "properties": {},
-      "geometry": {
-        "type": "LineString",
-        "coordinates": gafBoundary
-      }
-    }
-
     map.addLayer({
       "id": "gaf-" + areaCode,
       "type": "line",
       "source": {
-        "type": "geojson", "data": areaGeoJSON
+        "type": "geojson", "data": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": gafBoundary
+          }
+        }
       },
       "layout": {
         "line-join": "round", "line-cap": "round"
@@ -165,6 +163,7 @@ $(function () {
     });
 
     $.get("/json/openflights-airports-au.json", function (data) {
+      console.log(data[0]);
       var airportsCollection = data.reduce(function(result, airport) {
         var feature = {
           "type": "Feature",
@@ -199,6 +198,36 @@ $(function () {
           "text-anchor": "top"
         }
       });
-    })
+    });
+
+    $.get("/json/lsalt-au.json", function (data) {
+      data.forEach(lsaltGrid => {
+        var grid = lsaltGrid["grid"]
+        console.log(grid);
+        var lsalt = lsaltGrid["lsalt-100ft"];
+        var baseID = randomID();
+
+        map.addLayer({
+          "id": "lsalt-" + baseID,
+          "type": "line",
+          "source": {
+            "type": "geojson", "data": {
+              "type": "Feature",
+              "properties": {},
+              "geometry": {
+                "type": "LineString",
+                "coordinates": grid
+              }
+            }
+          },
+          "layout": {
+            "line-join": "round", "line-cap": "round"
+          },
+          "paint": {
+            "line-color": "#888", "line-width": 1
+          }
+        });
+      });
+    });
   });
 });
