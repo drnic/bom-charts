@@ -6,9 +6,19 @@ class MapMajorArea {
     this.gafArea = gafArea;
   }
   data() { return this.gafArea; }
+  gafAreaCode() { return this.gafAreaCode; }
   mapLabel() { return this.gafArea["area-id"]; }
-  boundaryPoints() { return this.gafArea["boundary"]["points"]; }
   cloudBase() { return this.gafArea["cloud-base"]; }
+
+  boundaryPoints() { return this.gafArea["boundary"]["points"]; }
+  turfPolygon() {
+    if (this._turfPolygon === undefined) {
+      var points = this.boundaryPoints();
+      points.push(points[0]);
+      this._turfPolygon = turf.polygon([points]);
+    }
+    return this._turfPolygon;
+  }
 
   // returns "QLD-S-A", "TAS-B"
   groupLabel() { return this.gafAreaCode + "-" + this.mapLabel(); }
@@ -22,9 +32,19 @@ class MapSubArea {
     this.gafSubArea = gafSubArea;
   }
   data() { return this.gafSubArea; }
+  gafAreaCode() { return this.mapArea.gafAreaCode(); }
   mapLabel() { return this.gafSubArea["sub-area-id"]; }
-  boundaryPoints() { return this.gafSubArea["boundary"]["points"]; }
   cloudBase() { return this.gafSubArea["cloud-base"]; }
+
+  boundaryPoints() { return this.gafSubArea["boundary"]["points"]; }
+  turfPolygon() {
+    if (this._turfPolygon === undefined) {
+      var points = this.boundaryPoints();
+      points.push(points[0]);
+      this._turfPolygon = turf.polygon([points]);
+    }
+    return this._turfPolygon;
+  }
 
   // returns "QLD-S-A", "TAS-B"
   groupLabel() { return this.mapArea.groupLabel(); }
