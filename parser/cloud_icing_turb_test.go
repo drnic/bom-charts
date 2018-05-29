@@ -65,6 +65,13 @@ var _ = Describe("CloudIcingTurbParser", func() {
 			Expect(*p.Subareas["A3"]).To(Equal(CloudLayer{Amount: "SCT", Type: "SC", Base: 2500, Top: 4000}))
 		})
 
+		It("Parses SCT ST 1500/5000FT LAND IN B1 ONLY TL 00Z", func() {
+			text := "SCT ST 1500/5000FT LAND IN B1 ONLY TL 00Z"
+			p, _ := NewCloudIcingTurbParser(text)
+			Expect(p.EntireAreaCloud).To(BeNil())
+			Expect(*p.Subareas["B1"]).To(Equal(CloudLayer{Amount: "SCT", Type: "ST", Base: 1500, Top: 5000}))
+		})
+
 		It("Ignore FEW SC 3000/4000FT IN A1 ONLY", func() {
 			text := "FEW SC 3000/4000FT IN A1 ONLY"
 			p, _ := NewCloudIcingTurbParser(text)

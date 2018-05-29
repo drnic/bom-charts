@@ -37,28 +37,31 @@ func init() {
 	cloudRE := "(?:ABV)?(\\d+)FT"
 	cloudBaseTopRE := "(\\d+)/" + cloudRE
 	subareaLabelRE := "(\\w\\d+)"
+	ignoreLandOrSeaRE := " *(?:LAND)?(?:SEA)? *"
 	subareaOnlyFilters := "(?:IN )?" + subareaLabelRE
 	subareasOnlyFilters := "(?:IN )?" + subareaLabelRE + ", " + "(?:IN )?" + subareaLabelRE
 	cloudAmountInSubareaRE := cloudAmountRE + " +" + subareaOnlyFilters
 	cloudBaseInSubareaRE := "BASES +" + cloudRE + " +" + subareaOnlyFilters
 
+	commonCloudRE := cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ignoreLandOrSeaRE
+
 	// SCT CU/SC 3000/5000FT (OVC IN B1, BKN IN B2)
-	areaAndAltAmountSubareasOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ".+\\(" + cloudAmountInSubareaRE + ", *" + cloudAmountInSubareaRE + ".*\\)")
+	areaAndAltAmountSubareasOnlyRE = regexp.MustCompile(commonCloudRE + ".+\\(" + cloudAmountInSubareaRE + ", *" + cloudAmountInSubareaRE + ".*\\)")
 
 	// SCT CU/SC 3000/8000FT (BKN IN A1)
-	areaAndAltAmountSubareaOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ".+\\(" + cloudAmountInSubareaRE + ".*\\)")
+	areaAndAltAmountSubareaOnlyRE = regexp.MustCompile(commonCloudRE + ".+\\(" + cloudAmountInSubareaRE + ".*\\)")
 
 	// SCT CU/SC 4000/7000FT (BASES 3000FT A2)
-	areaAndAltBaseSubareaOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ".+\\(" + cloudBaseInSubareaRE + ".*\\)")
+	areaAndAltBaseSubareaOnlyRE = regexp.MustCompile(commonCloudRE + ".+\\(" + cloudBaseInSubareaRE + ".*\\)")
 
 	// BKN ST 1000/4000FT B1, B2
-	subareasOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + " +" + subareasOnlyFilters)
+	subareasOnlyRE = regexp.MustCompile(commonCloudRE + " +" + subareasOnlyFilters)
 
 	// SCT CU/SC 5000/8000FT IN A1 ONLY
-	subareaOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + " +" + subareaOnlyFilters)
+	subareaOnlyRE = regexp.MustCompile(commonCloudRE + " +" + subareaOnlyFilters)
 
 	// BKN ST 1000/5000FT
-	simpleRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE)
+	simpleRE = regexp.MustCompile(commonCloudRE)
 }
 
 // NewCloudIcingTurbParser parses Cloud/Icing/Turbulance text
