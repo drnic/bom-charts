@@ -41,7 +41,7 @@ func init() {
 	subareaOnlyFilters := "(?:IN )?" + subareaLabelRE
 	subareasOnlyFilters := "(?:IN )?" + subareaLabelRE + ", " + "(?:IN )?" + subareaLabelRE
 	cloudAmountInSubareaRE := cloudAmountRE + " +" + subareaOnlyFilters
-	cloudBaseInSubareaRE := "BASES +" + cloudRE + " +" + subareaOnlyFilters
+	cloudBaseInSubareaRE := "BASES? +" + cloudRE + " +" + subareaOnlyFilters
 
 	commonCloudRE := cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ignoreLandOrSeaRE
 
@@ -52,7 +52,8 @@ func init() {
 	areaAndAltAmountSubareaRE = regexp.MustCompile(commonCloudRE + ".+\\(" + cloudAmountInSubareaRE + ".*\\)")
 
 	// SCT CU/SC 4000/7000FT (BASES 3000FT A2)
-	areaAndAltBaseSubareaRE = regexp.MustCompile(commonCloudRE + ".+\\(" + cloudBaseInSubareaRE + ".*\\)")
+	// SCT CU 3000/7000FT, BASE 2500FT IN C1
+	areaAndAltBaseSubareaRE = regexp.MustCompile(commonCloudRE + ",? *.+\\(?" + cloudBaseInSubareaRE + ".*\\)?")
 
 	// BKN ST 1000/4000FT B1, B2
 	subareasOnlyRE = regexp.MustCompile(commonCloudRE + " +" + subareasOnlyFilters)
