@@ -61,6 +61,13 @@ function updateLSALT(gafAreaCode, nightVFR) {
 
         map.on("mouseover", layerID, function(e) {
           map.setPaintProperty(layerID, "fill-opacity", 0.8);
+          var text = "LSALT: " + lsaltGrid["lsalt-100ft"] + " | Cloud base: ";
+          if (mapArea.cloudBase() === undefined) {
+            text += "NIL";
+          } else {
+            text += mapArea.cloudBase() + "MSL";
+          }
+          $('#mouseover-lsalt-grid').text(text);
         });
 
         map.on("mouseleave", layerID, function(e) {
