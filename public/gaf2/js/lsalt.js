@@ -1,4 +1,4 @@
-function updateLSALT(gafAreaCode) {
+function updateLSALT(gafAreaCode, nightVFR) {
   if (gafAreaCode != "QLD-S") {
     return;
   }
@@ -23,7 +23,12 @@ function updateLSALT(gafAreaCode) {
 
     data.forEach(lsaltGrid => {
       var grid = lsaltGrid["grid"]
+
       var lsalt = lsaltGrid["lsalt-100ft"];
+      // assume pilot can see highest object; and that LSALT is 1300' higher than highest object
+      if (!nightVFR) {
+        lsalt -= 13;
+      }
 
       var lsaltPolygon = turf.polygon([grid]);
 
@@ -37,7 +42,9 @@ function updateLSALT(gafAreaCode) {
 
         var layerID = "lsalt" + randomID();
 
-        var layerColourIndex = Math.round(lsalt / 10);
+        var areaCloudLayerBase = mapArea.cloudBase() === undefined ? 10000 : mapArea.cloudBase();
+        var cloudBaseLSALTDelta = areaCloudLayerBase - (lsalt * 100);
+        var layerColourIndex = Math.max(0, Math.round(cloudBaseLSALTDelta / 1000));
         var layerColour = cssHeightColors[layerColourIndex];
 
         map.addLayer({
