@@ -1,5 +1,5 @@
 function updateLSALT(gafAreaCode, nightVFR) {
-  if (gafAreaCode != "QLD-S" && gafAreaCode != "NSW-E") {
+  if (gafAreaCode != "QLD-S" && gafAreaCode != "NSW-E" && gafAreaCode != "TAS") {
     return;
   }
 
