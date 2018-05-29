@@ -55,6 +55,7 @@ function updateLSALT(gafAreaCode, nightVFR) {
           },
           "paint": {
             "fill-color": layerColour,
+            "fill-antialias": false,
             "fill-opacity": 0.5
           }
         });
