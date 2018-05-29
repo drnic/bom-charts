@@ -24,9 +24,9 @@ type CloudLayer struct {
 	Cumulus bool   `json:"cumulus"`
 }
 
-var areaAndAltBaseSubareaOnlyRE *regexp.Regexp
-var areaAndAltAmountSubareasOnlyRE *regexp.Regexp
-var areaAndAltAmountSubareaOnlyRE *regexp.Regexp
+var areaAndAltBaseSubareaRE *regexp.Regexp
+var areaAndAltAmountSubareasRE *regexp.Regexp
+var areaAndAltAmountSubareaRE *regexp.Regexp
 var subareasOnlyRE *regexp.Regexp
 var subareaOnlyRE *regexp.Regexp
 var simpleRE *regexp.Regexp
@@ -46,13 +46,13 @@ func init() {
 	commonCloudRE := cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ignoreLandOrSeaRE
 
 	// SCT CU/SC 3000/5000FT (OVC IN B1, BKN IN B2)
-	areaAndAltAmountSubareasOnlyRE = regexp.MustCompile(commonCloudRE + ".+\\(" + cloudAmountInSubareaRE + ", *" + cloudAmountInSubareaRE + ".*\\)")
+	areaAndAltAmountSubareasRE = regexp.MustCompile(commonCloudRE + ".+\\(" + cloudAmountInSubareaRE + ", *" + cloudAmountInSubareaRE + ".*\\)")
 
 	// SCT CU/SC 3000/8000FT (BKN IN A1)
-	areaAndAltAmountSubareaOnlyRE = regexp.MustCompile(commonCloudRE + ".+\\(" + cloudAmountInSubareaRE + ".*\\)")
+	areaAndAltAmountSubareaRE = regexp.MustCompile(commonCloudRE + ".+\\(" + cloudAmountInSubareaRE + ".*\\)")
 
 	// SCT CU/SC 4000/7000FT (BASES 3000FT A2)
-	areaAndAltBaseSubareaOnlyRE = regexp.MustCompile(commonCloudRE + ".+\\(" + cloudBaseInSubareaRE + ".*\\)")
+	areaAndAltBaseSubareaRE = regexp.MustCompile(commonCloudRE + ".+\\(" + cloudBaseInSubareaRE + ".*\\)")
 
 	// BKN ST 1000/4000FT B1, B2
 	subareasOnlyRE = regexp.MustCompile(commonCloudRE + " +" + subareasOnlyFilters)
@@ -69,7 +69,7 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 	parser = &CloudIcingTurbParser{}
 
 	// SCT CU/SC 3000/5000FT (OVC IN B1, BKN IN B2)
-	if matches := areaAndAltAmountSubareasOnlyRE.FindAllStringSubmatch(text, -1); matches != nil {
+	if matches := areaAndAltAmountSubareasRE.FindAllStringSubmatch(text, -1); matches != nil {
 		areaCloud := &CloudLayer{}
 		areaCloud.Amount = matches[0][1]
 		areaCloud.Type = matches[0][2]
@@ -102,7 +102,7 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 	}
 
 	// SCT CU/SC 3000/8000FT (BKN IN A1)
-	if matches := areaAndAltAmountSubareaOnlyRE.FindAllStringSubmatch(text, -1); matches != nil {
+	if matches := areaAndAltAmountSubareaRE.FindAllStringSubmatch(text, -1); matches != nil {
 		areaCloud := &CloudLayer{}
 		areaCloud.Amount = matches[0][1]
 		areaCloud.Type = matches[0][2]
@@ -126,7 +126,7 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 	}
 
 	// SCT CU/SC 4000/7000FT (BASES 3000FT A2)
-	if matches := areaAndAltBaseSubareaOnlyRE.FindAllStringSubmatch(text, -1); matches != nil {
+	if matches := areaAndAltBaseSubareaRE.FindAllStringSubmatch(text, -1); matches != nil {
 		areaCloud := &CloudLayer{}
 		areaCloud.Amount = matches[0][1]
 		areaCloud.Type = matches[0][2]
