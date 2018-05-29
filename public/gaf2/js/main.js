@@ -67,15 +67,13 @@ $(function () {
 
     var baseID = randomID();
     var layerID = "area-fills-" + baseID;
+    var outlineID = "outline-" + baseID;
     var labelID = "label-" + baseID;
 
     // 1000ft AMSL matches to .height-1 in main.css
     var areaCloudLayerBase = mapArea.cloudBase() === undefined ? 10000 : mapArea.cloudBase();
     var areaCloudLayerBaseCode = Math.round(areaCloudLayerBase / 1000);
-    if (areaCloudLayerBaseCode > 10) {
-      console.log(mapArea);
-      areaCloudLayerBaseCode = 10;
-    }
+    areaCloudLayerBaseCode = Math.min(10, Math.max(0, areaCloudLayerBaseCode));
     var cssHeightColors = {
       0: "#BB0EC9",
       1: "#BB0EC9",
@@ -111,6 +109,18 @@ $(function () {
       "paint": {
         "fill-color": fillColor,
         "fill-opacity": 0.2
+      }
+    });
+
+    map.addLayer({
+      "id": outlineID,
+      "type": "line",
+      "source": layerID,
+      "layout": {
+        "line-join": "round", "line-cap": "round"
+      },
+      "paint": {
+        "line-color": fillColor, "line-width": 2
       }
     });
 

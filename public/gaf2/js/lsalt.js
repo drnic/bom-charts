@@ -44,7 +44,8 @@ function updateLSALT(gafAreaCode, nightVFR) {
 
         var areaCloudLayerBase = mapArea.cloudBase() === undefined ? 10000 : mapArea.cloudBase();
         var cloudBaseLSALTDelta = areaCloudLayerBase - (lsalt * 100);
-        var layerColourIndex = Math.max(0, Math.round(cloudBaseLSALTDelta / 1000));
+        var layerColourIndex = Math.round(cloudBaseLSALTDelta / 1000);
+        layerColourIndex = Math.min(10, Math.max(0, layerColourIndex));
         var layerColour = cssHeightColors[layerColourIndex];
 
         map.addLayer({
