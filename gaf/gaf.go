@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/drnic/bom-charts/codes"
 	"github.com/drnic/bom-charts/parser"
 )
 
@@ -164,8 +165,8 @@ func (Boundary *GAFBoundary) copyFromRawForecast(raw rawGAFBoundary) {
 // DecodeCloudLayers takes the major layer and finds the lowest base and highest top
 func (area *GAFArea) DecodeCloudLayers() {
 	if len(area.WxCond) > 0 && len(area.WxCond[0].CloudIceTurbulence) > 0 {
-		area.CloudBase = 1000000
-		area.CloudTop = 0
+		area.CloudBase = codes.IgnoreMeCloudBase
+		area.CloudTop = codes.IgnoreMeCloudTop
 		for _, cloudLayer := range area.WxCond[0].CloudIceTurbulence {
 			if cloudLayer.Parsed.EntireAreaCloud != nil {
 				if area.CloudBase > cloudLayer.Parsed.EntireAreaCloud.Base {

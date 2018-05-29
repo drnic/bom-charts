@@ -92,9 +92,9 @@ var _ = Describe("Page", func() {
 		Expect(bRegion.Boundary.Points[0]).To(Equal([]float64{148.45, -32.70}))
 		Expect(len(bRegion.SubAreas)).To(Equal(0))
 
-		// FEW CU/SC 3000/6000FT
-		Expect(bRegion.CloudBase).To(Equal(uint64(3000)))
-		Expect(bRegion.CloudTop).To(Equal(uint64(6000)))
+		// FEW CU/SC 3000/6000FT - ignore
+		Expect(bRegion.CloudBase).To(Equal(uint64(999999)))
+		Expect(bRegion.CloudTop).To(Equal(uint64(0)))
 	})
 })
 
