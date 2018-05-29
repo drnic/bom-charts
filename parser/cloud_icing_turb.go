@@ -36,7 +36,7 @@ func init() {
 	subareaLabelRE := "(\\w\\d+)"
 	subareaOnlyFilters := "(?:IN )?" + subareaLabelRE
 	cloudAmountInSubareaRE := cloudAmountRE + " +" + subareaOnlyFilters
-	cloudBaseInSubareaRE := "BASES +" + cloudRE + " +" + subareaLabelRE
+	cloudBaseInSubareaRE := "BASES +" + cloudRE + " +" + subareaOnlyFilters
 
 	areaAndAltAmountSubareasOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ".+\\(" + cloudAmountInSubareaRE + ", *" + cloudAmountInSubareaRE + ".*\\)")
 	areaAndAltAmountSubareaOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ".+\\(" + cloudAmountInSubareaRE + ".*\\)")
