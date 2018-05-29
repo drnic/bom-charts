@@ -159,11 +159,11 @@ $(function () {
     });
 
     map.on("mouseover", layerID, function(e) {
-      var text = mapArea.mapLabel() + " cloud base ";
-      if (mapArea.cloudBase() === undefined) {
-        text += "NIL";
+      var text = mapArea.mapLabel();
+      if (mapArea.cloudBase() === undefined || mapArea.cloudBase() === 999999) {
+        text += " has N/A clouds";
       } else {
-        text += mapArea.cloudBase() + "MSL";
+        text += " has cloud base " + mapArea.cloudBase() + "MSL";
       }
       $('#mouseover-summary-area').text(text);
     });
