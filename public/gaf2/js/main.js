@@ -1,15 +1,21 @@
+// area_data is keyed by gafAreaCodes (QLD-S,TAS)
+document.areaData = {};
+document.mapAreas = {};
+
+function randomID() {
+  // Math.random should be unique because of its seeding algorithm.
+  // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+  // after the decimal.
+  return '_' + Math.random().toString(36).substr(2, 9);
+};
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 $(function () {
-
-  function randomID() {
-    // Math.random should be unique because of its seeding algorithm.
-    // Convert it to base 36 (numbers + letters), and grab the first 9 characters
-    // after the decimal.
-    return '_' + Math.random().toString(36).substr(2, 9);
-  };
-
-  function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+  var areaData = document.areaData;
+  var mapAreas = document.mapAreas;
 
   function setupGAFBoundary(map, areaCode, data) {
     var gafBoundary = data["boundary"]["points"];
@@ -56,16 +62,15 @@ $(function () {
     });
   }
 
-  function setupAreaBoundary(map, areaCode, area, fillColor) {
-    var gafBoundary = area["boundary"]["points"];
+  // mapArea is MapArea or MapSubArea
+  function setupMapFill(mapArea) {
 
-    var id = area["sub-area-id"] || area["area-id"];
     var baseID = randomID();
     var layerID = "area-fills-" + baseID;
     var labelID = "label-" + baseID;
 
     // 1000ft AMSL matches to .height-1 in main.css
-    var areaCloudLayerBase = area["cloud-base"] === undefined ? 10000 : area["cloud-base"];
+    var areaCloudLayerBase = mapArea.cloudBase() === undefined ? 10000 : mapArea.cloudBase();
     var areaCloudLayerBaseCode = Math.round(areaCloudLayerBase / 1000);
     var cssHeightColors = {
       0: "#BB0EC9",
@@ -82,27 +87,31 @@ $(function () {
     }
     var fillColor = cssHeightColors[areaCloudLayerBaseCode];
 
-    var areaGeoJSON = {
+    var areaLayerFeature = {
       "type": "Feature",
-      "properties": area,
+      "properties": {},
       "geometry": {
         "type": "Polygon",
-        "coordinates": [gafBoundary]
+        "coordinates": [mapArea.boundaryPoints()]
       }
-    }
+    };
+    map.addSource(layerID, {
+      "type": "geojson",
+      "data": areaLayerFeature
+    });
 
     map.addLayer({
       "id": layerID,
       "type": "fill",
-      "source": {"type": "geojson", "data": areaGeoJSON},
+      "source": layerID,
       "paint": {
         "fill-color": fillColor,
         "fill-opacity": 0.5
       }
     });
 
-    areaCenter = turf.center(areaGeoJSON, 1);
-    areaCenter.properties = {"title": id}
+    areaCenter = turf.center(areaLayerFeature, 1);
+    areaCenter.properties = {"title": mapArea.mapLabel()}
     map.addLayer({
       "id": labelID,
       "type": "symbol",
@@ -118,25 +127,22 @@ $(function () {
     });
 
 
-    var gafPageCode = document.gafPageCode
-    var areaID = area["area-id"];
-    var subAreaID = area["sub-area-id"]; // only if this is a sub-area zone
+    // var gafPageCode = document.gafPageCode
+    // map.on("mousemove", layerID, function(e) {
+    //   table = $('#gaf-' + gafPageCode);
+    //   table.find('.area-' + gafPageCode + '-' + areaID).addClass("area-selected");
+    //   if (subAreaID) {
+    //     table.find('.sub-area-mentioned-' + subAreaID).addClass("sub-area-selected");
+    //   }
+    // });
 
-    map.on("mousemove", layerID, function(e) {
-      table = $('#gaf-' + gafPageCode);
-      table.find('.area-' + gafPageCode + '-' + areaID).addClass("area-selected");
-      if (subAreaID) {
-        table.find('.sub-area-mentioned-' + subAreaID).addClass("sub-area-selected");
-      }
-    });
-
-    map.on("mouseleave", layerID, function() {
-      table = $('#gaf-' + gafPageCode);
-      table.find('.area-' + gafPageCode + '-' + areaID).removeClass("area-selected");
-      if (subAreaID) {
-        table.find('.sub-area-mentioned-' + subAreaID).removeClass("sub-area-selected");
-      }
-    });
+    // map.on("mouseleave", layerID, function() {
+    //   table = $('#gaf-' + gafPageCode);
+    //   table.find('.area-' + gafPageCode + '-' + areaID).removeClass("area-selected");
+    //   if (subAreaID) {
+    //     table.find('.sub-area-mentioned-' + subAreaID).removeClass("sub-area-selected");
+    //   }
+    // });
   }
 
   map.on('load', function () {
@@ -151,68 +157,39 @@ $(function () {
       // insert below waterway-river-canal-shadow;
       // where hillshading sits in the Mapbox Outdoors style
     }, 'waterway-river-canal-shadow');
+  });
 
+  map.on('load', function () {
     var gafAreaCodes = ["WA-N", "WA-S", "NT", "QLD-N", "QLD-S", "SA", "NSW-W", "NSW-E", "VIC", "TAS"];
     gafAreaCodes.forEach(gafAreaCode => {
       $.get("/api/gafarea/" + gafAreaCode + "/current.json", function(data) {
+        areaData[gafAreaCode] = data;
+        mapAreas[gafAreaCode] = [];
+
         setupGAFBoundary(map, gafAreaCode, data);
+
         data["areas"].forEach(area => {
-          setupAreaBoundary(map, gafAreaCode, area);
+          var mapArea = new MapMajorArea(gafAreaCode, area);
+          mapAreas[gafAreaCode].push(mapArea);
+
+          setupMapFill(mapArea);
 
           area["sub-areas"].forEach(subArea => {
-            setupAreaBoundary(map, gafAreaCode, subArea);
+            var mapSubArea = new MapSubArea(mapArea, subArea);
+            mapAreas[gafAreaCode].push(mapSubArea);
+            setupMapFill(mapSubArea);
           });
         });
+
+        // allow lsalt.js to start intersecting with areas
+        updateLSALT(gafAreaCode);
+
         if (document.gafAreaCode == gafAreaCode) {
           zoomGAFArea(map, gafAreaCode, data);
         }
       });
     });
 
-    var gafAreaCode = "QLD-S";
-    $.get("/json/lsalt-" + gafAreaCode + ".json?" + new Date().getTime(), function (data) {
-      // TODO: better way to wait for source to be defined
-      var gafAreaSource = map.getSource("gaf-" + gafAreaCode);
-      while (gafAreaSource === undefined) {
-        sleep(100);
-        var gafAreaSource = map.getSource("gaf-" + gafAreaCode);
-      }
-      var gafAreaPolygon = turf.polygon([gafAreaSource._data.geometry.coordinates]);
 
-      data.forEach(lsaltGrid => {
-        var grid = lsaltGrid["grid"]
-        var lsalt = lsaltGrid["lsalt-100ft"];
-        var baseID = randomID();
-
-        var lsaltPolygon = turf.polygon([grid]);
-
-        var lsaltIntersection = turf.intersect(gafAreaPolygon, lsaltPolygon)
-        if (lsaltIntersection == undefined) {
-          console.log("lsalt grid outside area: ", lsaltGrid);
-          return;
-        }
-
-        map.addLayer({
-          "id": "lsalt-" + baseID,
-          "type": "line",
-          "source": {
-            "type": "geojson", "data": {
-              "type": "Feature",
-              "properties": {},
-              "geometry": {
-                "type": "LineString",
-                "coordinates": grid
-              }
-            }
-          },
-          "layout": {
-            "line-join": "round", "line-cap": "round"
-          },
-          "paint": {
-            "line-color": "#888", "line-width": 1
-          }
-        });
-      });
-    });
   });
 });
