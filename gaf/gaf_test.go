@@ -77,8 +77,12 @@ var _ = Describe("Page", func() {
 		Expect(len(aRegion.SubAreas)).To(Equal(2))
 		Expect(aRegion.SubAreas[0].AreaID).To(Equal("A"))
 		Expect(aRegion.SubAreas[0].SubAreaID).To(Equal("A1"))
+		Expect(aRegion.SubAreas[0].CloudBase).To(Equal(uint64(2000))) // BKN ST 2000/6000FT IN A1
+		Expect(aRegion.SubAreas[0].CloudTop).To(Equal(uint64(6000)))
 		Expect(aRegion.SubAreas[0].Boundary.Points[0]).To(Equal([]float64{149.87, -37.47}))
 		Expect(aRegion.SubAreas[1].SubAreaID).To(Equal("A2"))
+		Expect(aRegion.SubAreas[1].CloudBase).To(Equal(uint64(3000))) // SCT CU/SC 3000/7000FT
+		Expect(aRegion.SubAreas[1].CloudTop).To(Equal(uint64(7000)))
 		Expect(aRegion.SubAreas[1].Boundary.Points[0]).To(Equal([]float64{152.45, -34.78}))
 
 		bRegion := forecast.Areas[1]
