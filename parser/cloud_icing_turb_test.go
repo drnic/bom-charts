@@ -36,6 +36,12 @@ var _ = Describe("CloudIcingTurbParser", func() {
 			Expect(*p.EntireAreaCloud).To(Equal(CloudLayer{Amount: "ISOL", Type: "TCU", Base: 2000, Top: 10000, Cumulus: true}))
 		})
 
+		It("Parses SCT ST 0800/2000FT COAST/30NM INLAND BETWEEN YLBD AND YTST TL 00Z", func() {
+			text := "SCT ST 0800/2000FT COAST/30NM INLAND BETWEEN YLBD AND YTST TL 00Z"
+			p, _ := NewCloudIcingTurbParser(text)
+			Expect(*p.EntireAreaCloud).To(Equal(CloudLayer{Amount: "SCT", Type: "ST", Base: 800, Top: 2000}))
+		})
+
 		It("Ignore FEW ST 1000/5000FT", func() {
 			text := "FEW ST 1000/5000FT"
 			p, _ := NewCloudIcingTurbParser(text)

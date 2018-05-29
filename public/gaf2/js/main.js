@@ -157,7 +157,17 @@ $(function () {
         table.find('.sub-area-mentioned-' + mapArea.subAreaID()).removeClass("sub-area-selected");
       }
     });
-  }
+
+    map.on("mouseover", layerID, function(e) {
+      var text = mapArea.mapLabel() + " cloud base ";
+      if (mapArea.cloudBase() === undefined) {
+        text += "NIL";
+      } else {
+        text += mapArea.cloudBase() + "MSL";
+      }
+      $('#mouseover-summary-area').text(text);
+    });
+}
 
   map.on('load', function () {
     map.addSource('dem', {

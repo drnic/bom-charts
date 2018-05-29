@@ -37,7 +37,7 @@ func init() {
 	cloudRE := "(?:ABV)?(\\d+)FT"
 	cloudBaseTopRE := "(\\d+)/" + cloudRE
 	subareaLabelRE := "(\\w\\d+)"
-	ignoreLandOrSeaRE := " *(?:LAND)?(?:SEA)? *"
+	ignoreLandOrSeaRE := " *(?:LAND)?/?(?:SEA)? *"
 	subareaOnlyFilters := "(?:IN )?" + subareaLabelRE
 	subareasOnlyFilters := "(?:IN )?" + subareaLabelRE + ", " + "(?:IN )?" + subareaLabelRE
 	cloudAmountInSubareaRE := cloudAmountRE + " +" + subareaOnlyFilters
