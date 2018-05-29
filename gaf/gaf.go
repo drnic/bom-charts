@@ -181,6 +181,8 @@ func (area *GAFArea) DecodeCloudLayers() {
 			subarea.CloudBase = area.CloudBase
 			subarea.CloudTop = area.CloudTop
 
+			// TODO: the first CloudIceTurbulence might be ignorable
+			// Look in each CloudIceTurbulence for each subarea to find lowest + highest
 			if len(area.WxCond) > 0 && len(area.WxCond[0].CloudIceTurbulence) > 0 {
 				subareasWxCloud := area.WxCond[0].CloudIceTurbulence[0].Parsed.Subareas
 				if subareaWxCloud, ok := subareasWxCloud[subarea.SubAreaID]; ok {
