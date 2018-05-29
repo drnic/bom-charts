@@ -23,6 +23,7 @@ type CloudLayer struct {
 	Cumulus bool   `json:"cumulus"`
 }
 
+var areaAndSubareasOnlyRE *regexp.Regexp
 var areaAndSubareaOnlyRE *regexp.Regexp
 var subareaOnlyRE *regexp.Regexp
 var simpleRE *regexp.Regexp
@@ -35,7 +36,8 @@ func init() {
 	subareaOnlyFilters := "(?:IN )?" + subareaLabelRE
 	cloudAmountInSubareaRE := cloudAmountRE + " +" + subareaOnlyFilters
 
-	areaAndSubareaOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ".+\\(" + cloudAmountInSubareaRE + "\\)")
+	areaAndSubareasOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ".+\\(" + cloudAmountInSubareaRE + ", *" + cloudAmountInSubareaRE + ".*\\)")
+	areaAndSubareaOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ".+\\(" + cloudAmountInSubareaRE + ".*\\)")
 	subareaOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + " +" + subareaOnlyFilters)
 	simpleRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE)
 }
@@ -43,6 +45,32 @@ func init() {
 // NewCloudIcingTurbParser parses Cloud/Icing/Turbulance text
 func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err error) {
 	parser = &CloudIcingTurbParser{}
+
+	if matches := areaAndSubareasOnlyRE.FindAllStringSubmatch(text, -1); matches != nil {
+		fmt.Println(areaAndSubareaOnlyRE)
+		fmt.Printf("%#v\n", matches)
+		areaCloud := &CloudLayer{}
+		areaCloud.Amount = matches[0][1]
+		areaCloud.Type = matches[0][2]
+		areaCloud.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
+		areaCloud.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
+		areaCloud.Cumulus = areaCloud.Type == "CB" || areaCloud.Type == "TCU"
+		parser.EntireAreaCloud = areaCloud
+
+		parser.Subareas = map[string]*CloudLayer{}
+
+		subareaCloud1 := *areaCloud
+		subareaCloud1.Amount = matches[0][5]
+		subarea1 := matches[0][6]
+		parser.Subareas[subarea1] = &subareaCloud1
+
+		subareaCloud2 := *areaCloud
+		subareaCloud2.Amount = matches[0][7]
+		subarea2 := matches[0][8]
+		parser.Subareas[subarea2] = &subareaCloud2
+
+		return
+	}
 
 	if matches := areaAndSubareaOnlyRE.FindAllStringSubmatch(text, -1); matches != nil {
 		fmt.Println(areaAndSubareaOnlyRE)

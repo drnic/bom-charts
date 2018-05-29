@@ -65,7 +65,7 @@ var _ = Describe("CloudIcingTurbParser", func() {
 		})
 	})
 
-	var _ = Describe("main area and alternate for a subarea", func() {
+	var _ = Describe("main area and alternate amount for a subarea", func() {
 		It("Parses SCT CU/SC 3000/8000FT (BKN IN A1)", func() {
 			text := "SCT CU/SC 3000/8000FT (BKN IN A1)"
 			p, _ := NewCloudIcingTurbParser(text)
@@ -79,18 +79,44 @@ var _ = Describe("CloudIcingTurbParser", func() {
 			Expect(*p.EntireAreaCloud).To(Equal(CloudLayer{Amount: "SCT", Type: "ST", Base: 1500, Top: 2500, Cumulus: false}))
 			Expect(*p.Subareas["A2"]).To(Equal(CloudLayer{Amount: "BKN", Type: "ST", Base: 1500, Top: 2500, Cumulus: false}))
 		})
+
+	})
+	var _ = Describe("main area and alternate amounts for diff subareas", func() {
+		It("Parses SCT CU/SC 3000/5000FT (FEW IN B1, BKN IN B2)", func() {
+			text := "SCT CU/SC 3000/5000FT (FEW IN B1, BKN IN B2)"
+			p, _ := NewCloudIcingTurbParser(text)
+			Expect(*p.EntireAreaCloud).To(Equal(CloudLayer{Amount: "SCT", Type: "CU/SC", Base: 3000, Top: 5000, Cumulus: false}))
+			Expect(*p.Subareas["B1"]).To(Equal(CloudLayer{Amount: "FEW", Type: "CU/SC", Base: 3000, Top: 5000, Cumulus: false}))
+			Expect(*p.Subareas["B2"]).To(Equal(CloudLayer{Amount: "BKN", Type: "CU/SC", Base: 3000, Top: 5000, Cumulus: false}))
+		})
+
+		It("Parses SCT AC/AS 6000/ABV10000FT (BKN IN B1, BKN IN B2 FM 08Z)", func() {
+			text := "SCT AC/AS 6000/ABV10000FT (BKN IN B1, BKN IN B2 FM 08Z)"
+			p, _ := NewCloudIcingTurbParser(text)
+			Expect(*p.EntireAreaCloud).To(Equal(CloudLayer{Amount: "SCT", Type: "AC/AS", Base: 6000, Top: 10000, Cumulus: false}))
+			Expect(*p.Subareas["B1"]).To(Equal(CloudLayer{Amount: "BKN", Type: "AC/AS", Base: 6000, Top: 10000, Cumulus: false}))
+			Expect(*p.Subareas["B2"]).To(Equal(CloudLayer{Amount: "BKN", Type: "AC/AS", Base: 6000, Top: 10000, Cumulus: false}))
+		})
+
+		// It("Parses FEW CU/SC 4000/7000FT (SCT IN B1, B2, AND IN B3 TL 08Z)", func() {
+		// 	text := "FEW CU/SC 4000/7000FT (SCT IN B1, B2, AND IN B3 TL 08Z)"
+		// 	p, _ := NewCloudIcingTurbParser(text)
+		// 	Expect(*p.EntireAreaCloud).To(Equal(CloudLayer{Amount: "FEW", Type: "CU/SC", Base: 4000, Top: 7000, Cumulus: false}))
+		// 	Expect(*p.Subareas["B1"]).To(Equal(CloudLayer{Amount: "SCT", Type: "CU/SC", Base: 4000, Top: 7000, Cumulus: false}))
+		// 	Expect(*p.Subareas["B2"]).To(Equal(CloudLayer{Amount: "SCT", Type: "CU/SC", Base: 4000, Top: 7000, Cumulus: false}))
+		// 	Expect(*p.Subareas["B3"]).To(Equal(CloudLayer{Amount: "SCT", Type: "CU/SC", Base: 4000, Top: 7000, Cumulus: false}))
+		// })
+
 	})
 
 	// TODO:
 	// FEW SC 3000/5000FT SEA
 	// SCT SC 2000/4000FT SEA W OF YPPD
 	// SCT CU/SC 3000/10000FT, BKN SEA
-	// SCT ST 1500/2500FT LAND (BKN A2)
 	// SCT CU/SC 5000/7000FT LAND N YDMN
 	// SCT CU/SC 4000/7000FT A1 (BASES 3000FT A2)
 	// SCT CU/SC 7000/ABV10000FT, BASES 5000FT AT SEA
 	// SCT CU/SC 3000/10000FT (BASES 2500FT IN A1)
-	// SCT CU/SC 3000/5000FT (FEW IN B1, BKN IN B2)
 	// SCT CU/SC 2500/5000FT (BKN BASE 2000FT A1)
 	// SCT CU/SC 6000/10000FT (3000/7000FT IN C1) BASES 2000FT SEA
 	// SCT CU/SC 3000/ABV10000FT (BKN BASES 2500FT IN B1)
