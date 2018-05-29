@@ -106,7 +106,7 @@ $(function () {
       "source": layerID,
       "paint": {
         "fill-color": fillColor,
-        "fill-opacity": 0.5
+        "fill-opacity": 0.2
       }
     });
 

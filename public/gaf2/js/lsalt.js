@@ -1,5 +1,5 @@
 function updateLSALT(gafAreaCode, nightVFR) {
-  if (gafAreaCode != "QLD-S") {
+  if (gafAreaCode != "QLD-S" && gafAreaCode != "NSW-E") {
     return;
   }
 
@@ -55,7 +55,7 @@ function updateLSALT(gafAreaCode, nightVFR) {
           },
           "paint": {
             "fill-color": layerColour,
-            "fill-opacity": 0.3
+            "fill-opacity": 0.5
           }
         });
 
@@ -64,7 +64,7 @@ function updateLSALT(gafAreaCode, nightVFR) {
         });
 
         map.on("mouseleave", layerID, function(e) {
-          map.setPaintProperty(layerID, "fill-opacity", 0.3);
+          map.setPaintProperty(layerID, "fill-opacity", 0.5);
         });
       });
     });
