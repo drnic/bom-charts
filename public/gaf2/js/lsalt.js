@@ -3,6 +3,20 @@ function updateLSALT(gafAreaCode) {
     return;
   }
 
+  var cssHeightColors = {
+    0: "#BB0EC9",
+    1: "#BB0EC9",
+    2: "#E30A35",
+    3: "#590AE3",
+    4: "#0ABCE3",
+    5: "#99DAAA",
+    6: "#99DAAA",
+    7: "#99DAAA",
+    8: "#99DAAA",
+    9: "#99DAAA",
+    10: "#99DAAA",
+  }
+
   $.get("/json/lsalt-" + gafAreaCode + ".json?" + new Date().getTime(), function (data) {
 
     var mapAreas = document.mapAreas[gafAreaCode];
@@ -23,28 +37,27 @@ function updateLSALT(gafAreaCode) {
 
         var layerID = "lsalt" + randomID();
 
+        var layerColourIndex = Math.round(lsalt / 10);
+        var layerColour = cssHeightColors[layerColourIndex];
+
         map.addLayer({
           "id": layerID,
-          "type": "line",
+          "type": "fill",
           "source": {
             "type": "geojson", "data": lsaltIntersection
           },
-          "layout": {
-            "line-join": "round", "line-cap": "round"
-          },
           "paint": {
-            "line-color": "#888", "line-width": 1
+            "fill-color": layerColour,
+            "fill-opacity": 0.3
           }
         });
 
         map.on("mouseover", layerID, function(e) {
-          map.setPaintProperty(layerID, "line-color", "#222");
-          map.setPaintProperty(layerID, "line-width", 2);
+          map.setPaintProperty(layerID, "fill-opacity", 0.8);
         });
 
         map.on("mouseleave", layerID, function(e) {
-          map.setPaintProperty(layerID, "line-color", "#888");
-          map.setPaintProperty(layerID, "line-width", 1);
+          map.setPaintProperty(layerID, "fill-opacity", 0.3);
         });
       });
     });
