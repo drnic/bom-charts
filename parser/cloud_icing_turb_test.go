@@ -9,28 +9,65 @@ import (
 
 var _ = Describe("CloudIcingTurbParser", func() {
 
-	It("Parses BKN ST 1000/5000FT", func() {
-		text := "BKN ST 1000/5000FT"
-		p, _ := NewCloudIcingTurbParser(text)
-		Expect(*p.Cloud).To(Equal(CloudLayer{Amount: "BKN", Type: "ST", Base: 1000, Top: 5000}))
+	var _ = Describe("simple", func() {
+		It("Parses BKN ST 1000/5000FT", func() {
+			text := "BKN ST 1000/5000FT"
+			p, _ := NewCloudIcingTurbParser(text)
+			Expect(*p.EntireAreaCloud).To(Equal(CloudLayer{Amount: "BKN", Type: "ST", Base: 1000, Top: 5000, Cumulus: false}))
+		})
+
+		It("Parses BKN CU/SC 1000/5000FT LAND", func() {
+			text := "BKN CU/SC 1000/5000FT LAND"
+			p, _ := NewCloudIcingTurbParser(text)
+			Expect(*p.EntireAreaCloud).To(Equal(CloudLayer{Amount: "BKN", Type: "CU/SC", Base: 1000, Top: 5000, Cumulus: false}))
+		})
+
+		It("Parses SCT CU/SC 3000/ABV10000FT", func() {
+			text := "SCT CU/SC 3000/ABV10000FT"
+			p, _ := NewCloudIcingTurbParser(text)
+			Expect(*p.EntireAreaCloud).To(Equal(CloudLayer{Amount: "SCT", Type: "CU/SC", Base: 3000, Top: 10000, Cumulus: false}))
+		})
+
+		It("Parses ISOL TCU 2000/ABV10000FT", func() {
+			text := "ISOL TCU 2000/ABV10000FT"
+			p, _ := NewCloudIcingTurbParser(text)
+			Expect(*p.EntireAreaCloud).To(Equal(CloudLayer{Amount: "ISOL", Type: "TCU", Base: 2000, Top: 10000, Cumulus: true}))
+		})
 	})
 
-	It("Parses BKN CU/SC 1000/5000FT LAND", func() {
-		text := "BKN CU/SC 1000/5000FT LAND"
-		p, _ := NewCloudIcingTurbParser(text)
-		Expect(*p.Cloud).To(Equal(CloudLayer{Amount: "BKN", Type: "CU/SC", Base: 1000, Top: 5000}))
-	})
+	var _ = Describe("only in subarea", func() {
+		// It("Parses SCT CU/SC 5000/8000FT IN A1 ONLY", func() {
+		// 	text := "SCT CU/SC 5000/8000FT IN A1 ONLY"
+		// 	p, _ := NewCloudIcingTurbParser(text)
+		// 	Expect(p.Cloud).To(BeNil())
+		// 	Expect(p.Cumulus).To(BeNil())
+		// })
 
-	It("Parses SCT CU/SC 3000/ABV10000FT", func() {
-		text := "SCT CU/SC 3000/ABV10000FT"
-		p, _ := NewCloudIcingTurbParser(text)
-		Expect(*p.Cloud).To(Equal(CloudLayer{Amount: "SCT", Type: "CU/SC", Base: 3000, Top: 10000}))
-	})
+		It("Parses SCT ST 1000/3000FT A1 ONLY FM 09Z", func() {
+			text := "SCT ST 1000/3000FT A1 ONLY FM 09Z"
+			p, _ := NewCloudIcingTurbParser(text)
+			Expect(p.EntireAreaCloud).To(BeNil())
+			Expect(*p.Subareas["A1"]).To(Equal(CloudLayer{Amount: "SCT", Type: "ST", Base: 1000, Top: 3000, Cumulus: false}))
+		})
 
-	It("Parses ISOL TCU 2000/ABV10000FT", func() {
-		text := "ISOL TCU 2000/ABV10000FT"
-		p, _ := NewCloudIcingTurbParser(text)
-		Expect(*p.Cumulus).To(Equal(CloudLayer{Amount: "ISOL", Type: "TCU", Base: 2000, Top: 10000}))
+		It("Parses SCT SC 2500/4000FT A3 FM 01Z", func() {
+			text := "SCT SC 2500/4000FT A3 FM 01Z"
+			p, _ := NewCloudIcingTurbParser(text)
+			Expect(p.EntireAreaCloud).To(BeNil())
+			Expect(*p.Subareas["A3"]).To(Equal(CloudLayer{Amount: "SCT", Type: "SC", Base: 2500, Top: 4000, Cumulus: false}))
+		})
+
+		// It("Parses SCT ST 1500/2500FT B1, W SEA/COAST", func() {
+		// 	text := "SCT ST 1500/2500FT B1, W SEA/COAST"
+		// 	p, _ := NewCloudIcingTurbParser(text)
+		// 	Expect(*p.Cloud).To(Equal(CloudLayer{Amount: "ISOL", Type: "TCU", Base: 2000, Top: 10000}))
+		// })
+
+		// It("Parses BKN SC 3000/4000FT IN A1 ONLY - SCT FM 08Z", func() {
+		// 	text := "BKN SC 3000/4000FT IN A1 ONLY - SCT FM 08Z"
+		// 	p, _ := NewCloudIcingTurbParser(text)
+		// 	Expect(*p.Cloud).To(Equal(CloudLayer{Amount: "ISOL", Type: "TCU", Base: 2000, Top: 10000}))
+		// })
 	})
 
 	// TODO:
@@ -43,14 +80,11 @@ var _ = Describe("CloudIcingTurbParser", func() {
 
 	// FEW SC 3000/5000FT SEA
 	// SCT SC 2000/4000FT SEA W OF YPPD
-	// SCT CU/SC 5000/8000FT IN A1 ONLY
 	// SCT CU/SC 3000/10000FT, BKN SEA
-	// SCT SC 2500/4000FT A3 FM 01Z
 	// SCT CU/SC 3000/8000FT (BKN IN A1)
 	// SCT ST 1500/2500FT LAND (BKN A2)
 	// SCT CU/SC 5000/7000FT LAND N YDMN
 	// SCT CU/SC 7000/ABV10000FT, BASES 5000FT AT SEA
-	// SCT ST 1500/2500FT B1, W SEA/COAST
 	// SCT CU/SC 3000/10000FT (BASES 2500FT IN A1)
 	// SCT CU/SC 3000/5000FT (FEW IN B1, BKN IN B2)
 	// SCT CU/SC 2500/5000FT (BKN BASE 2000FT A1)

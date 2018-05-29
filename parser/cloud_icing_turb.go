@@ -9,50 +9,61 @@ import (
 
 // CloudIcingTurbParser contains Cloud/Icing/Turbulance data
 type CloudIcingTurbParser struct {
-	Cloud   *CloudLayer `json:"cloud,omitempty"`
-	Cumulus *CloudLayer `json:"cumulus,omitempty"`
+	EntireAreaCloud *CloudLayer            `json:"cloud,omitempty"`
+	Subareas        map[string]*CloudLayer `json:"subareas,omitempty"`
 }
 
 // CloudLayer describes a layer of cloud AMSL
 type CloudLayer struct {
-	Amount string `json:"amount"`
-	Type   string `json:"type"`
-	Base   uint64 `json:"base"`
-	Top    uint64 `json:"top"`
+	Amount  string `json:"amount"`
+	Type    string `json:"type"`
+	Base    uint64 `json:"base"`
+	Top     uint64 `json:"top"`
+	Cumulus bool   `json:"cumulus"`
 }
 
+var subareaOnlyRE *regexp.Regexp
 var simpleRE *regexp.Regexp
-var cumulusRE *regexp.Regexp
 
 func init() {
-	cloudAmountRE := "(FEW|SCT|BKN|OVC)"
+	cloudAmountRE := "(FEW|SCT|BKN|OVC|ISOL|OCNL|FREQ)"
 	cloudTypeRE := "([A-Z/]+)"
 	cloudBaseTopRE := "(\\d+)/(?:ABV)?(\\d+)FT"
-	simpleRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE)
+	subareaLabelRE := "(\\w\\d+)"
+	subareaOnlyFilters := subareaLabelRE
 
-	cumulusCoverageRE := "(ISOL|OCNL|FREQ)"
-	cumulusTypeRE := "(CB|TCU)"
-	cumulusRE = regexp.MustCompile(cumulusCoverageRE + " +" + cumulusTypeRE + " +" + cloudBaseTopRE)
+	subareaOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + " +" + subareaOnlyFilters)
+	simpleRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE)
 }
 
 // NewCloudIcingTurbParser parses Cloud/Icing/Turbulance text
 func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err error) {
 	parser = &CloudIcingTurbParser{}
 
-	if matches := simpleRE.FindAllStringSubmatch(text, -1); matches != nil {
-		parser.Cloud = &CloudLayer{}
-		parser.Cloud.Amount = matches[0][1]
-		parser.Cloud.Type = matches[0][2]
-		parser.Cloud.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
-		parser.Cloud.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
+	if matches := subareaOnlyRE.FindAllStringSubmatch(text, -1); matches != nil {
+		cloud := &CloudLayer{}
+		cloud.Amount = matches[0][1]
+		cloud.Type = matches[0][2]
+		cloud.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
+		cloud.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
+		cloud.Cumulus = cloud.Type == "CB" || cloud.Type == "TCU"
+		subarea := matches[0][5]
+
+		parser.Subareas = map[string]*CloudLayer{}
+		parser.Subareas[subarea] = cloud
+		return
 	}
 
-	if matches := cumulusRE.FindAllStringSubmatch(text, -1); matches != nil {
-		parser.Cumulus = &CloudLayer{}
-		parser.Cumulus.Amount = matches[0][1]
-		parser.Cumulus.Type = matches[0][2]
-		parser.Cumulus.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
-		parser.Cumulus.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
+	if matches := simpleRE.FindAllStringSubmatch(text, -1); matches != nil {
+		cloud := &CloudLayer{}
+		cloud.Amount = matches[0][1]
+		cloud.Type = matches[0][2]
+		cloud.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
+		cloud.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
+		cloud.Cumulus = cloud.Type == "CB" || cloud.Type == "TCU"
+
+		parser.EntireAreaCloud = cloud
+		return
 	}
 
 	return

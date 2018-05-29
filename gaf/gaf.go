@@ -167,20 +167,12 @@ func (area *GAFArea) DecodeCloudLayers() {
 		area.CloudBase = 1000000
 		area.CloudTop = 0
 		for _, cloudLayer := range area.WxCond[0].CloudIceTurbulence {
-			if cloudLayer.Parsed.Cloud != nil {
-				if area.CloudBase > cloudLayer.Parsed.Cloud.Base {
-					area.CloudBase = cloudLayer.Parsed.Cloud.Base
+			if cloudLayer.Parsed.EntireAreaCloud != nil {
+				if area.CloudBase > cloudLayer.Parsed.EntireAreaCloud.Base {
+					area.CloudBase = cloudLayer.Parsed.EntireAreaCloud.Base
 				}
-				if area.CloudTop < cloudLayer.Parsed.Cloud.Top {
-					area.CloudTop = cloudLayer.Parsed.Cloud.Top
-				}
-			}
-			if cloudLayer.Parsed.Cumulus != nil {
-				if area.CloudBase > cloudLayer.Parsed.Cumulus.Base {
-					area.CloudBase = cloudLayer.Parsed.Cumulus.Base
-				}
-				if area.CloudTop < cloudLayer.Parsed.Cumulus.Top {
-					area.CloudTop = cloudLayer.Parsed.Cumulus.Top
+				if area.CloudTop < cloudLayer.Parsed.EntireAreaCloud.Top {
+					area.CloudTop = cloudLayer.Parsed.EntireAreaCloud.Top
 				}
 			}
 		}

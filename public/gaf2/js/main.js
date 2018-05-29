@@ -72,6 +72,10 @@ $(function () {
     // 1000ft AMSL matches to .height-1 in main.css
     var areaCloudLayerBase = mapArea.cloudBase() === undefined ? 10000 : mapArea.cloudBase();
     var areaCloudLayerBaseCode = Math.round(areaCloudLayerBase / 1000);
+    if (areaCloudLayerBaseCode > 10) {
+      console.log(mapArea);
+      areaCloudLayerBaseCode = 10;
+    }
     var cssHeightColors = {
       0: "#BB0EC9",
       1: "#BB0EC9",
