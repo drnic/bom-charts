@@ -3,7 +3,6 @@ package parser
 // Abbreviations from https://en.wikipedia.org/wiki/METAR
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
 )
@@ -23,21 +22,25 @@ type CloudLayer struct {
 	Cumulus bool   `json:"cumulus"`
 }
 
-var areaAndSubareasOnlyRE *regexp.Regexp
-var areaAndSubareaOnlyRE *regexp.Regexp
+var areaAndAltBaseSubareaOnlyRE *regexp.Regexp
+var areaAndAltAmountSubareasOnlyRE *regexp.Regexp
+var areaAndAltAmountSubareaOnlyRE *regexp.Regexp
 var subareaOnlyRE *regexp.Regexp
 var simpleRE *regexp.Regexp
 
 func init() {
 	cloudAmountRE := "(FEW|SCT|BKN|OVC|ISOL|OCNL|FREQ)"
 	cloudTypeRE := "([A-Z/]+)"
-	cloudBaseTopRE := "(\\d+)/(?:ABV)?(\\d+)FT"
+	cloudRE := "(?:ABV)?(\\d+)FT"
+	cloudBaseTopRE := "(\\d+)/" + cloudRE
 	subareaLabelRE := "(\\w\\d+)"
 	subareaOnlyFilters := "(?:IN )?" + subareaLabelRE
 	cloudAmountInSubareaRE := cloudAmountRE + " +" + subareaOnlyFilters
+	cloudBaseInSubareaRE := "BASES +" + cloudRE + " +" + subareaLabelRE
 
-	areaAndSubareasOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ".+\\(" + cloudAmountInSubareaRE + ", *" + cloudAmountInSubareaRE + ".*\\)")
-	areaAndSubareaOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ".+\\(" + cloudAmountInSubareaRE + ".*\\)")
+	areaAndAltAmountSubareasOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ".+\\(" + cloudAmountInSubareaRE + ", *" + cloudAmountInSubareaRE + ".*\\)")
+	areaAndAltAmountSubareaOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ".+\\(" + cloudAmountInSubareaRE + ".*\\)")
+	areaAndAltBaseSubareaOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ".+\\(" + cloudBaseInSubareaRE + ".*\\)")
 	subareaOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + " +" + subareaOnlyFilters)
 	simpleRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE)
 }
@@ -46,9 +49,9 @@ func init() {
 func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err error) {
 	parser = &CloudIcingTurbParser{}
 
-	if matches := areaAndSubareasOnlyRE.FindAllStringSubmatch(text, -1); matches != nil {
-		fmt.Println(areaAndSubareaOnlyRE)
-		fmt.Printf("%#v\n", matches)
+	if matches := areaAndAltAmountSubareasOnlyRE.FindAllStringSubmatch(text, -1); matches != nil {
+		// fmt.Println(areaAndAltAmountSubareasOnlyRE)
+		// fmt.Printf("%#v\n", matches)
 		areaCloud := &CloudLayer{}
 		areaCloud.Amount = matches[0][1]
 		areaCloud.Type = matches[0][2]
@@ -72,9 +75,7 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 		return
 	}
 
-	if matches := areaAndSubareaOnlyRE.FindAllStringSubmatch(text, -1); matches != nil {
-		fmt.Println(areaAndSubareaOnlyRE)
-		fmt.Printf("%#v\n", matches)
+	if matches := areaAndAltAmountSubareaOnlyRE.FindAllStringSubmatch(text, -1); matches != nil {
 		areaCloud := &CloudLayer{}
 		areaCloud.Amount = matches[0][1]
 		areaCloud.Type = matches[0][2]
@@ -85,6 +86,24 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 
 		subareaCloud := *areaCloud
 		subareaCloud.Amount = matches[0][5]
+		subarea := matches[0][6]
+
+		parser.Subareas = map[string]*CloudLayer{}
+		parser.Subareas[subarea] = &subareaCloud
+		return
+	}
+
+	if matches := areaAndAltBaseSubareaOnlyRE.FindAllStringSubmatch(text, -1); matches != nil {
+		areaCloud := &CloudLayer{}
+		areaCloud.Amount = matches[0][1]
+		areaCloud.Type = matches[0][2]
+		areaCloud.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
+		areaCloud.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
+		areaCloud.Cumulus = areaCloud.Type == "CB" || areaCloud.Type == "TCU"
+		parser.EntireAreaCloud = areaCloud
+
+		subareaCloud := *areaCloud
+		subareaCloud.Base, _ = strconv.ParseUint(matches[0][5], 10, 64)
 		subarea := matches[0][6]
 
 		parser.Subareas = map[string]*CloudLayer{}
