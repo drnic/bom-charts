@@ -30,7 +30,7 @@ func init() {
 	cloudTypeRE := "([A-Z/]+)"
 	cloudBaseTopRE := "(\\d+)/(?:ABV)?(\\d+)FT"
 	subareaLabelRE := "(\\w\\d+)"
-	subareaOnlyFilters := subareaLabelRE
+	subareaOnlyFilters := "(?:IN )?" + subareaLabelRE
 
 	subareaOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + " +" + subareaOnlyFilters)
 	simpleRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE)

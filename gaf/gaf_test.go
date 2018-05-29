@@ -53,7 +53,7 @@ var _ = Describe("Page", func() {
 
 		// BKN ST 2000/6000FT IN A1
 		// SCT CU/SC 3000/7000FT
-		Expect(aRegion.CloudBase).To(Equal(uint64(2000)))
+		Expect(aRegion.CloudBase).To(Equal(uint64(3000))) // main area, not A1
 		Expect(aRegion.CloudTop).To(Equal(uint64(7000)))
 
 		Expect(len(aRegion.WxCond)).To(Equal(4))

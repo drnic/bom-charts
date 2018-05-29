@@ -57,33 +57,22 @@ var _ = Describe("CloudIcingTurbParser", func() {
 			Expect(*p.Subareas["A3"]).To(Equal(CloudLayer{Amount: "SCT", Type: "SC", Base: 2500, Top: 4000, Cumulus: false}))
 		})
 
-		// It("Parses SCT ST 1500/2500FT B1, W SEA/COAST", func() {
-		// 	text := "SCT ST 1500/2500FT B1, W SEA/COAST"
-		// 	p, _ := NewCloudIcingTurbParser(text)
-		// 	Expect(*p.Cloud).To(Equal(CloudLayer{Amount: "ISOL", Type: "TCU", Base: 2000, Top: 10000}))
-		// })
-
-		// It("Parses BKN SC 3000/4000FT IN A1 ONLY - SCT FM 08Z", func() {
-		// 	text := "BKN SC 3000/4000FT IN A1 ONLY - SCT FM 08Z"
-		// 	p, _ := NewCloudIcingTurbParser(text)
-		// 	Expect(*p.Cloud).To(Equal(CloudLayer{Amount: "ISOL", Type: "TCU", Base: 2000, Top: 10000}))
-		// })
+		It("Parses BKN SC 3000/4000FT IN A1 ONLY", func() {
+			text := "BKN SC 3000/4000FT IN A1 ONLY"
+			p, _ := NewCloudIcingTurbParser(text)
+			Expect(p.EntireAreaCloud).To(BeNil())
+			Expect(*p.Subareas["A1"]).To(Equal(CloudLayer{Amount: "BKN", Type: "SC", Base: 3000, Top: 4000, Cumulus: false}))
+		})
 	})
 
 	// TODO:
-	// * ISOL/OCNL/FREQ are spatial coverage abbr for CB + TCU
-	// * TCU = "Towering Cumulus"
-	// * CB = "Cumulonimbus"
-	// ISOL TCU 2000/ABV10000FT A1 ONLY
-	// OCNL TCU 2500/ABV10000FT (WDSPR B1 FM 11Z, OCNL B1 FM 15Z)
-	// * look for "EMBD"
-
 	// FEW SC 3000/5000FT SEA
 	// SCT SC 2000/4000FT SEA W OF YPPD
 	// SCT CU/SC 3000/10000FT, BKN SEA
 	// SCT CU/SC 3000/8000FT (BKN IN A1)
 	// SCT ST 1500/2500FT LAND (BKN A2)
 	// SCT CU/SC 5000/7000FT LAND N YDMN
+	// SCT CU/SC 4000/7000FT A1 (BASES 3000FT A2)
 	// SCT CU/SC 7000/ABV10000FT, BASES 5000FT AT SEA
 	// SCT CU/SC 3000/10000FT (BASES 2500FT IN A1)
 	// SCT CU/SC 3000/5000FT (FEW IN B1, BKN IN B2)
@@ -99,8 +88,8 @@ var _ = Describe("CloudIcingTurbParser", func() {
 	// SCT CU/SC 3000/ABV10000FT (BKN BASES 2500FT IN B1)
 	// SCT CU/SC 5000/8000FT, BASES 3000FT E OF YBRK/YGAY/TBL
 	// SCT CU/SC 3000/ABV10000FT, BASE 2000FT SEA
+	// SCT ST 1500/2500FT B1, W SEA/COAST
 	// BKN CU/SC 2500/8000FT NE OF YBWP/YCKN
-	// BKN SC 3000/4000FT IN A1 ONLY - SCT FM 08Z
 	// SCT ST 1500/3000FT (BKN FM 14Z IN B1 ONLY)
 	// FEW ST 1500/2500FT, BECMG SCT FM 14Z
 	// SCT ST 1000/3000FT C1, BKN FM 14Z
