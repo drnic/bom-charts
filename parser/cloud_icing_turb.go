@@ -3,6 +3,7 @@ package parser
 // Abbreviations from https://en.wikipedia.org/wiki/METAR
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 )
@@ -22,6 +23,7 @@ type CloudLayer struct {
 	Cumulus bool   `json:"cumulus"`
 }
 
+var areaAndSubareaOnlyRE *regexp.Regexp
 var subareaOnlyRE *regexp.Regexp
 var simpleRE *regexp.Regexp
 
@@ -31,7 +33,9 @@ func init() {
 	cloudBaseTopRE := "(\\d+)/(?:ABV)?(\\d+)FT"
 	subareaLabelRE := "(\\w\\d+)"
 	subareaOnlyFilters := "(?:IN )?" + subareaLabelRE
+	cloudAmountInSubareaRE := cloudAmountRE + " +" + subareaOnlyFilters
 
+	areaAndSubareaOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ".+\\(" + cloudAmountInSubareaRE + "\\)")
 	subareaOnlyRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + " +" + subareaOnlyFilters)
 	simpleRE = regexp.MustCompile(cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE)
 }
@@ -39,6 +43,26 @@ func init() {
 // NewCloudIcingTurbParser parses Cloud/Icing/Turbulance text
 func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err error) {
 	parser = &CloudIcingTurbParser{}
+
+	if matches := areaAndSubareaOnlyRE.FindAllStringSubmatch(text, -1); matches != nil {
+		fmt.Println(areaAndSubareaOnlyRE)
+		fmt.Printf("%#v\n", matches)
+		areaCloud := &CloudLayer{}
+		areaCloud.Amount = matches[0][1]
+		areaCloud.Type = matches[0][2]
+		areaCloud.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
+		areaCloud.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
+		areaCloud.Cumulus = areaCloud.Type == "CB" || areaCloud.Type == "TCU"
+		parser.EntireAreaCloud = areaCloud
+
+		subareaCloud := *areaCloud
+		subareaCloud.Amount = matches[0][5]
+		subarea := matches[0][6]
+
+		parser.Subareas = map[string]*CloudLayer{}
+		parser.Subareas[subarea] = &subareaCloud
+		return
+	}
 
 	if matches := subareaOnlyRE.FindAllStringSubmatch(text, -1); matches != nil {
 		cloud := &CloudLayer{}
