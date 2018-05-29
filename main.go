@@ -31,7 +31,7 @@ func getAreaForecastByPageCode(params martini.Params, r render.Render) {
 }
 
 func getCurrentAreaForecastByAreaCode(params martini.Params, r render.Render) {
-	area, err := gaf.NewArea(params["area"])
+	area, err := gaf.NewAreaMappingPageCode(params["area"])
 	if err != nil {
 		r.JSON(500, errorResponse(err))
 		return
@@ -45,7 +45,7 @@ func getCurrentAreaForecastByAreaCode(params martini.Params, r render.Render) {
 }
 
 func getNextAreaForecastByAreaCode(params martini.Params, r render.Render) {
-	area, err := gaf.NewArea(params["area"])
+	area, err := gaf.NewAreaMappingPageCode(params["area"])
 	if err != nil {
 		r.JSON(500, errorResponse(err))
 		return
@@ -66,7 +66,7 @@ func getGAFHTML(params martini.Params, r render.Render) {
 	}{
 		Areas: gaf.Areas,
 	}
-	area, err := gaf.NewArea(params["area"])
+	area, err := gaf.NewAreaMappingPageCode(params["area"])
 	if err != nil {
 		r.JSON(500, errorResponse(err))
 		return

@@ -7,14 +7,14 @@ import (
 	. "github.com/drnic/bom-charts/gaf"
 )
 
-var _ = Describe("Area", func() {
+var _ = Describe("AreaMappingPageCode", func() {
 	It("returns error if invalid area code", func() {
-		_, err := NewArea("XXX")
+		_, err := NewAreaMappingPageCode("XXX")
 		Ω(err).Should(HaveOccurred())
 	})
 
 	It("returns GAF code for each UTC hour", func() {
-		area, err := NewArea("QLD-S")
+		area, err := NewAreaMappingPageCode("QLD-S")
 		Ω(err).ShouldNot(HaveOccurred())
 
 		Expect(area.CurrentGAFCode).To(Not(Equal("")))

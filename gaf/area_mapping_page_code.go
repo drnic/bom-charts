@@ -5,18 +5,18 @@ import (
 	"time"
 )
 
-type Area struct {
+type AreaMappingPageCode struct {
 	Code           string
 	CurrentGAFCode string
 	NextGAFCode    string
 }
 
-// NewArea constructs an Area, and sets GAF Codes for current UTC time
-func NewArea(code string) (area *Area, err error) {
+// NewAreaMappingPageCode constructs an Area, and sets GAF Codes for current UTC time
+func NewAreaMappingPageCode(code string) (area *AreaMappingPageCode, err error) {
 	if !ValidArea(code) {
 		return nil, fmt.Errorf("Invalid area code: %s", code)
 	}
-	area = &Area{Code: code}
+	area = &AreaMappingPageCode{Code: code}
 	area.Update()
 	return
 }
@@ -32,13 +32,13 @@ func ValidArea(area string) bool {
 }
 
 // Update sets the GAFCodes for the current UTC hour
-func (area *Area) Update() {
+func (area *AreaMappingPageCode) Update() {
 	now := time.Now()
 	area.UpdateForUTCHour(now.UTC().Hour())
 }
 
 // UpdateForUTCHour sets the GAFCodes for the specific UTC hour
-func (area *Area) UpdateForUTCHour(nowUTCHour int) *Area {
+func (area *AreaMappingPageCode) UpdateForUTCHour(nowUTCHour int) *AreaMappingPageCode {
 	if nowUTCHour >= 5 && nowUTCHour < 11 {
 		area.CurrentGAFCode = AreaMapping[area.Code][0]
 		area.NextGAFCode = AreaMapping[area.Code][1]
