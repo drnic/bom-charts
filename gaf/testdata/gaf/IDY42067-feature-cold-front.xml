@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bf:area-forecast xmlns:bf="http://www.airservicesaustralia.com/met/xsd" xsi:schemaLocation="http://www.airservicesaustralia.com/met/xsd" issued-at="2018-05-30T10:09:43Z" from="2018-05-30T11:00:00Z" till="2018-05-30T17:00:00Z" area-id="VIC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <bf:standard-inclusion>
+TS / CB / TCU imply SEV ICE and SEV TURB.
+CU / SC / AC imply MOD TURB.
+CLD ABV FZL implies MOD ICE.
+All heights AMSL.
+Speed of movement in KT.
+Check AIRMETs, SIGMETs and NOTAMs. 
+GAF data provided by Australian Bureau of Meteorology.</bf:standard-inclusion>
+ <bf:boundary>
+  <bf:point latitude="-39.57" longitude="141.00"/>
+  <bf:point latitude="-33.65" longitude="141.00"/>
+  <bf:point latitude="-36.20" longitude="146.93"/>
+  <bf:point latitude="-37.88" longitude="150.87"/>
+  <bf:point latitude="-39.57" longitude="150.20"/>
+  <bf:point latitude="-39.57" longitude="142.86"/>
+  <bf:point latitude="-39.57" longitude="141.00"/>
+ </bf:boundary>
+ <bf:area id="A">
+  <bf:boundary>
+   <bf:point latitude="-36.52" longitude="141.00"/>
+   <bf:point latitude="-36.37" longitude="141.62"/>
+   <bf:point latitude="-36.05" longitude="143.23"/>
+   <bf:point latitude="-35.92" longitude="144.25"/>
+   <bf:point latitude="-35.74" longitude="145.79"/>
+   <bf:point latitude="-35.74" longitude="145.79"/>
+   <bf:point latitude="-35.59" longitude="145.41"/>
+   <bf:point latitude="-35.43" longitude="145.03"/>
+   <bf:point latitude="-35.27" longitude="144.66"/>
+   <bf:point latitude="-35.12" longitude="144.29"/>
+   <bf:point latitude="-34.96" longitude="143.92"/>
+   <bf:point latitude="-34.80" longitude="143.55"/>
+   <bf:point latitude="-34.64" longitude="143.18"/>
+   <bf:point latitude="-34.48" longitude="142.81"/>
+   <bf:point latitude="-34.31" longitude="142.45"/>
+   <bf:point latitude="-34.15" longitude="142.08"/>
+   <bf:point latitude="-33.98" longitude="141.72"/>
+   <bf:point latitude="-33.82" longitude="141.36"/>
+   <bf:point latitude="-33.65" longitude="141.00"/>
+  </bf:boundary>
+  <bf:wx-cond>
+   <bf:scf-vis-wx>&amp;gt;10KM NIL</bf:scf-vis-wx>
+   <bf:cld-ice-turb>SCT CU/SC 4000/8000FT S OF YLAO/YBRN (FEW FM 15Z)</bf:cld-ice-turb>
+  </bf:wx-cond>
+  <bf:fz-lvl>8000FT</bf:fz-lvl>
+ </bf:area>
+ <bf:area id="B">
+  <bf:boundary>
+   <bf:point latitude="-39.57" longitude="141.00"/>
+   <bf:point latitude="-39.57" longitude="142.86"/>
+   <bf:point latitude="-39.58" longitude="143.09"/>
+   <bf:point latitude="-39.58" longitude="143.32"/>
+   <bf:point latitude="-39.58" longitude="143.35"/>
+   <bf:point latitude="-38.72" longitude="143.02"/>
+   <bf:point latitude="-38.37" longitude="141.57"/>
+   <bf:point latitude="-38.26" longitude="141.00"/>
+  </bf:boundary>
+  <bf:wx-cond>
+   <bf:scf-vis-wx>&amp;gt;10KM NIL</bf:scf-vis-wx>
+   <bf:cld-ice-turb>FEW CU/SC 3000/6000FT</bf:cld-ice-turb>
+  </bf:wx-cond>
+  <bf:fz-lvl>5500FT (8000FT W OF E14200 FM 15Z)</bf:fz-lvl>
+ </bf:area>
+ <bf:area id="C">
+  <bf:boundary>
+   <bf:point latitude="-35.74" longitude="145.79"/>
+   <bf:point latitude="-35.92" longitude="144.25"/>
+   <bf:point latitude="-36.87" longitude="145.68"/>
+   <bf:point latitude="-36.83" longitude="145.75"/>
+   <bf:point latitude="-36.43" longitude="147.13"/>
+   <bf:point latitude="-36.40" longitude="147.38"/>
+   <bf:point latitude="-36.30" longitude="147.17"/>
+   <bf:point latitude="-36.20" longitude="146.93"/>
+   <bf:point latitude="-36.04" longitude="146.54"/>
+   <bf:point latitude="-35.89" longitude="146.16"/>
+  </bf:boundary>
+ </bf:area>
+ <bf:area id="C">
+  <bf:boundary>
+   <bf:point latitude="-39.57" longitude="150.20"/>
+   <bf:point latitude="-38.90" longitude="150.47"/>
+   <bf:point latitude="-39.10" longitude="149.88"/>
+   <bf:point latitude="-37.80" longitude="148.95"/>
+   <bf:point latitude="-37.82" longitude="148.73"/>
+   <bf:point latitude="-37.80" longitude="148.33"/>
+   <bf:point latitude="-37.98" longitude="147.63"/>
+   <bf:point latitude="-39.07" longitude="146.93"/>
+   <bf:point latitude="-39.12" longitude="146.38"/>
+   <bf:point latitude="-38.67" longitude="145.48"/>
+   <bf:point latitude="-39.63" longitude="146.18"/>
+   <bf:point latitude="-39.63" longitude="146.30"/>
+   <bf:point latitude="-39.63" longitude="146.53"/>
+   <bf:point latitude="-39.63" longitude="146.76"/>
+   <bf:point latitude="-39.63" longitude="146.99"/>
+   <bf:point latitude="-39.63" longitude="147.22"/>
+   <bf:point latitude="-39.62" longitude="147.45"/>
+   <bf:point latitude="-39.62" longitude="147.68"/>
+   <bf:point latitude="-39.62" longitude="147.91"/>
+   <bf:point latitude="-39.62" longitude="148.14"/>
+   <bf:point latitude="-39.61" longitude="148.37"/>
+   <bf:point latitude="-39.61" longitude="148.59"/>
+   <bf:point latitude="-39.61" longitude="148.82"/>
+   <bf:point latitude="-39.60" longitude="149.05"/>
+   <bf:point latitude="-39.60" longitude="149.28"/>
+   <bf:point latitude="-39.59" longitude="149.51"/>
+   <bf:point latitude="-39.58" longitude="149.74"/>
+   <bf:point latitude="-39.58" longitude="149.97"/>
+  </bf:boundary>
+  <bf:wx-cond>
+   <bf:scf-vis-wx>4000M ISOL SHRA (SCT SEA, CEASING C1/C3 14Z)</bf:scf-vis-wx>
+   <bf:cld-ice-turb>BKN ST 1200/2500FT</bf:cld-ice-turb>
+   <bf:cld-ice-turb>BKN CU/SC 2500/ABV10000FT</bf:cld-ice-turb>
+  </bf:wx-cond>
+  <bf:wx-cond>
+   <bf:scf-vis-wx>&amp;gt;10KM NIL</bf:scf-vis-wx>
+   <bf:cld-ice-turb>SCT CU/SC 3000/10000FT (FEW C3, FEW C1 FM 14Z)</bf:cld-ice-turb>
+  </bf:wx-cond>
+  <bf:wx-cond>
+   <bf:scf-vis-wx>2000M ISOL SHSN ABV 4500FT</bf:scf-vis-wx>
+   <bf:cld-ice-turb>BKN CU/SC 4500/ABV10000FT</bf:cld-ice-turb>
+  </bf:wx-cond>
+  <bf:wx-cond>
+   <bf:scf-vis-wx>3000M ISOL TSRAGS SEA E OF E14700 (CEASING W OF E14800 FM 14Z)</bf:scf-vis-wx>
+   <bf:cld-ice-turb>ISOL CB 2500/ABV10000FT</bf:cld-ice-turb>
+   <bf:cld-ice-turb>BKN ST 1000/2500FT</bf:cld-ice-turb>
+  </bf:wx-cond>
+  <bf:wx-cond>
+   <bf:cld-ice-turb>MOD TURB BLW 8000FT</bf:cld-ice-turb>
+   <bf:cld-ice-turb>SEV TURB BLW 8000FT C1/C2 (CEASING C1 12Z, CEASING C2 N OF S3700 FM 15Z)</bf:cld-ice-turb>
+  </bf:wx-cond>
+  <bf:fz-lvl>5000FT (8000FT NW OF YPOD/YTOC FM 11Z, W OF YWBL/YDLQ FM 16Z)</bf:fz-lvl>
+  <bf:sub-area id="C1">
+   <bf:boundary>
+    <bf:point latitude="-36.87" longitude="145.68"/>
+    <bf:point latitude="-35.92" longitude="144.25"/>
+    <bf:point latitude="-36.05" longitude="143.23"/>
+    <bf:point latitude="-36.37" longitude="141.62"/>
+    <bf:point latitude="-36.58" longitude="141.97"/>
+    <bf:point latitude="-36.80" longitude="142.32"/>
+    <bf:point latitude="-37.01" longitude="142.67"/>
+    <bf:point latitude="-37.23" longitude="143.03"/>
+    <bf:point latitude="-37.44" longitude="143.38"/>
+    <bf:point latitude="-37.65" longitude="143.74"/>
+    <bf:point latitude="-37.86" longitude="144.10"/>
+    <bf:point latitude="-38.07" longitude="144.47"/>
+    <bf:point latitude="-38.23" longitude="145.05"/>
+    <bf:point latitude="-36.83" longitude="145.75"/>
+   </bf:boundary>
+  </bf:sub-area>
+  <bf:sub-area id="C2">
+   <bf:boundary>
+    <bf:point latitude="-36.40" longitude="147.38"/>
+    <bf:point latitude="-36.43" longitude="147.13"/>
+    <bf:point latitude="-36.83" longitude="145.75"/>
+    <bf:point latitude="-38.23" longitude="145.05"/>
+    <bf:point latitude="-38.67" longitude="145.48"/>
+    <bf:point latitude="-39.12" longitude="146.38"/>
+    <bf:point latitude="-39.07" longitude="146.93"/>
+    <bf:point latitude="-37.98" longitude="147.63"/>
+    <bf:point latitude="-37.80" longitude="148.33"/>
+    <bf:point latitude="-37.82" longitude="148.73"/>
+    <bf:point latitude="-37.80" longitude="148.95"/>
+    <bf:point latitude="-36.79" longitude="148.25"/>
+    <bf:point latitude="-36.74" longitude="148.14"/>
+    <bf:point latitude="-36.63" longitude="147.89"/>
+    <bf:point latitude="-36.52" longitude="147.65"/>
+    <bf:point latitude="-36.41" longitude="147.41"/>
+   </bf:boundary>
+  </bf:sub-area>
+  <bf:sub-area id="C3">
+   <bf:boundary>
+    <bf:point latitude="-39.63" longitude="146.07"/>
+    <bf:point latitude="-39.63" longitude="146.18"/>
+    <bf:point latitude="-38.67" longitude="145.48"/>
+    <bf:point latitude="-38.23" longitude="145.05"/>
+    <bf:point latitude="-38.07" longitude="144.47"/>
+    <bf:point latitude="-37.86" longitude="144.10"/>
+    <bf:point latitude="-37.65" longitude="143.74"/>
+    <bf:point latitude="-37.44" longitude="143.38"/>
+    <bf:point latitude="-37.23" longitude="143.03"/>
+    <bf:point latitude="-37.01" longitude="142.67"/>
+    <bf:point latitude="-36.80" longitude="142.32"/>
+    <bf:point latitude="-36.58" longitude="141.97"/>
+    <bf:point latitude="-36.37" longitude="141.62"/>
+    <bf:point latitude="-36.52" longitude="141.00"/>
+    <bf:point latitude="-38.26" longitude="141.00"/>
+    <bf:point latitude="-38.37" longitude="141.57"/>
+    <bf:point latitude="-38.72" longitude="143.02"/>
+    <bf:point latitude="-39.58" longitude="143.35"/>
+    <bf:point latitude="-39.59" longitude="143.54"/>
+    <bf:point latitude="-39.60" longitude="143.77"/>
+    <bf:point latitude="-39.60" longitude="144.00"/>
+    <bf:point latitude="-39.61" longitude="144.23"/>
+    <bf:point latitude="-39.61" longitude="144.46"/>
+    <bf:point latitude="-39.61" longitude="144.69"/>
+    <bf:point latitude="-39.62" longitude="144.92"/>
+    <bf:point latitude="-39.62" longitude="145.15"/>
+    <bf:point latitude="-39.62" longitude="145.38"/>
+    <bf:point latitude="-39.62" longitude="145.61"/>
+    <bf:point latitude="-39.63" longitude="145.84"/>
+   </bf:boundary>
+  </bf:sub-area>
+ </bf:area>
+ <bf:area id="D">
+  <bf:boundary>
+   <bf:point latitude="-36.79" longitude="148.25"/>
+   <bf:point latitude="-37.80" longitude="148.95"/>
+   <bf:point latitude="-39.10" longitude="149.88"/>
+   <bf:point latitude="-38.90" longitude="150.47"/>
+   <bf:point latitude="-37.88" longitude="150.87"/>
+   <bf:point latitude="-37.78" longitude="150.62"/>
+   <bf:point latitude="-37.68" longitude="150.37"/>
+   <bf:point latitude="-37.57" longitude="150.12"/>
+   <bf:point latitude="-37.47" longitude="149.87"/>
+   <bf:point latitude="-37.37" longitude="149.62"/>
+   <bf:point latitude="-37.26" longitude="149.37"/>
+   <bf:point latitude="-37.16" longitude="149.12"/>
+   <bf:point latitude="-37.05" longitude="148.88"/>
+   <bf:point latitude="-36.95" longitude="148.63"/>
+   <bf:point latitude="-36.84" longitude="148.38"/>
+  </bf:boundary>
+  <bf:wx-cond>
+   <bf:scf-vis-wx>4000M ISOL SHRA FM 13Z (SCT SEA FM 14Z)</bf:scf-vis-wx>
+   <bf:cld-ice-turb>BKN ST 1200/2500FT</bf:cld-ice-turb>
+   <bf:cld-ice-turb>BKN CU/SC 2500/ABV10000FT</bf:cld-ice-turb>
+  </bf:wx-cond>
+  <bf:wx-cond>
+   <bf:scf-vis-wx>&amp;gt;10KM NIL</bf:scf-vis-wx>
+   <bf:cld-ice-turb>SCT CU/SC 4000/10000FT </bf:cld-ice-turb>
+  </bf:wx-cond>
+  <bf:wx-cond>
+   <bf:cld-ice-turb>MOD TURB BLW 8000FT LAND (LAND AND SEA FM 13Z)</bf:cld-ice-turb>
+   <bf:cld-ice-turb>SEV TURB BLW 8000FT LAND FM 12Z</bf:cld-ice-turb>
+  </bf:wx-cond>
+  <bf:wx-cond>
+   <bf:scf-vis-wx>3000M ISOL TSRAGS SEA</bf:scf-vis-wx>
+   <bf:cld-ice-turb>ISOL CB 2500/ABV10000FT</bf:cld-ice-turb>
+   <bf:cld-ice-turb>BKN ST 1000/2500FT</bf:cld-ice-turb>
+  </bf:wx-cond>
+  <bf:fz-lvl>5000FT</bf:fz-lvl>
+ </bf:area>
+ <bf:feature valid-at="2018-05-30T11:00:00Z" type="COLD_FRONT">
+  <bf:line>
+   <bf:point latitude="-37.08" longitude="144.55"/>
+   <bf:point latitude="-38.05" longitude="145.33"/>
+   <bf:point latitude="-38.45" longitude="145.90"/>
+   <bf:point latitude="-39.02" longitude="146.53"/>
+   <bf:point latitude="-39.57" longitude="147.01"/>
+  </bf:line>
+  <bf:speed>35</bf:speed>
+  <bf:direction>67</bf:direction>
+ </bf:feature>
+ <bf:remarks>CRITICAL LOCATIONS [HEIGHT AMSL]:&lt;br&gt;KMG [1200FT]: 9999 -SHRA FEW ST 2500FT BKN CU/SC 4000FT, FM301400 9999 SCT CU/SC 4000FT, INTER 3011/3014 5000 SHRA BKN ST 1500FT BKN CU/SC 2500FT</bf:remarks>
+</bf:area-forecast>

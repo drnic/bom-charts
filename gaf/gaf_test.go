@@ -101,23 +101,6 @@ var _ = Describe("Page", func() {
 	})
 })
 
-// TODO: ignore FEW, and use SCT+ for cloud bases
-// FEW ST 1500/3000FT FM 09Z
-// SCT CU/SC 4000/7000FT (BASES 3000FT SEA)
-//
-// FEW ST 2500/5000FT
-// BKN CU/SC 4000/7000FT
-//
-// FEW CU/SC 4000/7000FT (SCT IN B1, B2, AND IN B3 TL 08Z)
-// SCT AC/AS 6000/ABV10000FT (BKN IN B1, BKN IN B2 FM 08Z, IN B3 TL 08Z)
-//
-// SCT ST 0800/5000FT
-// BKN AC/AS 6000/ABV10000FT
-
-// FEW ST 1500/3000FT
-// FEW CU/SC 4000/7000FT (BASES 3000FT SEA)
-// SCT AC/AS 6000/ABV10000FT IN SW FM 15Z
-
 // TODO: CB is first; but lowest cloud might be later
 // ISOL CB 6000/ABV10000FT
 // BKN ST 1000/5000FT
@@ -127,3 +110,4 @@ var _ = Describe("Page", func() {
 // TODO: IDY42082-two-B-areas.xml has two "B" areas; the first needs to get its cloud/ice from the second
 
 // TODO: IDY42079-feature-trough.xml contains a "Feature" - a trough to be displayed on map
+// TODO: IDY42067-feature-cold-front.xml contains a "Feature" - a cold front to be displayed on map
