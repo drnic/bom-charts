@@ -10,3 +10,5 @@ RUN apk -v --update add \
 VOLUME /root/.aws
 
 ADD run.sh /run.sh
+
+ENTRYPOINT [ "/run.sh" ]
