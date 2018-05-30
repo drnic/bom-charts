@@ -1,8 +1,4 @@
 function updateLSALT(gafAreaCode, nightVFR) {
-  if (gafAreaCode != "QLD-S" && gafAreaCode != "NSW-E" && gafAreaCode != "TAS") {
-    return;
-  }
-
   var cssHeightColors = {
     0: "#BB0EC9",
     1: "#BB0EC9",

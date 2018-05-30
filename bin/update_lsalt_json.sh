@@ -3,6 +3,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR/..
 
-csv2json data/manual-lsalt-QLD-S.csv | jq -rc 'map({"grid","lsalt-100ft"})' > public/json/lsalt-QLD-S.json
-csv2json data/manual-lsalt-NSW-E.csv | jq -rc 'map({"grid","lsalt-100ft"})' > public/json/lsalt-NSW-E.json
-csv2json data/manual-lsalt-TAS.csv | jq -rc 'map({"grid","lsalt-100ft"})' > public/json/lsalt-TAS.json
+gaf_areas=(NSW-E NSW-W NT QLD-N QLD-S SA TAS VIC WA-N WA-S)
+for area in "${gaf_areas[@]}"; do
+  csv2json data/manual-lsalt-${area}.csv | jq -rc 'map({"grid","lsalt-100ft"})' > public/json/lsalt-${area}.json
+done
