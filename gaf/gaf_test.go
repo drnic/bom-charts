@@ -120,3 +120,7 @@ var _ = Describe("Page", func() {
 // BKN ST 1000/5000FT
 // BKN CU/SC 4000/7000FT
 // BKN AC/AS 6000/ABV10000FT
+
+// TODO: IDY42082-two-B-areas.xml has two "B" areas; the first needs to get its cloud/ice from the second
+
+// TODO: IDY42079-feature-trough.xml contains a "Feature" - a trough to be displayed on map
