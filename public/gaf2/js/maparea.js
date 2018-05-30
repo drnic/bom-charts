@@ -22,6 +22,11 @@ class MapMajorArea {
 
   // returns "QLD-S-A", "TAS-B"
   groupLabel() { return this._gafAreaCode + "-" + this.mapLabel(); }
+
+  freezingLevel() { return this.data()["freezing-level"]; }
+
+  // Specific to MapMajorArea
+  wxConds() { return this.data()["wx-cond"]; }
 }
 
 class MapSubArea {
@@ -49,4 +54,6 @@ class MapSubArea {
 
   // returns "QLD-S-A", "TAS-B"
   groupLabel() { return this._mapArea.groupLabel(); }
+
+  freezingLevel() { return this._mapArea.freezingLevel(); }
 }
