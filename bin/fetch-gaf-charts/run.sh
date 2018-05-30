@@ -2,8 +2,9 @@
 
 set -eu
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $DIR
+WORKDIR=${WORKDIR:-tmp/bom-charts}
+mkdir -p $WORKDIR
+cd $WORKDIR
 
 # check AWS credentials and bucket working
 S3_BASE_URI=s3://${S3_BUCKET:?required}
@@ -12,10 +13,25 @@ aws s3 ls ${S3_BASE_URI}
 function fetchGAF() {
   local area=$1; shift
   local codes=$@
+  echo "Area $area"
+
+  today=$(date -u "+%Y-%m-%d")
+  mkdir -p aviation/gaf/${today}/$area
+  pushd aviation/gaf/${today}/$area
+
   for code in $codes; do
-    echo "$area - http://www.bom.gov.au/fwo/aviation/${code}.xml"
-    # echo "$area - http://www.bom.gov.au/fwo/aviation/${code}.png"
+    echo "Fetching ${code}"
+    curl -s "http://www.bom.gov.au/fwo/aviation/${code}.xml" -O
+    curl -s "http://www.bom.gov.au/fwo/aviation/${code}.png" -O
   done
+
+  popd
+}
+
+function uploadToS3() {
+  pushd aviation/gaf/
+    aws s3 sync . ${S3_BASE_URI}/aviation/gaf/
+  popd
 }
 
 NT=(IDY42058 IDY42059 IDY42060 IDY42061)
@@ -29,6 +45,7 @@ QLD_S=(IDY42078 IDY42079 IDY42080 IDY42081)
 NSW_W=(IDY42086 IDY42087 IDY42088 IDY42089)
 NSW_E=(IDY42082 IDY42083 IDY42084 IDY42085)
 
+
 fetchGAF "NT" "${NT[@]}"
 fetchGAF "SA" "${SA[@]}"
 fetchGAF "VIC" "${VIC[@]}"
@@ -39,3 +56,7 @@ fetchGAF "QLD_N" "${QLD_N[@]}"
 fetchGAF "QLD_S" "${QLD_S[@]}"
 fetchGAF "NSW_W" "${NSW_W[@]}"
 fetchGAF "NSW_E" "${NSW_E[@]}"
+
+uploadToS3
+
+aws s3 ls ${S3_BASE_URI}/aviation/gaf/
