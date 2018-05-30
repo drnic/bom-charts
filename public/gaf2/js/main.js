@@ -167,7 +167,7 @@ $(function () {
       }
       $('#mouseover-summary-area').text(text);
     });
-}
+  }
 
   map.on('load', function () {
     map.addSource('dem', {
