@@ -1,12 +1,19 @@
 applications:
 - name: bom-charts
-  buildpack: go_buildpack
   disk_quota: 1G
   instances: 1
   memory: 64M
   routes:
   - route: bom-charts.cfapps.io
   stack: cflinuxfs2
+  buildpack: go_buildpack
   env:
     GOPACKAGENAME: github.com/drnic/bom-charts
     GOVERSION: go1.10
+- name: bom-charts-fetch-charts
+  instances: 1
+  disk_quota: 1G
+  memory: 256M
+  no-route: true
+  docker:
+    image: drnic/bom-charts-fetch-charts
