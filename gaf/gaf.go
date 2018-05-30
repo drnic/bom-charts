@@ -153,12 +153,26 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *rawGAFAreaForecast) {
 
 }
 
-func (Boundary *GAFBoundary) copyFromRawForecast(raw rawGAFBoundary) {
-	Boundary.Points = make([][]float64, len(raw.Points))
+func (boundary *GAFBoundary) copyFromRawForecast(raw rawGAFBoundary) {
+	first := raw.Points[0]
+	last := raw.Points[len(raw.Points)-1]
+	boundaryLen := len(raw.Points)
+	addFirstToEnd := false
+	if first.Latitude != last.Latitude || first.Longitude != last.Longitude {
+		boundaryLen++
+		addFirstToEnd = true
+	}
+
+	boundary.Points = make([][]float64, boundaryLen)
 	for i, rawPoint := range raw.Points {
-		Boundary.Points[i] = []float64{0, 0}
-		Boundary.Points[i][0], _ = strconv.ParseFloat(rawPoint.Longitude, 64)
-		Boundary.Points[i][1], _ = strconv.ParseFloat(rawPoint.Latitude, 64)
+		boundary.Points[i] = []float64{0, 0}
+		boundary.Points[i][0], _ = strconv.ParseFloat(rawPoint.Longitude, 64)
+		boundary.Points[i][1], _ = strconv.ParseFloat(rawPoint.Latitude, 64)
+	}
+	if addFirstToEnd {
+		boundary.Points[boundaryLen-1] = []float64{0, 0}
+		boundary.Points[boundaryLen-1][0] = boundary.Points[0][0]
+		boundary.Points[boundaryLen-1][1] = boundary.Points[0][1]
 	}
 }
 

@@ -15,9 +15,7 @@ class MapMajorArea {
   boundaryPoints() { return this._gafArea["boundary"]["points"]; }
   turfPolygon() {
     if (this._turfPolygon === undefined) {
-      var points = this.boundaryPoints();
-      points.push(points[0]);
-      this._turfPolygon = turf.polygon([points]);
+      this._turfPolygon = turf.polygon([this.boundaryPoints()]);
     }
     return this._turfPolygon;
   }
@@ -44,9 +42,7 @@ class MapSubArea {
   boundaryPoints() { return this._gafSubArea["boundary"]["points"]; }
   turfPolygon() {
     if (this._turfPolygon === undefined) {
-      var points = this.boundaryPoints();
-      points.push(points[0]);
-      this._turfPolygon = turf.polygon([points]);
+      this._turfPolygon = turf.polygon([this.boundaryPoints()]);
     }
     return this._turfPolygon;
   }

@@ -46,6 +46,8 @@ var _ = Describe("Page", func() {
 		Expect(forecast.Till).To(Equal("2018-05-22T11:00:00Z"))
 		Expect(len(forecast.Boundary.Points)).To(Equal(7))
 		Expect(forecast.Boundary.Points[0]).To(Equal([]float64{152.67, -34.33}))
+		// last item happens to already match first item
+		Expect(forecast.Boundary.Points[6]).To(Equal([]float64{152.67, -34.33}))
 
 		aRegion := forecast.Areas[0]
 		Expect(aRegion.AreaID).To(Equal("A"))
@@ -74,6 +76,7 @@ var _ = Describe("Page", func() {
 		Expect(aRegion.WxCond[3].CloudIceTurbulence[0].SubAreasMentioned).To(BeNil())
 
 		Expect(aRegion.Boundary.Points[0]).To(Equal([]float64{152.67, -34.33}))
+		Expect(aRegion.Boundary.Points[23]).To(Equal([]float64{152.67, -34.33}))
 		Expect(len(aRegion.SubAreas)).To(Equal(2))
 		Expect(aRegion.SubAreas[0].AreaID).To(Equal("A"))
 		Expect(aRegion.SubAreas[0].SubAreaID).To(Equal("A1"))
