@@ -1,7 +1,7 @@
 $(function () {
     map.on('load', function () {
     $.get("/json/openflights-airports-au.json", function (data) {
-      var airportsCollection = data.reduce(function(result, airport) {
+      var airportsCollection = data.reduce((result, airport) => {
         var feature = {
           "type": "Feature",
           "geometry": {

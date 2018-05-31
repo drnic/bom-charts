@@ -2,13 +2,6 @@
 document.areaData = {};
 document.mapAreas = {};
 
-function randomID() {
-  // Math.random should be unique because of its seeding algorithm.
-  // Convert it to base 36 (numbers + letters), and grab the first 9 characters
-  // after the decimal.
-  return '_' + Math.random().toString(36).substr(2, 9);
-};
-
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -65,7 +58,7 @@ $(function () {
   // mapArea is MapArea or MapSubArea
   function setupMapFill(mapArea) {
 
-    var baseID = randomID();
+    var baseID = mapArea.uuid();
     var layerID = "area-fills-" + baseID;
     var outlineID = "outline-" + baseID;
     var labelID = "label-" + baseID;
@@ -89,14 +82,8 @@ $(function () {
     }
     var fillColor = cssHeightColors[areaCloudLayerBaseCode];
 
-    var areaLayerFeature = {
-      "type": "Feature",
-      "properties": {},
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [mapArea.boundaryPoints()]
-      }
-    };
+    var areaLayerFeature = mapAreaAsFeature(mapArea);
+
     map.addSource(layerID, {
       "type": "geojson",
       "data": areaLayerFeature
@@ -167,6 +154,8 @@ $(function () {
       }
       $('#mouseover-summary-area').text(text);
     });
+
+
   }
 
   map.on('load', function () {
