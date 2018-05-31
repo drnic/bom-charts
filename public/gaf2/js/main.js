@@ -59,7 +59,7 @@ $(function () {
   function setupMapFill(mapArea) {
 
     var baseID = mapArea.uuid();
-    var layerID = "area-fills-" + baseID;
+    var layerID = mapArea.mapLayerID();
     var outlineID = "outline-" + baseID;
     var labelID = "label-" + baseID;
 

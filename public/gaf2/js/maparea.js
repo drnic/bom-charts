@@ -34,6 +34,9 @@ class MapMajorArea {
     }
     return this._uuid;
   }
+  mapLayerID() {
+    return "maparea" + "_" + this.gafAreaCode() + "_" + this.mapLabel() + this.uuid();
+  }
 
   // returns "QLD-S-A", "TAS-B"
   groupLabel() { return this._gafAreaCode + "-" + this.mapLabel(); }
@@ -73,6 +76,9 @@ class MapSubArea {
     }
     return this._uuid;
   }
+  mapLayerID() {
+    return "mapsubarea" + "_" + this.gafAreaCode() + "_" + this.mapLabel() + this.uuid();
+  }
 
   // returns "QLD-S-A", "TAS-B"
   groupLabel() { return this._mapArea.groupLabel(); }
@@ -88,4 +94,26 @@ function mapAreaAsFeature(mapArea) {
       "coordinates": [mapArea.boundaryPoints()]
     }
   };
+}
+
+function mapAreasLayerIDs(mapAreasByAreaCode) {
+  var mapAreaLayerIDs = [];
+  for (var areaCode in mapAreasByAreaCode) {
+    if (mapAreasByAreaCode.hasOwnProperty(areaCode)) {
+      var mapAreas = mapAreasByAreaCode[areaCode];
+      mapAreas.forEach(mapArea => {
+        mapAreaLayerIDs.push(mapArea.mapLayerID());
+      });
+    }
+  }
+  return mapAreaLayerIDs;
+}
+
+// Returns Features for each MapMajorArea/MapSubArea in current map view
+// note: may include duplicates
+function mapAreasInCurrentView(mapAreasByAreaCode) {
+  var mapAreaLayerIDs = mapAreasLayerIDs(mapAreasByAreaCode);
+  var mapBounds = map.getBounds();
+  var view = [map.project(mapBounds.getSouthWest()), map.project(mapBounds.getNorthEast())];
+  return map.queryRenderedFeatures(view, {layers: mapAreaLayerIDs});
 }
