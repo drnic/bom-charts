@@ -10,15 +10,3 @@ applications:
   env:
     GOPACKAGENAME: github.com/drnic/bom-charts
     GOVERSION: go1.10
-- name: bom-charts-fetch-charts
-  instances: 1
-  disk_quota: 1G
-  memory: 256M
-  no-route: true
-  docker:
-    image: drnic/bom-charts-fetch-gaf-charts
-    username: drnic
-  env:
-    S3_BUCKET: bom-charts
-    AWS_ACCESS_KEY_ID: ((AWS_ACCESS_KEY_ID))
-    AWS_SECRET_ACCESS_KEY: ((AWS_SECRET_ACCESS_KEY))

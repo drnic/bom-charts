@@ -7,10 +7,10 @@ docker build -t drnic/bom-charts-fetch-gaf-charts bin/fetch-gaf-charts
 docker run -ti -e S3_BUCKET=bom-charts -v ~/.aws:/root/.aws -e AWS_PROFILE=starkandwayne-au drnic/bom-charts-fetch-gaf-charts /run.sh
 ```
 
-Deploying to CF from root folder:
+Deploying to CF from this folder:
 
 ```plain
-CF_DOCKER_PASSWORD=... cf push bom-charts-fetch-charts -f manifest-production.yml --var AWS_ACCESS_KEY_ID=... --var AWS_SECRET_ACCESS_KEY=...
+CF_DOCKER_PASSWORD=... cf push bom-charts-fetch-charts --var AWS_ACCESS_KEY_ID=... --var AWS_SECRET_ACCESS_KEY=...
 ```
 
 Once the app stages and runs the first time, stop it:
