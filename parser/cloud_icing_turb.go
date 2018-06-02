@@ -26,6 +26,7 @@ type CloudLayer struct {
 	SeaOnly bool   `json:"sea-only,omitempty"`
 }
 
+var inRE string
 var areaAndAltBaseSubareaRE *regexp.Regexp
 var areaAndAltLayersSubareaRE *regexp.Regexp
 var areaAndAltAmountSubareasRE *regexp.Regexp
@@ -53,15 +54,17 @@ func subareaLabelRE(i int) string {
 }
 
 func cloudAmountInSubareaRE(i int) string {
-	inRE := `(?:IN )?`
 	return cloudAmountRE(i) + " +" + inRE + subareaLabelRE(i)
 }
 
+func cloudBaseInSubareaRE(i int) string {
+	return cloudAmountRE(i) + `? *` + fmt.Sprintf(`BASES? +(?:ABV)?(?P<cloudBase%d>\d+)FT +`, i) + inRE + subareaLabelRE(i)
+}
+
 func init() {
-	inRE := `(?:IN )?`
+	inRE = `(?:IN )?`
 	subareaOnlyFilters := inRE + subareaLabelRE(1)
 	subareasOnlyFilters := inRE + subareaLabelRE(1) + ", " + inRE + subareaLabelRE(2)
-	cloudBaseInSubareaRE := `BASES? +(?:ABV)?(?P<cloudBaseSubArea>\d+)FT +` + subareaOnlyFilters
 	altLayerRE := cloudBaseTopRE(1) + " +" + subareaOnlyFilters
 
 	// SCT CU/SC 3000/5000FT (OVC IN B1, BKN IN B2)
@@ -72,7 +75,7 @@ func init() {
 
 	// SCT CU/SC 4000/7000FT (BASES 3000FT A2)
 	// SCT CU 3000/7000FT, BASE 2500FT IN C1
-	areaAndAltBaseSubareaRE = regexp.MustCompile(commonCloudRE(0) + `,? *.+\(?` + cloudBaseInSubareaRE + `.*\)?`)
+	areaAndAltBaseSubareaRE = regexp.MustCompile(commonCloudRE(0) + `,? *\(?` + cloudBaseInSubareaRE(1) + `.*\)?`)
 
 	// BKN CU/SC 4000/9000FT (3000/ABV10000FT IN A1)
 	areaAndAltLayersSubareaRE = regexp.MustCompile(commonCloudRE(0) + `.+\(` + altLayerRE + `.*\)`)
@@ -145,12 +148,18 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 	}
 
 	// SCT CU/SC 4000/7000FT (BASES 3000FT A2)
+	// SCT CU/SC 4000/7000FT (BKN BASE 3000FT A2)
 	if match, ok := parseNamedRegexp(areaAndAltBaseSubareaRE, text); ok {
 		areaCloud := newCloudLayerFromFromRegexpMatch(match, 0)
 		parser.EntireAreaCloud = areaCloud
 
 		subareaCloud := *areaCloud
-		subareaCloud.Base, _ = strconv.ParseUint(match["cloudBaseSubArea"], 10, 64)
+		subareaCloud.Base, _ = strconv.ParseUint(match["cloudBase1"], 10, 64)
+		fmt.Printf("%v\n", areaAndAltBaseSubareaRE)
+		fmt.Printf("%#v\n", match)
+		if len(match["cloudAmount1"]) > 0 {
+			subareaCloud.Amount = match["cloudAmount1"]
+		}
 		subarea := match["subarea1"]
 
 		parser.Subareas = map[string]*CloudLayer{}
