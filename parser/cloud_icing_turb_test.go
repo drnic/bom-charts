@@ -210,13 +210,14 @@ var _ = Describe("CloudIcingTurbParser", func() {
 		It("Parses SCT SC 3000/5000FT SEA", func() {
 			text := "SCT SC 3000/5000FT SEA"
 			p, _ := NewCloudIcingTurbParser(text)
-			Expect(*p.EntireAreaCloud).To(Equal(CloudLayer{Amount: "SCT", Type: "SC", Base: 3000, Top: 5000, SeaOnly: true}))
+			Expect(*p.EntireAreaCloud).To(Equal(CloudLayer{Amount: "SCT", Type: "SC", Base: codes.IgnoreMeCloudBase, Top: codes.IgnoreMeCloudTop, SeaOnly: true}))
 		})
 
 	})
 	// TODO:
 	// SCT SC 2000/4000FT SEA W OF YPPD
 	// SCT CU/SC 3000/10000FT, BKN SEA
+	// SCT CU/SC 3000/6000FT SEA/COAST
 	// SCT CU/SC 5000/7000FT LAND N YDMN
 	// FEW CU/SC 4000/7000FT (SCT IN B1, B2, AND IN B3 TL 08Z)
 	// SCT CU/SC 7000/ABV10000FT, BASES 5000FT AT SEA
