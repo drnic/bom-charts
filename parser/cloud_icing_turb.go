@@ -33,43 +33,50 @@ var subareasOnlyRE *regexp.Regexp
 var subareaOnlyRE *regexp.Regexp
 var simpleRE *regexp.Regexp
 
-func init() {
-	cloudAmountRE := `(FEW|SCT|BKN|OVC|ISOL|OCNL|FREQ)`
-	cloudTypeRE := `([A-Z/]+)`
-	cloudRE := `(?:ABV)?(\d+)FT`
-	cloudBaseTopRE := `(\d+)/` + cloudRE
-	subareaLabelRE := `(\w\d+)`
+func cloudAmountRE(i int) string {
+	return fmt.Sprintf(`(?P<cloudAmount%d>FEW|SCT|BKN|OVC|ISOL|OCNL|FREQ)`, i)
+}
+
+func cloudBaseTopRE(i int) string {
+	return fmt.Sprintf(`(?P<cloudBase%d>\d+)/(?:ABV)?(?P<cloudTop%d>\d+)FT`, i, i)
+}
+
+func commonCloudRE(i int) string {
+	cloudTypeRE := fmt.Sprintf(`(?P<cloudType%d>[A-Z/]+)`, i)
 	ignoreLandOrSeaRE := ` *(?:LAND)?/?(?:SEA)? *`
+	return cloudAmountRE(i) + " +" + cloudTypeRE + " +" + cloudBaseTopRE(i) + ignoreLandOrSeaRE
+}
+
+func init() {
+	subareaLabelRE := `(?P<subarea>\w\d+)`
 	inRE := `(?:IN )?`
 	subareaOnlyFilters := inRE + subareaLabelRE
 	subareasOnlyFilters := inRE + subareaLabelRE + ", " + inRE + subareaLabelRE
-	cloudAmountInSubareaRE := cloudAmountRE + " +" + subareaOnlyFilters
-	cloudBaseInSubareaRE := "BASES? +" + cloudRE + " +" + subareaOnlyFilters
-	altLayerRE := cloudBaseTopRE + " +" + subareaOnlyFilters
-
-	commonCloudRE := cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ignoreLandOrSeaRE
+	cloudAmountInSubareaRE := cloudAmountRE(1) + " +" + subareaOnlyFilters
+	cloudBaseInSubareaRE := `BASES? +(?:ABV)?(?P<cloudBaseSubArea>\d+)FT +` + subareaOnlyFilters
+	altLayerRE := cloudBaseTopRE(1) + " +" + subareaOnlyFilters
 
 	// SCT CU/SC 3000/5000FT (OVC IN B1, BKN IN B2)
-	areaAndAltAmountSubareasRE = regexp.MustCompile(commonCloudRE + `.+\(` + cloudAmountInSubareaRE + `, *` + cloudAmountInSubareaRE + `.*\)`)
+	areaAndAltAmountSubareasRE = regexp.MustCompile(commonCloudRE(0) + `.+\(` + cloudAmountInSubareaRE + `, *` + cloudAmountInSubareaRE + `.*\)`)
 
 	// SCT CU/SC 3000/8000FT (BKN IN A1)
-	areaAndAltAmountSubareaRE = regexp.MustCompile(commonCloudRE + `.+\(` + cloudAmountInSubareaRE + `.*\)`)
+	areaAndAltAmountSubareaRE = regexp.MustCompile(commonCloudRE(0) + `.+\(` + cloudAmountInSubareaRE + `.*\)`)
 
 	// SCT CU/SC 4000/7000FT (BASES 3000FT A2)
 	// SCT CU 3000/7000FT, BASE 2500FT IN C1
-	areaAndAltBaseSubareaRE = regexp.MustCompile(commonCloudRE + `,? *.+\(?` + cloudBaseInSubareaRE + `.*\)?`)
+	areaAndAltBaseSubareaRE = regexp.MustCompile(commonCloudRE(0) + `,? *.+\(?` + cloudBaseInSubareaRE + `.*\)?`)
 
 	// BKN CU/SC 4000/9000FT (3000/ABV10000FT IN A1)
-	areaAndAltLayersSubareaRE = regexp.MustCompile(commonCloudRE + `.+\(?` + altLayerRE + `.*\)`)
+	areaAndAltLayersSubareaRE = regexp.MustCompile(commonCloudRE(0) + `.+\(?` + altLayerRE + `.*\)`)
 
 	// BKN ST 1000/4000FT B1, B2
-	subareasOnlyRE = regexp.MustCompile(commonCloudRE + " +" + subareasOnlyFilters)
+	subareasOnlyRE = regexp.MustCompile(commonCloudRE(0) + " +" + subareasOnlyFilters)
 
 	// SCT CU/SC 5000/8000FT IN A1 ONLY
-	subareaOnlyRE = regexp.MustCompile(commonCloudRE + " +" + subareaOnlyFilters)
+	subareaOnlyRE = regexp.MustCompile(commonCloudRE(0) + " +" + subareaOnlyFilters)
 
 	// BKN ST 1000/5000FT
-	simpleRE = regexp.MustCompile(commonCloudRE)
+	simpleRE = regexp.MustCompile(commonCloudRE(0))
 }
 
 // NewCloudIcingTurbParser parses Cloud/Icing/Turbulance text
@@ -153,24 +160,25 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 	}
 
 	// BKN CU/SC 4000/9000FT (3000/ABV10000FT IN A1)
-	if matches := areaAndAltLayersSubareaRE.FindAllStringSubmatch(text, -1); matches != nil {
-		fmt.Printf("%v/n", areaAndAltLayersSubareaRE)
-		fmt.Printf("%#v/n", matches)
-		areaCloud := &CloudLayer{}
-		areaCloud.Amount = matches[0][1]
-		areaCloud.Type = matches[0][2]
-		areaCloud.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
-		areaCloud.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
-		areaCloud.Cumulus = areaCloud.Type == "CB" || areaCloud.Type == "TCU"
-		parser.EntireAreaCloud = areaCloud
+	if matches := areaAndAltLayersSubareaRE.FindStringSubmatch(text); matches != nil {
+		fmt.Printf("%v\n", areaAndAltLayersSubareaRE)
+		fmt.Printf("%#v\n", matches)
+		fmt.Printf("%#v\n", areaAndAltLayersSubareaRE.SubexpNames())
+		// areaCloud := &CloudLayer{}
+		// areaCloud.Amount = matches[0][1]
+		// areaCloud.Type = matches[0][2]
+		// areaCloud.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
+		// areaCloud.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
+		// areaCloud.Cumulus = areaCloud.Type == "CB" || areaCloud.Type == "TCU"
+		// parser.EntireAreaCloud = areaCloud
 
-		subareaCloud := *areaCloud
-		subareaCloud.Base, _ = strconv.ParseUint(matches[0][5], 10, 64)
-		subareaCloud.Top, _ = strconv.ParseUint(matches[0][6], 10, 64)
-		subarea := matches[0][7]
+		// subareaCloud := *areaCloud
+		// subareaCloud.Base, _ = strconv.ParseUint(matches[0][5], 10, 64)
+		// subareaCloud.Top, _ = strconv.ParseUint(matches[0][6], 10, 64)
+		// subarea := matches[0][7]
 
-		parser.Subareas = map[string]*CloudLayer{}
-		parser.Subareas[subarea] = &subareaCloud
+		// parser.Subareas = map[string]*CloudLayer{}
+		// parser.Subareas[subarea] = &subareaCloud
 		return
 	}
 
