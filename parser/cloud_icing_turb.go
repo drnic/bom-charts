@@ -23,6 +23,7 @@ type CloudLayer struct {
 	Base    uint64 `json:"base"`
 	Top     uint64 `json:"top"`
 	Cumulus bool   `json:"cumulus"`
+	SeaOnly bool   `json:"sea-only,omitempty`
 }
 
 var areaAndAltBaseSubareaRE *regexp.Regexp
@@ -77,6 +78,19 @@ func init() {
 
 	// BKN ST 1000/5000FT
 	simpleRE = regexp.MustCompile(commonCloudRE(0))
+}
+
+func parseNamedRegexp(re *regexp.Regexp, text string) (result map[string]string, matches bool) {
+	if match := re.FindStringSubmatch(text); match != nil {
+		result = map[string]string{}
+		for i, name := range re.SubexpNames() {
+			if i != 0 && name != "" {
+				result[name] = match[i]
+			}
+		}
+		return result, true
+	}
+	return result, false
 }
 
 // NewCloudIcingTurbParser parses Cloud/Icing/Turbulance text
@@ -215,13 +229,12 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 		return
 	}
 
-	// BKN ST 1000/5000FT
-	if matches := simpleRE.FindAllStringSubmatch(text, -1); matches != nil {
+	if match, ok := parseNamedRegexp(simpleRE, text); ok {
 		cloud := &CloudLayer{}
-		cloud.Amount = matches[0][1]
-		cloud.Type = matches[0][2]
-		cloud.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
-		cloud.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
+		cloud.Amount = match["cloudAmount0"]
+		cloud.Type = match["cloudType0"]
+		cloud.Base, _ = strconv.ParseUint(match["cloudBase0"], 10, 64)
+		cloud.Top, _ = strconv.ParseUint(match["cloudTop0"], 10, 64)
 		cloud.Cumulus = cloud.Type == "CB" || cloud.Type == "TCU"
 
 		if cloud.Amount != "FEW" {
