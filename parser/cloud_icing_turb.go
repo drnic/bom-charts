@@ -23,7 +23,7 @@ type CloudLayer struct {
 	Base    uint64 `json:"base"`
 	Top     uint64 `json:"top"`
 	Cumulus bool   `json:"cumulus"`
-	SeaOnly bool   `json:"sea-only,omitempty`
+	SeaOnly bool   `json:"sea-only,omitempty"`
 }
 
 var areaAndAltBaseSubareaRE *regexp.Regexp
@@ -213,14 +213,9 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 	}
 
 	// SCT CU/SC 5000/8000FT IN A1 ONLY
-	if matches := subareaOnlyRE.FindAllStringSubmatch(text, -1); matches != nil {
-		cloud := &CloudLayer{}
-		cloud.Amount = matches[0][1]
-		cloud.Type = matches[0][2]
-		cloud.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
-		cloud.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
-		cloud.Cumulus = cloud.Type == "CB" || cloud.Type == "TCU"
-		subarea := matches[0][5]
+	if match, ok := parseNamedRegexp(subareaOnlyRE, text); ok {
+		cloud := newCloudLayerFromFromRegexpMatch(match, 0)
+		subarea := match["subarea"]
 
 		if cloud.Amount != "FEW" {
 			parser.Subareas = map[string]*CloudLayer{}
@@ -229,13 +224,9 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 		return
 	}
 
+	// SCT CU/SC 5000/8000FT
 	if match, ok := parseNamedRegexp(simpleRE, text); ok {
-		cloud := &CloudLayer{}
-		cloud.Amount = match["cloudAmount0"]
-		cloud.Type = match["cloudType0"]
-		cloud.Base, _ = strconv.ParseUint(match["cloudBase0"], 10, 64)
-		cloud.Top, _ = strconv.ParseUint(match["cloudTop0"], 10, 64)
-		cloud.Cumulus = cloud.Type == "CB" || cloud.Type == "TCU"
+		cloud := newCloudLayerFromFromRegexpMatch(match, 0)
 
 		if cloud.Amount != "FEW" {
 			parser.EntireAreaCloud = cloud
@@ -243,5 +234,19 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 		return
 	}
 
+	return
+}
+
+func matchKey(key string, i int) string {
+	return fmt.Sprintf(key+"%d", i)
+}
+
+func newCloudLayerFromFromRegexpMatch(match map[string]string, i int) (cloud *CloudLayer) {
+	cloud = &CloudLayer{}
+	cloud.Amount = match[matchKey("cloudAmount", i)]
+	cloud.Type = match[matchKey("cloudType", i)]
+	cloud.Base, _ = strconv.ParseUint(match[matchKey("cloudBase", i)], 10, 64)
+	cloud.Top, _ = strconv.ParseUint(match[matchKey("cloudTop", i)], 10, 64)
+	cloud.Cumulus = cloud.Type == "CB" || cloud.Type == "TCU"
 	return
 }
