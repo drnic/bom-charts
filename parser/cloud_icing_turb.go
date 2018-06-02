@@ -32,24 +32,25 @@ var subareaOnlyRE *regexp.Regexp
 var simpleRE *regexp.Regexp
 
 func init() {
-	cloudAmountRE := "(FEW|SCT|BKN|OVC|ISOL|OCNL|FREQ)"
-	cloudTypeRE := "([A-Z/]+)"
-	cloudRE := "(?:ABV)?(\\d+)FT"
-	cloudBaseTopRE := "(\\d+)/" + cloudRE
-	subareaLabelRE := "(\\w\\d+)"
-	ignoreLandOrSeaRE := " *(?:LAND)?/?(?:SEA)? *"
-	subareaOnlyFilters := "(?:IN )?" + subareaLabelRE
-	subareasOnlyFilters := "(?:IN )?" + subareaLabelRE + ", " + "(?:IN )?" + subareaLabelRE
+	cloudAmountRE := `(FEW|SCT|BKN|OVC|ISOL|OCNL|FREQ)`
+	cloudTypeRE := `([A-Z/]+)`
+	cloudRE := `(?:ABV)?(\d+)FT`
+	cloudBaseTopRE := `(\d+)/` + cloudRE
+	subareaLabelRE := `(\w\d+)`
+	ignoreLandOrSeaRE := ` *(?:LAND)?/?(?:SEA)? *`
+	inRE := `(?:IN )?`
+	subareaOnlyFilters := inRE + subareaLabelRE
+	subareasOnlyFilters := inRE + subareaLabelRE + ", " + inRE + subareaLabelRE
 	cloudAmountInSubareaRE := cloudAmountRE + " +" + subareaOnlyFilters
 	cloudBaseInSubareaRE := "BASES? +" + cloudRE + " +" + subareaOnlyFilters
 
 	commonCloudRE := cloudAmountRE + " +" + cloudTypeRE + " +" + cloudBaseTopRE + ignoreLandOrSeaRE
 
 	// SCT CU/SC 3000/5000FT (OVC IN B1, BKN IN B2)
-	areaAndAltAmountSubareasRE = regexp.MustCompile(commonCloudRE + ".+\\(" + cloudAmountInSubareaRE + ", *" + cloudAmountInSubareaRE + ".*\\)")
+	areaAndAltAmountSubareasRE = regexp.MustCompile(commonCloudRE + `.+\(` + cloudAmountInSubareaRE + `, *` + cloudAmountInSubareaRE + `.*\)`)
 
 	// SCT CU/SC 3000/8000FT (BKN IN A1)
-	areaAndAltAmountSubareaRE = regexp.MustCompile(commonCloudRE + ".+\\(" + cloudAmountInSubareaRE + ".*\\)")
+	areaAndAltAmountSubareaRE = regexp.MustCompile(commonCloudRE + `.+\(` + cloudAmountInSubareaRE + `.*\)`)
 
 	// SCT CU/SC 4000/7000FT (BASES 3000FT A2)
 	// SCT CU 3000/7000FT, BASE 2500FT IN C1
