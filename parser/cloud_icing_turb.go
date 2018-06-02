@@ -67,7 +67,7 @@ func init() {
 	areaAndAltBaseSubareaRE = regexp.MustCompile(commonCloudRE(0) + `,? *.+\(?` + cloudBaseInSubareaRE + `.*\)?`)
 
 	// BKN CU/SC 4000/9000FT (3000/ABV10000FT IN A1)
-	areaAndAltLayersSubareaRE = regexp.MustCompile(commonCloudRE(0) + `.+\(?` + altLayerRE + `.*\)`)
+	areaAndAltLayersSubareaRE = regexp.MustCompile(commonCloudRE(0) + `.+\(` + altLayerRE + `.*\)`)
 
 	// BKN ST 1000/4000FT B1, B2
 	subareasOnlyRE = regexp.MustCompile(commonCloudRE(0) + " +" + subareasOnlyFilters)
@@ -160,25 +160,22 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 	}
 
 	// BKN CU/SC 4000/9000FT (3000/ABV10000FT IN A1)
-	if matches := areaAndAltLayersSubareaRE.FindStringSubmatch(text); matches != nil {
-		fmt.Printf("%v\n", areaAndAltLayersSubareaRE)
-		fmt.Printf("%#v\n", matches)
-		fmt.Printf("%#v\n", areaAndAltLayersSubareaRE.SubexpNames())
-		// areaCloud := &CloudLayer{}
-		// areaCloud.Amount = matches[0][1]
-		// areaCloud.Type = matches[0][2]
-		// areaCloud.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
-		// areaCloud.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
-		// areaCloud.Cumulus = areaCloud.Type == "CB" || areaCloud.Type == "TCU"
-		// parser.EntireAreaCloud = areaCloud
+	if matches := areaAndAltLayersSubareaRE.FindAllStringSubmatch(text, -1); matches != nil {
+		areaCloud := &CloudLayer{}
+		areaCloud.Amount = matches[0][1]
+		areaCloud.Type = matches[0][2]
+		areaCloud.Base, _ = strconv.ParseUint(matches[0][3], 10, 64)
+		areaCloud.Top, _ = strconv.ParseUint(matches[0][4], 10, 64)
+		areaCloud.Cumulus = areaCloud.Type == "CB" || areaCloud.Type == "TCU"
+		parser.EntireAreaCloud = areaCloud
 
-		// subareaCloud := *areaCloud
-		// subareaCloud.Base, _ = strconv.ParseUint(matches[0][5], 10, 64)
-		// subareaCloud.Top, _ = strconv.ParseUint(matches[0][6], 10, 64)
-		// subarea := matches[0][7]
+		subareaCloud := *areaCloud
+		subareaCloud.Base, _ = strconv.ParseUint(matches[0][5], 10, 64)
+		subareaCloud.Top, _ = strconv.ParseUint(matches[0][6], 10, 64)
+		subarea := matches[0][7]
 
-		// parser.Subareas = map[string]*CloudLayer{}
-		// parser.Subareas[subarea] = &subareaCloud
+		parser.Subareas = map[string]*CloudLayer{}
+		parser.Subareas[subarea] = &subareaCloud
 		return
 	}
 
