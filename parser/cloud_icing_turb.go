@@ -44,7 +44,7 @@ func cloudBaseTopRE(i int) string {
 
 func commonCloudRE(i int) string {
 	cloudTypeRE := fmt.Sprintf(`(?P<cloudType%d>[A-Z/]+)`, i)
-	ignoreLandOrSeaRE := ` *(?:LAND)?/?(?P<sea>SEA)? *`
+	ignoreLandOrSeaRE := ` *(?P<land>LAND)?/?(?P<sea>SEA)? *`
 	return cloudAmountRE(i) + " +" + cloudTypeRE + " +" + cloudBaseTopRE(i) + ignoreLandOrSeaRE
 }
 
@@ -225,7 +225,7 @@ func newCloudLayerFromFromRegexpMatch(match map[string]string, i int) (cloud *Cl
 	cloud.Top, _ = strconv.ParseUint(match[matchKey("cloudTop", i)], 10, 64)
 	cloud.Cumulus = cloud.Type == "CB" || cloud.Type == "TCU"
 
-	cloud.SeaOnly = match["sea"] == "SEA"
+	cloud.SeaOnly = len(match["sea"]) > 0 && len(match["land"]) == 0
 	if cloud.SeaOnly {
 		cloud.Base = codes.IgnoreMeCloudBase
 		cloud.Top = codes.IgnoreMeCloudTop
