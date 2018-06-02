@@ -15,7 +15,7 @@ function updateLSALT(gafAreaCode, nightVFR) {
 
   $.get("/json/lsalt-" + gafAreaCode + ".json?" + new Date().getTime(), function (data) {
 
-    var mapAreas = document.mapAreas[gafAreaCode];
+    var mapAreas = document.mapAreasByAreaCode[gafAreaCode];
 
     data.forEach(lsaltGrid => {
       var grid = lsaltGrid["grid"]

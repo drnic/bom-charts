@@ -1,3 +1,5 @@
+
+
 function randomID() {
   // Math.random should be unique because of its seeding algorithm.
   // Convert it to base 36 (numbers + letters), and grab the first 9 characters
@@ -88,7 +90,9 @@ class MapSubArea {
 function mapAreaAsFeature(mapArea) {
   return {
     "type": "Feature",
-    "properties": {},
+    "properties": {
+      "mapArea": mapArea
+    },
     "geometry": {
       "type": "Polygon",
       "coordinates": [mapArea.boundaryPoints()]
@@ -96,6 +100,7 @@ function mapAreaAsFeature(mapArea) {
   };
 }
 
+// TODO - rewrite this based on simple document.mapAreasByLabelID to get mapAreasInCurrentView() method
 function mapAreasLayerIDs(mapAreasByAreaCode) {
   var mapAreaLayerIDs = [];
   for (var areaCode in mapAreasByAreaCode) {
@@ -111,9 +116,16 @@ function mapAreasLayerIDs(mapAreasByAreaCode) {
 
 // Returns Features for each MapMajorArea/MapSubArea in current map view
 // note: may include duplicates
-function mapAreasInCurrentView(mapAreasByAreaCode) {
+function mapAreaFeaturesInCurrentView(mapAreasByAreaCode) {
   var mapAreaLayerIDs = mapAreasLayerIDs(mapAreasByAreaCode);
   var mapBounds = map.getBounds();
   var view = [map.project(mapBounds.getSouthWest()), map.project(mapBounds.getNorthEast())];
   return map.queryRenderedFeatures(view, {layers: mapAreaLayerIDs});
+}
+
+// Returns MapArea objects that are in current map view
+function mapAreasInCurrentView() {
+  var features = mapAreaFeaturesInCurrentView(document.mapAreasByAreaCode);
+  return features.reduce((r, a) => { console.log(a); r.push(a.mapLabel()); return r; }, [])
+
 }

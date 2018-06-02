@@ -1,6 +1,7 @@
 // area_data is keyed by gafAreaCodes (QLD-S,TAS)
 document.areaData = {};
-document.mapAreas = {};
+document.mapAreasByAreaCode = {};
+document.mapAreasByLabelID = {};
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -8,7 +9,8 @@ function sleep(ms) {
 
 $(function () {
   var areaData = document.areaData;
-  var mapAreas = document.mapAreas;
+  var mapAreasByAreaCode = document.mapAreasByAreaCode;
+  var mapAreasByLabelID = document.mapAreasByAreaCode;
 
   function setupGAFBoundary(map, areaCode, data) {
     var gafBoundary = data["boundary"]["points"];
@@ -36,6 +38,16 @@ $(function () {
         "line-color": "#888", "line-width": 1
       }
     });
+  }
+
+  function zoomCurrentLocation(map) {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        var long = position.coords.longitude;
+        var lat = position.coords.latitude;
+        map.zoomIn({zoom: 6, center: [long, lat]});
+      });
+    }
   }
 
   function zoomGAFArea(map, areaCode, data) {
@@ -155,7 +167,9 @@ $(function () {
       $('#mouseover-summary-area').text(text);
     });
 
-
+    map.on("dragend", function(e) {
+      updateGAFTableFromVisibleAreas();
+    });
   }
 
   map.on('load', function () {
@@ -173,23 +187,26 @@ $(function () {
   });
 
   map.on('load', function () {
+    zoomCurrentLocation(map);
+
     var gafAreaCodes = ["WA-N", "WA-S", "NT", "QLD-N", "QLD-S", "SA", "NSW-W", "NSW-E", "VIC", "TAS"];
     gafAreaCodes.forEach(gafAreaCode => {
       $.get("/api/gafarea/" + gafAreaCode + "/current.json", function(data) {
         areaData[gafAreaCode] = data;
-        mapAreas[gafAreaCode] = [];
+        mapAreasByAreaCode[gafAreaCode] = [];
 
         setupGAFBoundary(map, gafAreaCode, data);
 
         data["areas"].forEach(area => {
           var mapArea = new MapMajorArea(gafAreaCode, area);
-          mapAreas[gafAreaCode].push(mapArea);
+          mapAreasByAreaCode[gafAreaCode].push(mapArea);
+          mapAreasByLabelID[mapArea.mapLayerID()] = mapArea;
 
           setupMapFill(mapArea);
 
           area["sub-areas"].forEach(subArea => {
             var mapSubArea = new MapSubArea(mapArea, subArea);
-            mapAreas[gafAreaCode].push(mapSubArea);
+            mapAreasByAreaCode[gafAreaCode].push(mapSubArea);
             setupMapFill(mapSubArea);
           });
 
@@ -198,13 +215,8 @@ $(function () {
 
         // allow lsalt.js to start intersecting with areas
         updateLSALT(gafAreaCode);
-
-        if (document.gafAreaCode == gafAreaCode) {
-          zoomGAFArea(map, gafAreaCode, data);
-        }
       });
     });
-
 
   });
 });

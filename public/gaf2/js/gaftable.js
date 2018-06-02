@@ -1,3 +1,7 @@
+function updateGAFTableFromVisibleAreas() {
+
+}
+
 function addAreaToGAFTable(majorMapArea) {
   if ($("#gaf-table table").length === 0) {
     var table = $(`
