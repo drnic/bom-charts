@@ -50,18 +50,20 @@ function addAreaToGAFTable(majorMapArea) {
       areaCol.appendTo(row);
     }
 
+    var surfaceVis = wxCond["surface-vis-wx"];
     var surfaceVisCol = $(`<td>`);
-    surfaceVisCol.text(wxCond["surface-vis-wx"]["text"]);
+    surfaceVisCol.text(surfaceVis["text"]);
+    (surfaceVis["sub-areas-mentioned"] || []).forEach(subareaLabel => {
+      surfaceVisCol.addClass(`subarea-mentioned-${subareaLabel}`);
+    })
     surfaceVisCol.appendTo(row);
 
     var cloudIceCol = $(`<td>`);
     wxCond["cloud-ice-turb"].forEach(cloudIce => {
       var cloudIcePart = $(`<div>`);
-      if (cloudIce["sub-areas-mentioned"] !== undefined) {
-        cloudIce["sub-areas-mentioned"].forEach(subareaLabel => {
-          cloudIcePart.addClass(`subarea-mentioned-${subareaLabel}`);
-        })
-      }
+      (cloudIce["sub-areas-mentioned"] || []).forEach(subareaLabel => {
+        cloudIcePart.addClass(`subarea-mentioned-${subareaLabel}`);
+      })
       cloudIcePart.text(cloudIce["text"]);
       cloudIcePart.appendTo(cloudIceCol);
     });
