@@ -76,6 +76,7 @@ function addAreaToGAFTable(majorMapArea) {
       freezingLevelCol.appendTo(row);
     }
 
+    row.hide();
     row.appendTo(tbody);
   });
 }
