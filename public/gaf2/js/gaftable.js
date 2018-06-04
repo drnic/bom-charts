@@ -1,7 +1,6 @@
 function updateGAFTableFromVisibleAreas() {
   $("#gaf-table").text("");
   majorAreas(mapAreasInCurrentView()).forEach(mapMajorArea => {
-    console.log(mapMajorArea);
     addAreaToGAFTable(mapMajorArea);
   });
 }

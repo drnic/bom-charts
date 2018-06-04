@@ -217,7 +217,7 @@ $(function () {
         });
 
         // allow lsalt.js to start intersecting with areas
-        updateLSALT(gafAreaCode);
+        // updateLSALT(gafAreaCode);
       });
     });
 

@@ -18,14 +18,14 @@
   <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
 </head>
 <body>
-  <p>|
+  <!--p>|
     {{range .Areas -}}<a href="/gaf2/{{.}}">{{.}}</a> |
     {{end -}}
     &nbsp;&nbsp;
     | <a href="http://www.bom.gov.au/fwo/aviation/{{.Current.PageCode}}.png">PNG</a>
     | <a href="http://www.bom.gov.au/fwo/aviation/{{.Current.PageCode}}.pdf">PDF</a>
     | <a href="/gaf/?area={{.Current.GAFAreaID}}">Original</a>
-  </p>
+  </p-->
 
   <!--
     <img src="http://www.bom.gov.au/fwo/aviation/{{.Current.PageCode}}.png" style="width: 800px; float: right;" />
@@ -48,7 +48,9 @@
   {{template "gaf2/color_legend"  }}
 
   <div id="gaf-table"></div>
+  <!--
   {{template "gaf2/gaf_table" .Current}}
   {{template "gaf2/gaf_table" .Next}}
+  -->
 </body>
 </html>
