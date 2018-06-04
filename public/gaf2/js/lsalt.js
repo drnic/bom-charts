@@ -1,3 +1,9 @@
+function updateLSALTFromVisibleAreas() {
+  gafAreaCodesFromMapAreas(mapAreasInCurrentView()).forEach(gafAreaCode => {
+    updateLSALT(gafAreaCode, false);
+  });
+}
+
 function updateLSALT(gafAreaCode, nightVFR) {
   var cssHeightColors = {
     0: "#BB0EC9",

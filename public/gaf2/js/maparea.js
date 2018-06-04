@@ -140,3 +140,17 @@ function majorAreas(mapAreas) {
     return result;
   }, []);
 }
+
+// gafAreaCodesFromMapAreas returns a unique list of GAF areas (QLD-S, NSW-E etc) for
+// a list of MapMajorAreas + MapSubAreas
+function gafAreaCodesFromMapAreas(mapAreas) {
+  var gafAreaCodesFound = {};
+  return mapAreas.reduce((result, mapArea) => {
+    var gafAreaCode = mapArea.gafAreaCode();
+    if (!gafAreaCodesFound[gafAreaCode]) {
+      gafAreaCodesFound[gafAreaCode] = true;
+      result.push(gafAreaCode);
+    }
+    return result;
+  }, []);
+}
