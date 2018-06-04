@@ -1,7 +1,8 @@
 // area_data is keyed by gafAreaCodes (QLD-S,TAS)
 document.areaData = {};
 document.mapAreasByAreaCode = {};
-document.mapAreasByLabelID = {};
+document.mapAreasByLayerID = {};
+document.mapAreasOutlineIDs = [];
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -10,7 +11,8 @@ function sleep(ms) {
 $(function () {
   var areaData = document.areaData;
   var mapAreasByAreaCode = document.mapAreasByAreaCode;
-  var mapAreasByLabelID = document.mapAreasByAreaCode;
+  var mapAreasByLayerID = document.mapAreasByLayerID;
+  var mapAreasOutlineIDs = document.mapAreasOutlineIDs;
 
   function setupGAFBoundary(map, areaCode, data) {
     var gafBoundary = data["boundary"]["points"];
@@ -72,8 +74,11 @@ $(function () {
 
     var baseID = mapArea.uuid();
     var layerID = mapArea.mapLayerID();
-    var outlineID = "outline-" + baseID;
+    mapAreasByLayerID[layerID] = mapArea;
+
     var labelID = "label-" + baseID;
+    var outlineID = "outline-" + baseID;
+    mapAreasOutlineIDs.push(outlineID);
 
     // 1000ft AMSL matches to .height-1 in main.css
     var areaCloudLayerBase = mapArea.cloudBase() === undefined ? 10000 : mapArea.cloudBase();
@@ -139,6 +144,7 @@ $(function () {
       }
     });
 
+    updateGAFTableFromVisibleAreas();
 
     var gafPageCode = document.gafPageCode
     map.on("mousemove", layerID, function(e) {
@@ -166,10 +172,6 @@ $(function () {
       }
       $('#mouseover-summary-area').text(text);
     });
-
-    map.on("dragend", function(e) {
-      updateGAFTableFromVisibleAreas();
-    });
   }
 
   map.on('load', function () {
@@ -186,6 +188,10 @@ $(function () {
     }, 'waterway-river-canal-shadow');
   });
 
+  map.on("dragend", function(e) {
+    updateGAFTableFromVisibleAreas();
+  });
+
   map.on('load', function () {
     zoomCurrentLocation(map);
 
@@ -200,7 +206,6 @@ $(function () {
         data["areas"].forEach(area => {
           var mapArea = new MapMajorArea(gafAreaCode, area);
           mapAreasByAreaCode[gafAreaCode].push(mapArea);
-          mapAreasByLabelID[mapArea.mapLayerID()] = mapArea;
 
           setupMapFill(mapArea);
 
@@ -209,8 +214,6 @@ $(function () {
             mapAreasByAreaCode[gafAreaCode].push(mapSubArea);
             setupMapFill(mapSubArea);
           });
-
-          addAreaToGAFTable(mapArea);
         });
 
         // allow lsalt.js to start intersecting with areas

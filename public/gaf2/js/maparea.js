@@ -91,7 +91,7 @@ function mapAreaAsFeature(mapArea) {
   return {
     "type": "Feature",
     "properties": {
-      "mapArea": mapArea
+      "mapLayerID": mapArea.mapLayerID()
     },
     "geometry": {
       "type": "Polygon",
@@ -100,32 +100,26 @@ function mapAreaAsFeature(mapArea) {
   };
 }
 
-// TODO - rewrite this based on simple document.mapAreasByLabelID to get mapAreasInCurrentView() method
-function mapAreasLayerIDs(mapAreasByAreaCode) {
-  var mapAreaLayerIDs = [];
-  for (var areaCode in mapAreasByAreaCode) {
-    if (mapAreasByAreaCode.hasOwnProperty(areaCode)) {
-      var mapAreas = mapAreasByAreaCode[areaCode];
-      mapAreas.forEach(mapArea => {
-        mapAreaLayerIDs.push(mapArea.mapLayerID());
-      });
-    }
-  }
-  return mapAreaLayerIDs;
-}
-
 // Returns Features for each MapMajorArea/MapSubArea in current map view
 // note: may include duplicates
-function mapAreaFeaturesInCurrentView(mapAreasByAreaCode) {
-  var mapAreaLayerIDs = mapAreasLayerIDs(mapAreasByAreaCode);
+function mapAreaFeaturesInCurrentView() {
+  var mapAreasOutlineIDs = document.mapAreasOutlineIDs;
   var mapBounds = map.getBounds();
   var view = [map.project(mapBounds.getSouthWest()), map.project(mapBounds.getNorthEast())];
-  return map.queryRenderedFeatures(view, {layers: mapAreaLayerIDs});
+  return map.queryRenderedFeatures(view, {layers: mapAreasOutlineIDs});
 }
 
 // Returns MapArea objects that are in current map view
 function mapAreasInCurrentView() {
-  var features = mapAreaFeaturesInCurrentView(document.mapAreasByAreaCode);
-  return features.reduce((r, a) => { console.log(a); r.push(a.mapLabel()); return r; }, [])
-
+  var features = mapAreaFeaturesInCurrentView();
+  var layerIDsFound = {};
+  return features.reduce((r, a) => {
+    var mapLayerID = a.properties.mapLayerID;
+    if (!layerIDsFound[mapLayerID]) {
+      mapArea = document.mapAreasByLayerID[mapLayerID];
+      r.push(mapArea);
+      layerIDsFound[mapLayerID] = true;
+    }
+    return r;
+  }, [])
 }

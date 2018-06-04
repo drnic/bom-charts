@@ -1,4 +1,6 @@
 function updateGAFTableFromVisibleAreas() {
+  console.log(mapAreasInCurrentView());
+  // addAreaToGAFTable(mapArea);
 
 }
 
