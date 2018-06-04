@@ -1,7 +1,23 @@
 function updateGAFTableFromVisibleAreas() {
-  $("#gaf-table").text("");
-  majorAreas(mapAreasInCurrentView()).forEach(mapMajorArea => {
-    addAreaToGAFTable(mapMajorArea);
+  var visibleMajorAreas = majorAreas(mapAreasInCurrentView());
+  var visibleAreaGroupClasses = {};
+  visibleMajorAreas.forEach(mapMajorArea => {
+    visibleAreaGroupClasses[`gaf-${mapMajorArea.gafAreaCodeAndGroup()}`] = true;
+  });
+
+  $("#gaf-table table tr").each(function() {
+    var classes = $(this).attr("class");
+    if (classes !== undefined) {
+      classes.split(/\s+/).forEach(className => {
+        if (className.startsWith(`gaf-`)) {
+          if (visibleAreaGroupClasses[className]) {
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+        }
+      });
+    }
   });
 }
 
@@ -19,7 +35,7 @@ function addAreaToGAFTable(majorMapArea) {
   var wxCondsCount = majorMapArea.wxConds().length;
 
   majorMapArea.wxConds().forEach((wxCond, index) => {
-    var row = `<tr>`;
+    var row = `<tr class="gaf-${majorMapArea.gafAreaCodeAndGroup()}">`;
     if (index === 0) {
       row += `<td rowspan=${wxCondsCount}>
         ${majorMapArea.gafAreaCode()} - ${majorMapArea.mapLabel()}

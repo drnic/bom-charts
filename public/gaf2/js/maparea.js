@@ -15,10 +15,19 @@ class MapMajorArea {
     this._gafArea = gafArea;
   }
   data() { return this._gafArea; }
+
+  // QLD-S, NSW-E
   gafAreaCode() { return this._gafAreaCode; }
+
+  // A, B, C
+  areaGroup() { return this._gafArea["area-id"]; }
+
+  // QLD-S-A, NSW-E-C, TAS-B
+  gafAreaCodeAndGroup() { return `${this.gafAreaCode()}-${this.areaGroup()}`; }
+
   majorArea() { return this; }
   isSubArea() { return false; }
-  areaGroup() { return this._gafArea["area-id"]; }
+
   freezingLevel() { return this.data()["freezing-level"]; }
   mapLabel() { return this._gafArea["area-id"]; }
   cloudBase() { return this._gafArea["cloud-base"]; }

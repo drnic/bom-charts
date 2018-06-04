@@ -214,6 +214,8 @@ $(function () {
             mapAreasByAreaCode[gafAreaCode].push(mapSubArea);
             setupMapFill(mapSubArea);
           });
+
+          addAreaToGAFTable(mapArea);
         });
 
         // allow lsalt.js to start intersecting with areas
