@@ -4,6 +4,8 @@ document.mapAreasByAreaCode = {};
 document.mapAreasByLayerID = {};
 document.mapAreasOutlineIDs = [];
 
+var initialZoom = true;
+
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -48,6 +50,8 @@ $(function () {
         var long = position.coords.longitude;
         var lat = position.coords.latitude;
         map.zoomIn({zoom: 6, center: [long, lat]});
+        // console.log("finished zoom");
+        // updateLSALTFromVisibleAreas();
       });
     }
   }
@@ -172,6 +176,14 @@ $(function () {
       }
       $('#mouseover-summary-area').text(text);
     });
+
+    map.on('moveend', function(e){
+      if(initialZoom){
+        initialZoom = false;
+        updateGAFTableFromVisibleAreas();
+        updateLSALTFromVisibleAreas();
+      }
+   });
   }
 
   map.on('load', function () {
@@ -190,6 +202,10 @@ $(function () {
 
   map.on("dragend", function(e) {
     updateGAFTableFromVisibleAreas();
+  });
+
+  map.on("dragend", function(e) {
+    updateLSALTFromVisibleAreas();
   });
 
   map.on('load', function () {
@@ -217,9 +233,6 @@ $(function () {
 
           addAreaToGAFTable(mapArea);
         });
-
-        // allow lsalt.js to start intersecting with areas
-        // updateLSALT(gafAreaCode);
       });
     });
 

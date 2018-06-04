@@ -4,7 +4,13 @@ function updateLSALTFromVisibleAreas() {
   });
 }
 
+var lsaltAreaCodeLoaded = {}
 function updateLSALT(gafAreaCode, nightVFR) {
+  if (lsaltAreaCodeLoaded[gafAreaCode]) {
+    return;
+  }
+  lsaltAreaCodeLoaded[gafAreaCode] = true;
+
   var cssHeightColors = {
     0: "#BB0EC9",
     1: "#BB0EC9",
