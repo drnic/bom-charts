@@ -1,7 +1,9 @@
 function updateGAFTableFromVisibleAreas() {
-  console.log(mapAreasInCurrentView());
-  // addAreaToGAFTable(mapArea);
-
+  $("#gaf-table").text("");
+  majorAreas(mapAreasInCurrentView()).forEach(mapMajorArea => {
+    console.log(mapMajorArea);
+    addAreaToGAFTable(mapMajorArea);
+  });
 }
 
 function addAreaToGAFTable(majorMapArea) {
@@ -42,17 +44,3 @@ function addAreaToGAFTable(majorMapArea) {
     $(row).appendTo($("#gaf-table table tbody"));
   });
 }
-
-// TODO: only show rows for visible GAF areas
-
-// https://github.com/mapbox/mapbox-gl-js/issues/3888#issuecomment-270560065
-// get airpots in current map view
-function airportsInCurrentView() {
-  var mapBounds = map.getBounds();
-  var view = [map.project(mapBounds.getSouthWest()), map.project(mapBounds.getNorthEast())];
-  return map.queryRenderedFeatures(view, {layers: ["airports"]});
-}
-
-// airportsInCurrentView().forEach(airport => {
-//   console.log(airport.properties.title);
-// })

@@ -16,6 +16,7 @@ class MapMajorArea {
   }
   data() { return this._gafArea; }
   gafAreaCode() { return this._gafAreaCode; }
+  majorArea() { return this; }
   isSubArea() { return false; }
   areaGroup() { return this._gafArea["area-id"]; }
   freezingLevel() { return this.data()["freezing-level"]; }
@@ -57,6 +58,7 @@ class MapSubArea {
   }
   data() { return this._gafSubArea; }
   gafAreaCode() { return this._mapArea.gafAreaCode(); }
+  majorArea() { return this._mapArea; }
   isSubArea() { return true; }
   areaGroup() { return this._mapArea.areaGroup(); }
   freezingLevel() { return this._mapArea.freezingLevel(); }
@@ -122,4 +124,19 @@ function mapAreasInCurrentView() {
     }
     return r;
   }, [])
+}
+
+// majorAreas returns a unique list of MapMajorAreas for
+// a list of MapMajorAreas + MapSubAreas
+function majorAreas(mapAreas) {
+  var majorAreasFound = {};
+  return mapAreas.reduce((result, mapArea) => {
+    var mapMajorArea = mapArea.majorArea();
+    var mapLayerID = mapMajorArea.mapLayerID();
+    if (!majorAreasFound[mapLayerID]) {
+      majorAreasFound[mapLayerID] = true;
+      result.push(mapMajorArea);
+    }
+    return result;
+  }, []);
 }
