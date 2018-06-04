@@ -101,6 +101,9 @@ var _ = Describe("Page", func() {
 	})
 })
 
+// TODO if surface/vis says "WDSPR" then perhaps prioritize its cloud/icing as visible layer
+// 4000M ISOL SHRA (WDSPR IN A1, SCT SEA S OF A1)
+
 // TODO: CB is first; but lowest cloud might be later
 // ISOL CB 6000/ABV10000FT
 // BKN ST 1000/5000FT

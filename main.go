@@ -59,7 +59,7 @@ func getNextAreaForecastByAreaCode(params martini.Params, r render.Render) {
 }
 
 func getGAFHTML(params martini.Params, r render.Render) {
-	r.HTML(200, "gaf2/index", gafs)
+	r.HTML(200, "gaf2/index", struct{}{})
 }
 
 func getAIRMET(r render.Render) {
