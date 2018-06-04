@@ -56,28 +56,30 @@ function updateLSALT(gafAreaCode, nightVFR) {
         layerColourIndex = Math.min(10, Math.max(0, layerColourIndex));
         var layerColour = cssHeightColors[layerColourIndex];
 
-        map.addLayer({
-          "id": layerID,
-          "type": "fill",
-          "source": {
-            "type": "geojson", "data": lsaltIntersection
-          },
-          "paint": {
-            "fill-color": layerColour,
-            "fill-antialias": false,
-            "fill-opacity": 0.5
-          }
-        });
+        if (mapArea.cloudBaseColor() != layerColour) {
+          map.addLayer({
+            "id": layerID,
+            "type": "fill",
+            "source": {
+              "type": "geojson", "data": lsaltIntersection
+            },
+            "paint": {
+              "fill-color": layerColour,
+              "fill-antialias": false,
+              "fill-opacity": 0.5
+            }
+          });
 
-        map.on("mouseover", layerID, function(e) {
-          map.setPaintProperty(layerID, "fill-opacity", 0.8);
-          var text = "LSALT: " + lsaltGrid["lsalt-100ft"];
-          $('#mouseover-summary-lsalt-grid').text(text);
-        });
+          map.on("mouseover", layerID, function(e) {
+            map.setPaintProperty(layerID, "fill-opacity", 0.8);
+            var text = "LSALT: " + lsaltGrid["lsalt-100ft"];
+            $('#mouseover-summary-lsalt-grid').text(text);
+          });
 
-        map.on("mouseleave", layerID, function(e) {
-          map.setPaintProperty(layerID, "fill-opacity", 0.5);
-        });
+          map.on("mouseleave", layerID, function(e) {
+            map.setPaintProperty(layerID, "fill-opacity", 0.5);
+          });
+        }
       });
     });
   });

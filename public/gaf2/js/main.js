@@ -85,23 +85,7 @@ $(function () {
     mapAreasOutlineIDs.push(outlineID);
 
     // 1000ft AMSL matches to .height-1 in main.css
-    var areaCloudLayerBase = mapArea.cloudBase() === undefined ? 10000 : mapArea.cloudBase();
-    var areaCloudLayerBaseCode = Math.round(areaCloudLayerBase / 1000);
-    areaCloudLayerBaseCode = Math.min(10, Math.max(0, areaCloudLayerBaseCode));
-    var cssHeightColors = {
-      0: "#BB0EC9",
-      1: "#BB0EC9",
-      2: "#E30A35",
-      3: "#590AE3",
-      4: "#0ABCE3",
-      5: "#99DAAA",
-      6: "#99DAAA",
-      7: "#99DAAA",
-      8: "#99DAAA",
-      9: "#99DAAA",
-      10: "#99DAAA",
-    }
-    var fillColor = cssHeightColors[areaCloudLayerBaseCode];
+    var fillColor = mapArea.cloudBaseColor();
 
     var areaLayerFeature = mapAreaAsFeature(mapArea);
 
