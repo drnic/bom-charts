@@ -38,30 +38,42 @@ function addAreaToGAFTable(majorMapArea) {
   }
   var wxCondsCount = majorMapArea.wxConds().length;
 
+  var tbody = $("#gaf-table table tbody");
   majorMapArea.wxConds().forEach((wxCond, index) => {
-    var row = `<tr>`;
+    var row = $(`<tr>`);
+    row.addClass(`gaf-${majorMapArea.gafAreaCodeAndGroup()}`);
+
     if (index === 0) {
-      row += `<td rowspan=${wxCondsCount}>
-        ${majorMapArea.gafAreaCode()} - ${majorMapArea.mapLabel()}
-      </td>`;
+      var areaCol = $(`<td>`);
+      areaCol.attr("rowspan", wxCondsCount);
+      areaCol.text(`${majorMapArea.gafAreaCode()} - ${majorMapArea.mapLabel()}`);
+      areaCol.appendTo(row);
     }
 
-    var surfaceVis = wxCond["surface-vis-wx"];
-    row += `<td>${surfaceVis["text"]}</td>`;
-    row += `<td>`;
+    var surfaceVisCol = $(`<td>`);
+    surfaceVisCol.text(wxCond["surface-vis-wx"]["text"]);
+    surfaceVisCol.appendTo(row);
+
+    var cloudIceCol = $(`<td>`);
     wxCond["cloud-ice-turb"].forEach(cloudIce => {
-      row += `<div>${cloudIce["text"]}</div>`
+      var cloudIcePart = $(`<div>`);
+      if (cloudIce["sub-areas-mentioned"] !== undefined) {
+        cloudIce["sub-areas-mentioned"].forEach(subareaLabel => {
+          cloudIcePart.addClass(`subarea-mentioned-${subareaLabel}`);
+        })
+      }
+      cloudIcePart.text(cloudIce["text"]);
+      cloudIcePart.appendTo(cloudIceCol);
     });
-    row += `</td>`;
+    cloudIceCol.appendTo(row);
 
     if (index === 0) {
-      row += `<td rowspan=${wxCondsCount}>
-        ${majorMapArea.freezingLevel()}
-      </td>`;
+      var freezingLevelCol = $(`<td>`);
+      freezingLevelCol.attr("rowspan", wxCondsCount);
+      freezingLevelCol.text(majorMapArea.freezingLevel());
+      freezingLevelCol.appendTo(row);
     }
-    row += `</tr>`;
-    var r = $(row);
-    r.addClass(`gaf-${majorMapArea.gafAreaCodeAndGroup()}`);
-    r.appendTo($("#gaf-table table tbody"));
+
+    row.appendTo(tbody);
   });
 }
