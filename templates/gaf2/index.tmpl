@@ -18,18 +18,6 @@
   <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
 </head>
 <body>
-  <!--p>|
-    {{range .Areas -}}<a href="/gaf2/{{.}}">{{.}}</a> |
-    {{end -}}
-    &nbsp;&nbsp;
-    | <a href="http://www.bom.gov.au/fwo/aviation/{{.Current.PageCode}}.png">PNG</a>
-    | <a href="http://www.bom.gov.au/fwo/aviation/{{.Current.PageCode}}.pdf">PDF</a>
-    | <a href="/gaf/?area={{.Current.GAFAreaID}}">Original</a>
-  </p-->
-
-  <!--
-    <img src="http://www.bom.gov.au/fwo/aviation/{{.Current.PageCode}}.png" style="width: 800px; float: right;" />
-  -->
   <div id='map' style='width: 400px; height: 400px;'></div>
   <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiZHJuaWMiLCJhIjoiY2poaWRidWpyMG02dzM3bXBtMmtiMWdjaiJ9.MowHdxFXszibdQ48A255-Q';
@@ -39,10 +27,6 @@
     center: [133.5,-24.25],
     zoom: 2
     });
-  </script>
-  <script>
-  document.gafAreaCode = "{{.Current.GAFAreaID}}";
-  document.gafPageCode = "{{.Current.PageCode}}";
   </script>
 
   {{template "gaf2/color_legend"  }}

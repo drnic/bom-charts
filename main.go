@@ -59,28 +59,6 @@ func getNextAreaForecastByAreaCode(params martini.Params, r render.Render) {
 }
 
 func getGAFHTML(params martini.Params, r render.Render) {
-	gafs := struct {
-		Areas   []string
-		Current *gaf.AreaForecast
-		Next    *gaf.AreaForecast
-	}{
-		Areas: gaf.Areas,
-	}
-	area, err := gaf.NewAreaMappingPageCode(params["area"])
-	if err != nil {
-		r.JSON(500, errorResponse(err))
-		return
-	}
-	gafs.Current, err = gaf.NewAreaForecast(area.CurrentGAFCode)
-	if err != nil {
-		r.JSON(500, errorResponse(err))
-		return
-	}
-	gafs.Next, err = gaf.NewAreaForecast(area.NextGAFCode)
-	if err != nil {
-		r.JSON(500, errorResponse(err))
-		return
-	}
 	r.HTML(200, "gaf2/index", gafs)
 }
 
