@@ -148,16 +148,16 @@ $(function () {
 
     var gafPageCode = document.gafPageCode
     map.on("mousemove", layerID, function(e) {
-      table = $('#gaf-' + gafPageCode);
-      table.find('.area-' + gafPageCode + '-' + mapArea.areaGroup()).addClass("area-selected");
+      table = gafTable();
+      table.find(`.gaf-${mapArea.gafAreaCodeAndGroup()}`).addClass("area-selected");
       if (mapArea.isSubArea()) {
         table.find('.sub-area-mentioned-' + mapArea.subAreaID()).addClass("sub-area-selected");
       }
     });
 
     map.on("mouseleave", layerID, function() {
-      table = $('#gaf-' + gafPageCode);
-      table.find('.area-' + gafPageCode + '-' + mapArea.areaGroup()).removeClass("area-selected");
+      table = gafTable();
+      table.find(`.gaf-${mapArea.gafAreaCodeAndGroup()}`).removeClass("area-selected");
       if (mapArea.isSubArea()) {
         table.find('.sub-area-mentioned-' + mapArea.subAreaID()).removeClass("sub-area-selected");
       }

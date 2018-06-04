@@ -68,6 +68,7 @@ class MapSubArea {
   data() { return this._gafSubArea; }
   gafAreaCode() { return this._mapArea.gafAreaCode(); }
   majorArea() { return this._mapArea; }
+  gafAreaCodeAndGroup() { return this._mapArea.gafAreaCodeAndGroup(); }
   isSubArea() { return true; }
   areaGroup() { return this._mapArea.areaGroup(); }
   freezingLevel() { return this._mapArea.freezingLevel(); }

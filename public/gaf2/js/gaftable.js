@@ -1,3 +1,7 @@
+function gafTable() {
+  return $("#gaf-table");
+}
+
 function updateGAFTableFromVisibleAreas() {
   var visibleMajorAreas = majorAreas(mapAreasInCurrentView());
   var visibleAreaGroupClasses = {};
@@ -5,7 +9,7 @@ function updateGAFTableFromVisibleAreas() {
     visibleAreaGroupClasses[`gaf-${mapMajorArea.gafAreaCodeAndGroup()}`] = true;
   });
 
-  $("#gaf-table table tr").each(function() {
+  gafTable().find("table tr").each(function() {
     var classes = $(this).attr("class");
     if (classes !== undefined) {
       classes.split(/\s+/).forEach(className => {
@@ -35,7 +39,7 @@ function addAreaToGAFTable(majorMapArea) {
   var wxCondsCount = majorMapArea.wxConds().length;
 
   majorMapArea.wxConds().forEach((wxCond, index) => {
-    var row = `<tr class="gaf-${majorMapArea.gafAreaCodeAndGroup()}">`;
+    var row = `<tr>`;
     if (index === 0) {
       row += `<td rowspan=${wxCondsCount}>
         ${majorMapArea.gafAreaCode()} - ${majorMapArea.mapLabel()}
@@ -56,6 +60,8 @@ function addAreaToGAFTable(majorMapArea) {
       </td>`;
     }
     row += `</tr>`;
-    $(row).appendTo($("#gaf-table table tbody"));
+    var r = $(row);
+    r.addClass(`gaf-${majorMapArea.gafAreaCodeAndGroup()}`);
+    r.appendTo($("#gaf-table table tbody"));
   });
 }
