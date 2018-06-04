@@ -1,0 +1,28 @@
+meta:
+  name:    bom-charts
+  team:    starkandwayne
+  # fly -t ohio-sw login -c https://ci2.starkandwayne.com -n starkandwayne
+  target:  ohio-sw
+  url:     https://ci2.starkandwayne.com
+
+  cf:
+    api:              https://api.run.pivotal.io
+    skip_cert_check:  false
+    organization:     starkandwayne
+    space-production: bom-charts
+    space-staging:    bom-charts-staging
+    username:         ((pws-cf-username))
+    password:         ((pws-cf-password))
+    appname:          bom-charts
+
+  github:
+    owner: drnic
+    repo: bom-charts
+    private_key:  ((github-private-key))
+    access_token: ((github-access-token))
+
+  slack:
+    webhook:  unknown
+    icon:     ((slack-icon-url))
+    username: ((slack-username))
+    channel:  "#snw-pws-apps"
