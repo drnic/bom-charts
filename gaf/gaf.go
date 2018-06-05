@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"html"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/gregjones/httpcache"
 
 	"github.com/drnic/bom-charts/codes"
 	"github.com/drnic/bom-charts/parser"
@@ -67,11 +68,19 @@ type GAFBoundary struct {
 	Points [][]float64 `json:"points"`
 }
 
+var httpTransport *httpcache.Transport
+
+func init() {
+	httpTransport = httpcache.NewMemoryCacheTransport()
+}
+
 // NewAreaForecast is the constructor for a AreaForecast
 func NewAreaForecast(pagecode string) (forecast *AreaForecast, err error) {
+	httpClient := httpTransport.Client()
+
 	url := fmt.Sprintf("http://www.bom.gov.au/fwo/aviation/%s.xml", pagecode)
 	fmt.Println("GET ", url)
-	resp, err := http.Get(url)
+	resp, err := httpClient.Get(url)
 	if err != nil {
 		return nil, err
 	}
