@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"html"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gregjones/httpcache"
 
@@ -68,15 +70,21 @@ type GAFBoundary struct {
 	Points [][]float64 `json:"points"`
 }
 
+var httpTransportCreatedAt time.Time
 var httpTransport *httpcache.Transport
 
-func init() {
-	httpTransport = httpcache.NewMemoryCacheTransport()
+// Cache fetched XML files for an hour
+func httpCacheClient() *http.Client {
+	if httpTransport == nil || time.Since(httpTransportCreatedAt) > time.Hour {
+		httpTransport = httpcache.NewMemoryCacheTransport()
+		httpTransportCreatedAt = time.Now()
+	}
+	return httpTransport.Client()
 }
 
 // NewAreaForecast is the constructor for a AreaForecast
 func NewAreaForecast(pagecode string) (forecast *AreaForecast, err error) {
-	httpClient := httpTransport.Client()
+	httpClient := httpCacheClient()
 
 	url := fmt.Sprintf("http://www.bom.gov.au/fwo/aviation/%s.xml", pagecode)
 	fmt.Println("GET ", url)
