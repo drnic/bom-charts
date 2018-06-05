@@ -78,7 +78,7 @@ func main() {
 		IndentJSON: true, // Output human readable JSON
 	}))
 
-	m.Get("/gaf2/:area", getGAFHTML)
+	m.Get("/gaf2", getGAFHTML)
 	m.Group("/api", func(api martini.Router) {
 		api.Get("/gaf/:pagecode.json", getAreaForecastByPageCode)
 		api.Get("/gafarea/:area/current.json", getCurrentAreaForecastByAreaCode)
