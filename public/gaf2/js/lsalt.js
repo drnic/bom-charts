@@ -13,16 +13,9 @@ function updateLSALT(gafAreaCode, nightVFR) {
 
   var cssHeightColors = {
     0: "#BB0EC9",
-    1: "#BB0EC9",
-    2: "#E30A35",
-    3: "#590AE3",
-    4: "#0ABCE3",
-    5: "#99DAAA",
-    6: "#99DAAA",
-    7: "#99DAAA",
-    8: "#99DAAA",
-    9: "#99DAAA",
-    10: "#99DAAA",
+    1: "#DF8211",
+    2: "#FCFC00",
+    3: "#99DAAA",
   }
 
   $.get("/json/lsalt-" + gafAreaCode + ".json?" + new Date().getTime(), function (data) {
@@ -53,7 +46,7 @@ function updateLSALT(gafAreaCode, nightVFR) {
         var areaCloudLayerBase = mapArea.cloudBase() === undefined ? 10000 : mapArea.cloudBase();
         var cloudBaseLSALTDelta = areaCloudLayerBase - (lsalt * 100);
         var layerColourIndex = Math.round(cloudBaseLSALTDelta / 1000);
-        layerColourIndex = Math.min(10, Math.max(0, layerColourIndex));
+        layerColourIndex = Math.min(3, Math.max(0, layerColourIndex));
         var layerColour = cssHeightColors[layerColourIndex];
 
         if (mapArea.cloudBaseColor() != layerColour) {

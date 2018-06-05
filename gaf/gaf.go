@@ -74,6 +74,7 @@ var httpTransportCreatedAt time.Time
 var httpTransport *httpcache.Transport
 
 // Cache fetched XML files for an hour
+// TODO: perhaps just cache the AreaForecast instead
 func httpCacheClient() *http.Client {
 	if httpTransport == nil || time.Since(httpTransportCreatedAt) > time.Hour {
 		httpTransport = httpcache.NewMemoryCacheTransport()
