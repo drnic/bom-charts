@@ -9,6 +9,15 @@ var combinedMapArea = {};
 
 var initialZoom = true;
 
+var gafAreaCodes = ["WA-N", "WA-S", "NT", "QLD-N", "QLD-S", "SA", "NSW-W", "NSW-E", "VIC", "TAS"];
+
+var cssHeightColors = {
+  0: "#BB0EC9",
+  1: "#DF8211",
+  2: "#FCFC00",
+  3: "#99DAAA",
+}
+
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -200,7 +209,6 @@ $(function () {
   map.on('load', function () {
     zoomCurrentLocation(map);
 
-    var gafAreaCodes = ["WA-N", "WA-S", "NT", "QLD-N", "QLD-S", "SA", "NSW-W", "NSW-E", "VIC", "TAS"];
     gafAreaCodes.forEach(gafAreaCode => {
       $.getJSON(`/api/gafarea/${gafAreaCode}/${period}/${vfr}.json`, function(data) {
         areaData[gafAreaCode] = data;

@@ -104,12 +104,6 @@ function mapAreaCloudLayerBaseColor(mapArea) {
   var areaCloudLayerBase = mapArea.cloudBase() === undefined ? 10000 : mapArea.cloudBase();
   var areaCloudLayerBaseCode = Math.round(areaCloudLayerBase / 1000);
   var colorIndex = Math.min(3, Math.max(0, areaCloudLayerBaseCode));
-  var cssHeightColors = {
-    0: "#BB0EC9",
-    1: "#DF8211",
-    2: "#FCFC00",
-    3: "#99DAAA",
-  }
   return cssHeightColors[colorIndex];
 }
 
