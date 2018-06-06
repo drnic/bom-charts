@@ -2,6 +2,15 @@ body.vfr-night {
   background-color: #333;
   color: #eee;
 }
+
+body.vfr-night a {
+  color: #ccc;
+}
+
+body.vfr-night a:visited {
+  color: #ccc;
+}
+
 .area-selected {
   background-color: #7588A1;
 }
