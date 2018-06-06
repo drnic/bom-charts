@@ -27,7 +27,7 @@ var _ = AfterSuite(func() {
 })
 
 var _ = Describe("Page", func() {
-	It("Converts from XML to JSON", func() {
+	It("Converts from XML to JSON - day VFR", func() {
 		wd, _ := os.Getwd()
 
 		xmlTestdataFile, err := os.Open(filepath.Join(wd, "testdata/gaf/IDY42082.xml"))
@@ -39,7 +39,7 @@ var _ = Describe("Page", func() {
 		httpmock.RegisterResponder("GET", "http://www.bom.gov.au/fwo/aviation/IDY42082.xml",
 			httpmock.NewStringResponder(200, string(xmlTestdata)))
 
-		forecast, err := NewAreaForecast("IDY42082")
+		forecast, err := NewAreaForecast("IDY42082", false)
 		Ω(err).ShouldNot(HaveOccurred())
 		Expect(forecast.GAFAreaID).To(Equal("NSW-E"))
 		Expect(forecast.From).To(Equal("2018-05-22T05:00:00Z"))
