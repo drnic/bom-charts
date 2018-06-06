@@ -8,6 +8,7 @@ var mapAreasOutlineIDs = [];
 var combinedMapArea = {};
 
 var initialZoom = true;
+var nightVFR;
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -64,13 +65,11 @@ $(function () {
         var long = position.coords.longitude;
         var lat = position.coords.latitude;
         map.zoomIn({zoom: 6, center: [long, lat]});
-        // console.log("finished zoom");
-        // updateLSALTFromVisibleAreas();
       });
     }
   }
 
-  // mapArea is MapArea or MapSubArea
+  // mapArea is MapMajorArea or MapSubArea
   function setupMapFill(mapArea) {
 
     var baseID = mapArea.uuid();
@@ -81,7 +80,7 @@ $(function () {
     var outlineID = "outline-" + baseID;
     mapAreasOutlineIDs.push(outlineID);
 
-    // 1000ft AMSL matches to .height-1 in main.css
+    // 1000ft AGL matches to .height-1 in main.css
     var fillColor = mapArea.cloudBaseColor();
 
     var areaLayerFeature = mapAreaAsFeature(mapArea);
@@ -162,7 +161,7 @@ $(function () {
       if(initialZoom){
         initialZoom = false;
         updateGAFTableFromVisibleAreas();
-        updateLSALTFromVisibleAreas();
+        updateLSALTFromVisibleAreas(nightVFR);
       }
    });
   }
@@ -186,17 +185,19 @@ $(function () {
   });
 
   map.on("dragend", function(e) {
-    updateLSALTFromVisibleAreas();
+    updateLSALTFromVisibleAreas(nightVFR);
   });
 
   map.on('load', function () {
     zoomCurrentLocation(map);
 
+    var period = getUrlParameter("period") || "current";
     var vfr = getUrlParameter("vfr") || "day";
+    nightVFR = (vfr == "night");
 
     var gafAreaCodes = ["WA-N", "WA-S", "NT", "QLD-N", "QLD-S", "SA", "NSW-W", "NSW-E", "VIC", "TAS"];
     gafAreaCodes.forEach(gafAreaCode => {
-      $.getJSON(`/api/gafarea/${gafAreaCode}/current/${vfr}.json`, function(data) {
+      $.getJSON(`/api/gafarea/${gafAreaCode}/${period}/${vfr}.json`, function(data) {
         areaData[gafAreaCode] = data;
         mapAreasByAreaCode[gafAreaCode] = [];
 

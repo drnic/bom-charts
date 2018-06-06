@@ -1,6 +1,6 @@
-function updateLSALTFromVisibleAreas() {
+function updateLSALTFromVisibleAreas(nightVFR) {
   gafAreaCodesFromMapAreas(mapAreasInCurrentView()).forEach(gafAreaCode => {
-    updateLSALT(gafAreaCode, false);
+    updateLSALT(gafAreaCode, nightVFR);
   });
 }
 
@@ -18,7 +18,8 @@ function updateLSALT(gafAreaCode, nightVFR) {
     3: "#99DAAA",
   }
 
-  $.get("/json/lsalt-" + gafAreaCode + ".json?" + new Date().getTime(), function (data) {
+  // $.get(`/json/lsalt-${gafAreaCode}.json?${new Date().getTime()}`, function (data) {
+  $.get(`/json/lsalt-${gafAreaCode}.json`, function (data) {
 
     var mapAreas = mapAreasByAreaCode[gafAreaCode];
 
@@ -26,8 +27,8 @@ function updateLSALT(gafAreaCode, nightVFR) {
       var grid = lsaltGrid["grid"]
 
       var lsalt = lsaltGrid["lsalt-100ft"];
-      // assume pilot can see highest object; and that LSALT is 1300' higher than highest object
       if (!nightVFR) {
+        // assume pilot can see highest object; and that LSALT is 1300' higher than highest object
         lsalt -= 13;
       }
 
