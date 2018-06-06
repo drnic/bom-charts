@@ -54,23 +54,6 @@ $(function () {
     }
   }
 
-  function zoomGAFArea(areaCode, data) {
-    var gafBoundary = data["boundary"]["points"];
-
-    // Pass the first coordinates in the LineString to `lngLatBounds` &
-    // wrap each coordinate pair in `extend` to include them in the bounds
-    // result. A variation of this technique could be applied to zooming
-    // to the bounds of multiple Points or Polygon geomteries - it just
-    // requires wrapping all the coordinates with the extend method.
-    var bounds = gafBoundary.reduce(function(bounds, coord) {
-      return bounds.extend(coord);
-    }, new mapboxgl.LngLatBounds(gafBoundary[0], gafBoundary[0]));
-
-    map.fitBounds(bounds, {
-      padding: 20
-    });
-  }
-
   // mapArea is MapArea or MapSubArea
   function setupMapFill(mapArea) {
 
