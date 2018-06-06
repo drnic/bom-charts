@@ -13,6 +13,22 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// From https://stackoverflow.com/a/21903119/36170
+function getUrlParameter(sParam) {
+  var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+      sURLVariables = sPageURL.split('&'),
+      sParameterName,
+      i;
+
+  for (i = 0; i < sURLVariables.length; i++) {
+      sParameterName = sURLVariables[i].split('=');
+
+      if (sParameterName[0] === sParam) {
+          return sParameterName[1] === undefined ? true : sParameterName[1];
+      }
+  }
+};
+
 $(function () {
   function setupGAFBoundary(map, areaCode, data) {
     var gafBoundary = data["boundary"]["points"];
@@ -176,9 +192,11 @@ $(function () {
   map.on('load', function () {
     zoomCurrentLocation(map);
 
+    var vfr = getUrlParameter("vfr") || "day";
+
     var gafAreaCodes = ["WA-N", "WA-S", "NT", "QLD-N", "QLD-S", "SA", "NSW-W", "NSW-E", "VIC", "TAS"];
     gafAreaCodes.forEach(gafAreaCode => {
-      $.get("/api/gafarea/" + gafAreaCode + "/current.json", function(data) {
+      $.getJSON(`/api/gafarea/${gafAreaCode}/current/${vfr}.json`, function(data) {
         areaData[gafAreaCode] = data;
         mapAreasByAreaCode[gafAreaCode] = [];
 

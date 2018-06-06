@@ -23,6 +23,7 @@ import (
 type AreaForecast struct {
 	PageCode          string       `json:"page-code"`
 	GAFAreaID         string       `json:"gaf-area-id"`
+	NightVFR          bool         `json:"night-vfr"`
 	From              string       `json:"from"`
 	IssuedAt          string       `json:"issued-at"`
 	StandardInclusion string       `json:"standard-inclusion"`
@@ -64,7 +65,6 @@ type GAFCloudIceTurbulence struct {
 	Text              string                       `json:"text"`
 	SubAreasMentioned []string                     `json:"sub-areas-mentioned,omitempty"`
 	Parsed            *parser.CloudIcingTurbParser `json:"parsed"`
-	nightVFR          bool                         `json:-`
 }
 
 type GAFBoundary struct {
@@ -106,7 +106,7 @@ func NewAreaForecast(pagecode string, nightVFR bool) (forecast *AreaForecast, er
 		return forecast, err
 	}
 
-	forecast = &AreaForecast{PageCode: pagecode}
+	forecast = &AreaForecast{PageCode: pagecode, NightVFR: nightVFR}
 	forecast.copyFromRawForecast(rawForecast)
 
 	return forecast, nil
@@ -150,7 +150,7 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *rawGAFAreaForecast) {
 
 			if len(rawWxCond.SurfaceVisWx) > 0 {
 				wxCond.SurfaceVisWx.Text = html.UnescapeString(rawWxCond.SurfaceVisWx[0])
-				wxCond.SurfaceVisWx.Decode(area)
+				wxCond.SurfaceVisWx.Decode(forecast, area)
 			}
 
 			wxCond.CloudIceTurbulence = make([]*GAFCloudIceTurbulence, len(rawWxCond.CloudIceTurbulence))
@@ -158,7 +158,7 @@ func (forecast *AreaForecast) copyFromRawForecast(raw *rawGAFAreaForecast) {
 				cloud := &GAFCloudIceTurbulence{
 					Text: html.UnescapeString(rawCloud),
 				}
-				cloud.Decode(area)
+				cloud.Decode(forecast, area)
 				wxCond.CloudIceTurbulence[k] = cloud
 			}
 		}
@@ -229,7 +229,7 @@ func (area *GAFArea) DecodeCloudLayers() {
 }
 
 // Decode extracts metadata from surface-visibility-wx raw text
-func (surface *GAFSurfaceVisWx) Decode(area *GAFArea) {
+func (surface *GAFSurfaceVisWx) Decode(forecast *AreaForecast, area *GAFArea) {
 	if strings.Contains(surface.Text, "10KM") {
 		surface.SurfaceVisibility = 10000
 	} else {
@@ -250,9 +250,9 @@ func (surface *GAFSurfaceVisWx) Decode(area *GAFArea) {
 }
 
 // Decode extracts metadata from cloud-ice-turbulence raw text
-func (cloud *GAFCloudIceTurbulence) Decode(area *GAFArea) {
+func (cloud *GAFCloudIceTurbulence) Decode(forecast *AreaForecast, area *GAFArea) {
 	r := regexp.MustCompile(fmt.Sprintf("%s([0-9])", area.AreaID))
 	cloud.SubAreasMentioned = r.FindAllString(cloud.Text, -1)
 
-	cloud.Parsed, _ = parser.NewCloudIcingTurbParser(cloud.Text, cloud.nightVFR)
+	cloud.Parsed, _ = parser.NewCloudIcingTurbParser(cloud.Text, forecast.NightVFR)
 }
