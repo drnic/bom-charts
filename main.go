@@ -21,23 +21,13 @@ func messageResponse(message string) *basicResponse {
 	return &basicResponse{Message: message}
 }
 
-func getAreaForecastByPageCode(params martini.Params, r render.Render) {
-	nightVFR := false
-	areaForecast, err := gaf.NewAreaForecast(params["pagecode"], nightVFR)
-	if err != nil {
-		r.JSON(500, errorResponse(err))
-		return
-	}
-	r.JSON(200, areaForecast)
-}
-
 func getCurrentAreaForecastByAreaCode(params martini.Params, r render.Render) {
 	area, err := gaf.NewAreaMappingPageCode(params["area"])
 	if err != nil {
 		r.JSON(500, errorResponse(err))
 		return
 	}
-	nightVFR := false
+	nightVFR := len(params["night-vfr"]) > 0
 	areaForecast, err := gaf.NewAreaForecast(area.CurrentGAFCode, nightVFR)
 	if err != nil {
 		r.JSON(500, errorResponse(err))
@@ -52,7 +42,7 @@ func getNextAreaForecastByAreaCode(params martini.Params, r render.Render) {
 		r.JSON(500, errorResponse(err))
 		return
 	}
-	nightVFR := false
+	nightVFR := len(params["night-vfr"]) > 0
 	areaForecast, err := gaf.NewAreaForecast(area.NextGAFCode, nightVFR)
 	if err != nil {
 		r.JSON(500, errorResponse(err))
@@ -83,7 +73,6 @@ func main() {
 
 	m.Get("/gaf2", getGAFHTML)
 	m.Group("/api", func(api martini.Router) {
-		api.Get("/gaf/:pagecode.json", getAreaForecastByPageCode)
 		api.Get("/gafarea/:area/current.json", getCurrentAreaForecastByAreaCode)
 		api.Get("/gafarea/:area/next.json", getNextAreaForecastByAreaCode)
 		api.Get("/airmet", getAIRMET)
