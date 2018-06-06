@@ -1,8 +1,11 @@
 // area_data is keyed by gafAreaCodes (QLD-S,TAS)
-document.areaData = {};
-document.mapAreasByAreaCode = {};
-document.mapAreasByLayerID = {};
-document.mapAreasOutlineIDs = [];
+var areaData = {};
+var mapAreasByAreaCode = {};
+var mapAreasByLayerID = {};
+var mapAreasOutlineIDs = [];
+
+// combinedMapArea["QLD-S-A"] will return [MapMajorArea("A"), MapSubArea("A1")]
+var combinedMapArea = {};
 
 var initialZoom = true;
 
@@ -11,11 +14,6 @@ function sleep(ms) {
 }
 
 $(function () {
-  var areaData = document.areaData;
-  var mapAreasByAreaCode = document.mapAreasByAreaCode;
-  var mapAreasByLayerID = document.mapAreasByLayerID;
-  var mapAreasOutlineIDs = document.mapAreasOutlineIDs;
-
   function setupGAFBoundary(map, areaCode, data) {
     var gafBoundary = data["boundary"]["points"];
 
@@ -56,7 +54,7 @@ $(function () {
     }
   }
 
-  function zoomGAFArea(map, areaCode, data) {
+  function zoomGAFArea(areaCode, data) {
     var gafBoundary = data["boundary"]["points"];
 
     // Pass the first coordinates in the LineString to `lngLatBounds` &
@@ -204,14 +202,17 @@ $(function () {
         setupGAFBoundary(map, gafAreaCode, data);
 
         data["areas"].forEach(area => {
+          // TODO: Delegate creation to maparea.js so it can curate global variables
           var mapArea = new MapMajorArea(gafAreaCode, area);
           mapAreasByAreaCode[gafAreaCode].push(mapArea);
+          combinedMapArea[mapArea.gafAreaCodeAndGroup()] = [mapArea];
 
           setupMapFill(mapArea);
 
           area["sub-areas"].forEach(subArea => {
             var mapSubArea = new MapSubArea(mapArea, subArea);
             mapAreasByAreaCode[gafAreaCode].push(mapSubArea);
+            combinedMapArea[mapArea.gafAreaCodeAndGroup()].push(mapSubArea);
             setupMapFill(mapSubArea);
           });
 

@@ -1,5 +1,4 @@
 
-
 function randomID() {
   // Math.random should be unique because of its seeding algorithm.
   // Convert it to base 36 (numbers + letters), and grab the first 9 characters
@@ -131,7 +130,6 @@ function mapAreaAsFeature(mapArea) {
 // Returns Features for each MapMajorArea/MapSubArea in current map view
 // note: may include duplicates
 function mapAreaFeaturesInCurrentView() {
-  var mapAreasOutlineIDs = document.mapAreasOutlineIDs;
   var mapBounds = map.getBounds();
   var view = [map.project(mapBounds.getSouthWest()), map.project(mapBounds.getNorthEast())];
   return map.queryRenderedFeatures(view, {layers: mapAreasOutlineIDs});
@@ -144,7 +142,7 @@ function mapAreasInCurrentView() {
   return features.reduce((r, a) => {
     var mapLayerID = a.properties.mapLayerID;
     if (!layerIDsFound[mapLayerID]) {
-      mapArea = document.mapAreasByLayerID[mapLayerID];
+      mapArea = mapAreasByLayerID[mapLayerID];
       r.push(mapArea);
       layerIDsFound[mapLayerID] = true;
     }
@@ -179,4 +177,16 @@ function gafAreaCodesFromMapAreas(mapAreas) {
     }
     return result;
   }, []);
+}
+
+function mapFitBoundsToArea(mapArea) {
+  var boundary = mapArea.boundaryPoints();
+
+  var bounds = boundary.reduce(function(bounds, coord) {
+    return bounds.extend(coord);
+  }, new mapboxgl.LngLatBounds(gafBoundary[0], gafBoundary[0]));
+
+  map.fitBounds(bounds, {
+    padding: 20
+  });
 }

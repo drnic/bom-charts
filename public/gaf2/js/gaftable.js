@@ -2,6 +2,9 @@ function gafTable() {
   return $("#gaf-table");
 }
 
+var latestMouseoverArea;
+var combinedMapAreaBoundaryPoints = {};
+
 function updateGAFTableFromVisibleAreas() {
   var visibleMajorAreas = majorAreas(mapAreasInCurrentView());
   var visibleAreaGroupClasses = {};
@@ -23,6 +26,33 @@ function updateGAFTableFromVisibleAreas() {
       });
     }
   });
+
+  gafTable().find("table tr").mouseover(function() {
+    var showGAFArea = $(this).data()["gafArea"];
+    if (showGAFArea !== undefined && latestMouseoverArea != showGAFArea) {
+      latestMouseoverArea = showGAFArea;
+      if (combinedMapAreaBoundaryPoints[latestMouseoverArea] === undefined) {
+        var areas = combinedMapArea[latestMouseoverArea];
+        var areaBoundaryPoints = areas.reduce((points, area) => {
+          return points.concat(area.boundaryPoints());
+        }, []);
+
+        // Pass the first coordinates in the LineString to `lngLatBounds` &
+        // wrap each coordinate pair in `extend` to include them in the bounds
+        // result. A variation of this technique could be applied to zooming
+        // to the bounds of multiple Points or Polygon geomteries - it just
+        // requires areaBoundaryPoints all the coordinates with the extend method.
+        var bounds = areaBoundaryPoints.reduce((bounds, coord) => {
+          return bounds.extend(coord);
+        }, new mapboxgl.LngLatBounds(areaBoundaryPoints[0], areaBoundaryPoints[0]));
+
+        map.fitBounds(bounds, {
+          padding: 20
+        });
+      }
+      console.log(combinedMapAreaBoundaryPoints[latestMouseoverArea]);
+    }
+  })
 }
 
 function addAreaToGAFTable(majorMapArea) {
@@ -42,9 +72,10 @@ function addAreaToGAFTable(majorMapArea) {
   majorMapArea.wxConds().forEach((wxCond, index) => {
     var row = $(`<tr>`);
     row.addClass(`gaf-${majorMapArea.gafAreaCodeAndGroup()}`);
+    row.data(`gaf-area`, majorMapArea.gafAreaCodeAndGroup());
 
     if (index === 0) {
-      var areaCol = $(`<td>`);
+      var areaCol = $(`<td class="area-label">`);
       areaCol.attr("rowspan", wxCondsCount);
       areaCol.text(`${majorMapArea.gafAreaCode()} - ${majorMapArea.mapLabel()}`);
       areaCol.appendTo(row);
