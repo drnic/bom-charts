@@ -64,6 +64,7 @@ type GAFCloudIceTurbulence struct {
 	Text              string                       `json:"text"`
 	SubAreasMentioned []string                     `json:"sub-areas-mentioned,omitempty"`
 	Parsed            *parser.CloudIcingTurbParser `json:"parsed"`
+	nightVFR          bool                         `json:-`
 }
 
 type GAFBoundary struct {
@@ -84,7 +85,7 @@ func httpCacheClient() *http.Client {
 }
 
 // NewAreaForecast is the constructor for a AreaForecast
-func NewAreaForecast(pagecode string) (forecast *AreaForecast, err error) {
+func NewAreaForecast(pagecode string, nightVFR bool) (forecast *AreaForecast, err error) {
 	httpClient := httpCacheClient()
 
 	url := fmt.Sprintf("http://www.bom.gov.au/fwo/aviation/%s.xml", pagecode)
@@ -253,5 +254,5 @@ func (cloud *GAFCloudIceTurbulence) Decode(area *GAFArea) {
 	r := regexp.MustCompile(fmt.Sprintf("%s([0-9])", area.AreaID))
 	cloud.SubAreasMentioned = r.FindAllString(cloud.Text, -1)
 
-	cloud.Parsed, _ = parser.NewCloudIcingTurbParser(cloud.Text)
+	cloud.Parsed, _ = parser.NewCloudIcingTurbParser(cloud.Text, cloud.nightVFR)
 }

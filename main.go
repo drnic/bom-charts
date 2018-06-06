@@ -22,7 +22,8 @@ func messageResponse(message string) *basicResponse {
 }
 
 func getAreaForecastByPageCode(params martini.Params, r render.Render) {
-	areaForecast, err := gaf.NewAreaForecast(params["pagecode"])
+	nightVFR := false
+	areaForecast, err := gaf.NewAreaForecast(params["pagecode"], nightVFR)
 	if err != nil {
 		r.JSON(500, errorResponse(err))
 		return
@@ -36,7 +37,8 @@ func getCurrentAreaForecastByAreaCode(params martini.Params, r render.Render) {
 		r.JSON(500, errorResponse(err))
 		return
 	}
-	areaForecast, err := gaf.NewAreaForecast(area.CurrentGAFCode)
+	nightVFR := false
+	areaForecast, err := gaf.NewAreaForecast(area.CurrentGAFCode, nightVFR)
 	if err != nil {
 		r.JSON(500, errorResponse(err))
 		return
@@ -50,7 +52,8 @@ func getNextAreaForecastByAreaCode(params martini.Params, r render.Render) {
 		r.JSON(500, errorResponse(err))
 		return
 	}
-	areaForecast, err := gaf.NewAreaForecast(area.NextGAFCode)
+	nightVFR := false
+	areaForecast, err := gaf.NewAreaForecast(area.NextGAFCode, nightVFR)
 	if err != nil {
 		r.JSON(500, errorResponse(err))
 		return
