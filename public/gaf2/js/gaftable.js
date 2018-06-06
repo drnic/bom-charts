@@ -31,8 +31,9 @@ function updateGAFTableFromVisibleAreas() {
     var showGAFArea = $(this).data()["gafArea"];
     if (showGAFArea !== undefined && latestMouseoverArea != showGAFArea) {
       latestMouseoverArea = showGAFArea;
-      if (combinedMapAreaBoundaryPoints[latestMouseoverArea] === undefined) {
-        var areas = combinedMapArea[latestMouseoverArea];
+      latestMouseoverAreaLayer = showGAFArea;
+      if (combinedMapAreaBoundaryPoints[showGAFArea] === undefined) {
+        var areas = combinedMapArea[showGAFArea];
         var areaBoundaryPoints = areas.reduce((points, area) => {
           return points.concat(area.boundaryPoints());
         }, []);
@@ -46,11 +47,44 @@ function updateGAFTableFromVisibleAreas() {
           return bounds.extend(coord);
         }, new mapboxgl.LngLatBounds(areaBoundaryPoints[0], areaBoundaryPoints[0]));
 
-        map.fitBounds(bounds, {
-          padding: 20
+        combinedMapAreaBoundaryPoints[showGAFArea] = bounds;
+
+        var mapSource = `combined-area-boundary-${showGAFArea}`;
+        map.addSource(mapSource, {
+          "type": "geojson",
+          "data": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": bounds
+            }
+          }
         });
       }
-      console.log(combinedMapAreaBoundaryPoints[latestMouseoverArea]);
+
+      var gafAreaCode = combinedMapArea[showGAFArea][0].gafAreaCode();
+
+      // TODO: no idea why this layer line doesn't appear
+      // if (map.getLayer("mouseover-area-highlight")) {
+      //   map.removeLayer("mouseover-area-highlight");
+      // }
+      // map.addLayer({
+      //   "id": "mouseover-area-highlight",
+      //   "type": "line",
+      //   "source": `combined-area-boundary-${showGAFArea}`,
+      //   "layout": {
+      //     "line-join": "round", "line-cap": "round"
+      //   },
+      //   "paint": {
+      //     "line-color": "#333", "line-width": 10, "line-offset": 50
+      //   }
+      // });
+      // }, `gaf-${gafAreaCode}`);
+
+      map.fitBounds(combinedMapAreaBoundaryPoints[latestMouseoverArea], {
+        padding: 20
+      });
     }
   })
 }

@@ -37,7 +37,7 @@ $(function () {
         "line-join": "round", "line-cap": "round"
       },
       "paint": {
-        "line-color": "#888", "line-width": 1
+        "line-width": 0
       }
     });
   }
