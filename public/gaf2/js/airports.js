@@ -1,5 +1,5 @@
 $(function () {
-    map.on('load', function () {
+  map.on('load', function () {
     $.get("/json/openflights-airports-au.json", function (data) {
       var airportsCollection = data.reduce((result, airport) => {
         var feature = {
@@ -33,6 +33,9 @@ $(function () {
           "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
           "text-offset": [0, 0],
           "text-anchor": "top"
+        },
+        "paint": {
+          "text-color": document.textColor
         }
       });
     });

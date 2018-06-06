@@ -8,7 +8,6 @@ var mapAreasOutlineIDs = [];
 var combinedMapArea = {};
 
 var initialZoom = true;
-var nightVFR;
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -29,6 +28,11 @@ function getUrlParameter(sParam) {
       }
   }
 };
+
+var period = getUrlParameter("period") || "current";
+var vfr = getUrlParameter("vfr") || "day";
+var nightVFR = (vfr == "night");
+document.textColor = "#f00"; // day vfr
 
 $(function () {
   function setupGAFBoundary(map, areaCode, data) {
@@ -118,13 +122,16 @@ $(function () {
       "id": labelID,
       "type": "symbol",
       "source": {
-          "type": "geojson",
-          "data": areaCenter
+        "type": "geojson",
+        "data": areaCenter
       },
       "layout": {
-          "text-field": "{title}",
-          "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-          "text-anchor": "top"
+        "text-field": "{title}",
+        "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+        "text-anchor": "top"
+      },
+      "paint": {
+        "text-color": document.textColor
       }
     });
 
@@ -167,17 +174,19 @@ $(function () {
   }
 
   map.on('load', function () {
-    map.addSource('dem', {
-      "type": "raster-dem",
-      "url": "mapbox://mapbox.terrain-rgb"
-    });
-    map.addLayer({
-        "id": "hillshading",
-        "source": "dem",
-        "type": "hillshade"
-      // insert below waterway-river-canal-shadow;
-      // where hillshading sits in the Mapbox Outdoors style
-    }, 'waterway-river-canal-shadow');
+    if (!nightVFR) {
+      map.addSource('dem', {
+        "type": "raster-dem",
+        "url": "mapbox://mapbox.terrain-rgb"
+      });
+      map.addLayer({
+          "id": "hillshading",
+          "source": "dem",
+          "type": "hillshade"
+        // insert below waterway-river-canal-shadow;
+        // where hillshading sits in the Mapbox Outdoors style
+      }, 'waterway-river-canal-shadow');
+    }
   });
 
   map.on("dragend", function(e) {
@@ -190,10 +199,6 @@ $(function () {
 
   map.on('load', function () {
     zoomCurrentLocation(map);
-
-    var period = getUrlParameter("period") || "current";
-    var vfr = getUrlParameter("vfr") || "day";
-    nightVFR = (vfr == "night");
 
     var gafAreaCodes = ["WA-N", "WA-S", "NT", "QLD-N", "QLD-S", "SA", "NSW-W", "NSW-E", "VIC", "TAS"];
     gafAreaCodes.forEach(gafAreaCode => {

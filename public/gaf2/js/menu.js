@@ -2,6 +2,16 @@ $(function () {
   var vfr = getUrlParameter("vfr") || "day";
   var period = getUrlParameter("period") || "current";
 
+  $('body').addClass(`vfr-${vfr}`);
+  $('body').addClass(`period-${period}`);
+
+  if (vfr == "night") {
+    map.setStyle('mapbox://styles/mapbox/dark-v9');
+    document.textColor = "#eee";
+  } else {
+    document.textColor = "#000";
+  }
+
   var menu = $("p#menu")
   if (vfr == "night") {
     menu.find("a#day-vfr").attr("href", `?vfr=day&period=${period}`);
