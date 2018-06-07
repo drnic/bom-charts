@@ -14,12 +14,6 @@
   version = "v1.0.0"
 
 [[projects]]
-  name = "github.com/basgys/goxml2json"
-  packages = ["."]
-  revision = "652b277a9313806ef04f7c0cb0205dd455c4f344"
-  version = "v1.1.0"
-
-[[projects]]
   name = "github.com/codegangsta/inject"
   packages = ["."]
   revision = "37d7f8432a3e684eef9b2edece76bdfa6ac85b39"
@@ -30,6 +24,12 @@
   packages = ["."]
   revision = "49411a5b646861ad29a6ddd5351717a0a9c49b94"
   version = "v1.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/gregjones/httpcache"
+  packages = ["."]
+  revision = "9cad4c3443a7200dd6400aef47183728de563a38"
 
 [[projects]]
   branch = "master"
@@ -88,6 +88,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "0d2665994f536839e4cc8fe8eca0f3c9332a63c535603fa11a036422a7ac03e1"
+  inputs-digest = "f3ee9d576c43778da49117b6afa8913b285e58c5bbe069663a9b263f9b02e217"
   solver-name = "gps-cdcl"
   solver-version = 1
