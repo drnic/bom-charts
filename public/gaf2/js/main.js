@@ -74,6 +74,7 @@ $(function () {
 });
 
 function setupMapForGAFArea(gafAreaCode, data) {
+  // TODO: can use gafData instead
   areaData[gafAreaCode] = data;
   mapAreasByAreaCode[gafAreaCode] = [];
 

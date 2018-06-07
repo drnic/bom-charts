@@ -11,22 +11,22 @@ if (period == "next") {
   gafPeriods = ["next", "current"];
 }
 
-gafVFROptions.forEach(_vfr => {
-  gafData[_vfr] = {}
+$(document).ready(function () {
+  map.on("load", function() {
+    gafVFROptions.forEach(_vfr => {
+      gafData[_vfr] = {}
 
-  gafPeriods.forEach(_period => {
-    gafData[_vfr][_period] = {}
+      gafPeriods.forEach(_period => {
+        gafData[_vfr][_period] = {}
 
-    gafAreaCodes.forEach(gafAreaCode => {
-      $.getJSON(`/api/gafarea/${gafAreaCode}/${_period}/${_vfr}.json`, function(data) {
-        gafData[_vfr][_period][gafAreaCode] = data;
-        if (_vfr == vfr && _period == period) {
-          $(document).ready(function () {
-            map.on("load", function() {
-              setupMapForGAFArea(gafAreaCode, data);
-            })
-          });
-        }
+        gafAreaCodes.forEach(gafAreaCode => {
+          $.getJSON(`/api/gafarea/${gafAreaCode}/${_period}/${_vfr}.json`, function(data) {
+            gafData[_vfr][_period][gafAreaCode] = data;
+            if (_vfr == vfr && _period == period) {
+                  setupMapForGAFArea(gafAreaCode, data);
+                }
+            });
+        });
       });
     });
   });
