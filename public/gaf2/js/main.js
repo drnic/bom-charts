@@ -97,6 +97,8 @@ function setupMapForGAFArea(gafAreaCode, data) {
 
     addAreaToGAFTable(mapArea);
   });
+
+  updateLSALTFromVisibleAreas(nightVFR);
 }
 
 function setupGAFBoundary(map, areaCode, data) {
