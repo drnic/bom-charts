@@ -66,7 +66,7 @@ func getAIRMET(r render.Render) {
 
 func main() {
 	m := martini.Classic()
-	m.Use(martini.Static("assets"))
+	m.Use(martini.Static("public"))
 	m.Use(render.Renderer(render.Options{
 		IndentJSON: true, // Output human readable JSON
 	}))
