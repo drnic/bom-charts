@@ -13,12 +13,18 @@ function updateLSALTFromVisibleAreas(nightVFR) {
   });
 }
 
+var layerIDsForLSALT = {};
+
 function updateLSALT(gafAreaCode, nightVFR) {
   var mapAreas = mapAreasByAreaCode[gafAreaCode];
   var lsaltGridsForArea = lsaltData[gafAreaCode];
   if (mapAreas === undefined || lsaltGridsForArea === undefined) {
     return;
   }
+  if (layerIDsForLSALT[gafAreaCode]) {
+    return;
+  }
+  layerIDsForLSALT[gafAreaCode] = [];
 
   lsaltGridsForArea.forEach(lsaltGrid => {
     var grid = lsaltGrid["grid"]
@@ -40,6 +46,7 @@ function updateLSALT(gafAreaCode, nightVFR) {
       }
 
       var layerID = "lsalt" + randomID();
+      layerIDsForLSALT[gafAreaCode].push(layerID);
 
       var areaCloudLayerBase = mapArea.cloudBase() === undefined ? 10000 : mapArea.cloudBase();
       var cloudBaseLSALTDelta = areaCloudLayerBase - (lsalt * 100);
