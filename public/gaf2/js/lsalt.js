@@ -1,11 +1,9 @@
 var lsaltData = {}
-$(function () {
-  gafAreaCodes.forEach(gafAreaCode => {
-    // $.get(`/json/lsalt-${gafAreaCode}.json?${new Date().getTime()}`, function (data) {
-    $.get(`/json/lsalt-${gafAreaCode}.json`, function (data) {
-      lsaltData[gafAreaCode] = data;
-      updateLSALT(gafAreaCode, nightVFR);
-    });
+gafAreaCodes.forEach(gafAreaCode => {
+  // $.get(`/json/lsalt-${gafAreaCode}.json?${new Date().getTime()}`, function (data) {
+  $.get(`/json/lsalt-${gafAreaCode}.json`, function (data) {
+    lsaltData[gafAreaCode] = data;
+    updateLSALT(gafAreaCode, nightVFR);
   });
 });
 
