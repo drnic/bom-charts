@@ -27,8 +27,8 @@ function updateGAFTableFromVisibleAreas() {
     }
   });
 
-  gafTable().find("table tr").mouseover(function() {
-    var showGAFArea = $(this).data()["gafArea"];
+  gafTable().find("table tr td.area-label").mouseover(function() {
+    var showGAFArea = $(this).parent().data()["gafArea"];
     if (showGAFArea !== undefined && latestMouseoverArea != showGAFArea) {
       latestMouseoverArea = showGAFArea;
       latestMouseoverAreaLayer = showGAFArea;
