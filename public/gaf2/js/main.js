@@ -18,10 +18,6 @@ var cssHeightColors = {
   3: "#99DAAA",
 }
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 // From https://stackoverflow.com/a/21903119/36170
 function getUrlParameter(sParam) {
   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
