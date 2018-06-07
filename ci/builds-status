@@ -5,4 +5,4 @@ cd $DIR
 
 fly_target=$(bosh int settings.yml --path "/meta/target")
 pipeline_name=$(bosh int settings.yml --path "/meta/name")
-fly -t $fly_target builds -p $pipeline_name
+fly -t $fly_target builds -p $pipeline_name -c 10 "$@"
