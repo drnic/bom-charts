@@ -1,18 +1,32 @@
+import * as mapboxgl from "mapbox-gl";
+
+interface Theme {
+  textColor: string;
+}
+
+declare var theme: Theme;
+
+interface APIGEOPoint {
+  Longitude: number;
+  Latitude: number;
+  ICAO: string;
+}
+
 $.get("/json/openflights-airports-au.json", function (data) {
-  var airportsCollection = data.reduce((result, airport) => {
+  var airportsCollection = data.reduce((result: GeoJSON.Feature<mapboxgl.GeoJSONGeometry>[], airport: APIGEOPoint) => {
     var feature = {
       "type": "Feature",
       "geometry": {
           "type": "Point",
-          "coordinates": [airport["Longitude"], airport["Latitude"]]
+          "coordinates": [airport.Longitude, airport.Latitude]
       },
       "properties": {
-          "title": airport["ICAO"]
+          "title": airport.ICAO
       }
-    };
+    } as GeoJSON.Feature<mapboxgl.GeoJSONGeometry>;
     result.push(feature);
     return result;
-  }, []);
+  }, []) as GeoJSON.Feature<mapboxgl.GeoJSONGeometry>[];
 
   var airportsGeoJSON = {
     "type": "geojson",
@@ -20,7 +34,7 @@ $.get("/json/openflights-airports-au.json", function (data) {
       "type": "FeatureCollection",
       "features": airportsCollection
     }
-  };
+  } as mapboxgl.GeoJSONSourceRaw;
 
   $(function () {
     map.on('load', function () {
@@ -35,7 +49,7 @@ $.get("/json/openflights-airports-au.json", function (data) {
           "text-anchor": "top"
         },
         "paint": {
-          "text-color": document.textColor
+          "text-color": theme.textColor
         }
       });
     });

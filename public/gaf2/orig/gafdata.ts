@@ -1,4 +1,8 @@
-var gafData = {}
+declare var map: mapboxgl.Map;
+declare var vfr : string;
+declare var period : string;
+
+var gafData = {} as any;
 
 // prioritize loading of currently selected modes
 var gafVFROptions = ["day", "night"];

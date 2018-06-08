@@ -1,15 +1,29 @@
+import * as url from './helpers/url';
+import * as $ from 'jquery';
+
+declare var map: mapboxgl.Map;
+
+interface Theme {
+  textColor: string;
+}
+
+var theme = {
+  textColor: "#eee",
+} as Theme;
+
 $(function () {
-  var vfr = getUrlParameter("vfr") || "day";
-  var period = getUrlParameter("period") || "current";
+
+  var vfr = url.getUrlParameter("vfr") || "day";
+  var period = url.getUrlParameter("period") || "current";
 
   $('body').addClass(`vfr-${vfr}`);
   $('body').addClass(`period-${period}`);
 
   if (vfr == "night") {
     map.setStyle('mapbox://styles/mapbox/dark-v9');
-    document.textColor = "#eee";
+    theme.textColor = "#eee";
   } else {
-    document.textColor = "#000";
+    theme.textColor = "#000";
   }
 
   var menu = $("p#menu")

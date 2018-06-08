@@ -1,4 +1,11 @@
-var lsaltData = {}
+declare var mapAreasByAreaCode : any;
+
+import * as turf from "@turf/helpers";
+import intersect from "@turf/intersect";
+import * as maparea from "./maparea";
+
+let lsaltData = {} as any;
+
 gafAreaCodes.forEach(gafAreaCode => {
   // $.get(`/json/lsalt-${gafAreaCode}.json?${new Date().getTime()}`, function (data) {
   $.get(`/json/lsalt-${gafAreaCode}.json`, function (data) {
@@ -7,15 +14,19 @@ gafAreaCodes.forEach(gafAreaCode => {
   });
 });
 
-function updateLSALTFromVisibleAreas(nightVFR) {
-  gafAreaCodesFromMapAreas(mapAreasInCurrentView()).forEach(gafAreaCode => {
+function updateLSALTFromVisibleAreas(nightVFR: boolean) {
+  maparea.gafAreaCodesFromMapAreas(maparea.mapAreasInCurrentView()).forEach((gafAreaCode: string) => {
     updateLSALT(gafAreaCode, nightVFR);
   });
 }
 
-var layerIDsForLSALT = {};
+let layerIDsForLSALT = {} as any;
 
-function updateLSALT(gafAreaCode, nightVFR) {
+function randomID() : string {
+  return '_' + Math.random().toString(36).substr(2, 9);
+}
+
+function updateLSALT(gafAreaCode: string, nightVFR: boolean) {
   var mapAreas = mapAreasByAreaCode[gafAreaCode];
   var lsaltGridsForArea = lsaltData[gafAreaCode];
   if (mapAreas === undefined || lsaltGridsForArea === undefined) {
@@ -26,7 +37,7 @@ function updateLSALT(gafAreaCode, nightVFR) {
   }
   layerIDsForLSALT[gafAreaCode] = [];
 
-  lsaltGridsForArea.forEach(lsaltGrid => {
+  lsaltGridsForArea.forEach((lsaltGrid: any) => {
     var grid = lsaltGrid["grid"]
 
     var lsalt = lsaltGrid["lsalt-100ft"];
@@ -37,10 +48,10 @@ function updateLSALT(gafAreaCode, nightVFR) {
 
     var lsaltPolygon = turf.polygon([grid]);
 
-    mapAreas.forEach(mapArea => {
+    mapAreas.forEach((mapArea: maparea.MapAreaBase) => {
       var mapAreaPolygon = mapArea.turfPolygon();
 
-      var lsaltIntersection = turf.intersect(mapAreaPolygon, lsaltPolygon)
+      var lsaltIntersection = intersect(mapAreaPolygon, lsaltPolygon)
       if (lsaltIntersection === undefined) {
         return;
       }

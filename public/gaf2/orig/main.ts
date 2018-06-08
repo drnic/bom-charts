@@ -1,8 +1,10 @@
+import * as mapboxgl from "mapbox-gl";
+
 // area_data is keyed by gafAreaCodes (QLD-S,TAS)
 var areaData = {};
 var mapAreasByAreaCode = {};
 var mapAreasByLayerID = {};
-var mapAreasOutlineIDs = [];
+var mapAreasOutlineIDs = [] as string[];
 
 // combinedMapArea["QLD-S-A"] will return [MapMajorArea("A"), MapSubArea("A1")]
 var combinedMapArea = {};
@@ -16,10 +18,10 @@ var cssHeightColors = {
   1: "#DF8211",
   2: "#FCFC00",
   3: "#99DAAA",
-}
+} as any;
 
 // From https://stackoverflow.com/a/21903119/36170
-function getUrlParameter(sParam) {
+function getUrlParameter(sParam : string) : string {
   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
       sURLVariables = sPageURL.split('&'),
       sParameterName,
@@ -29,7 +31,7 @@ function getUrlParameter(sParam) {
       sParameterName = sURLVariables[i].split('=');
 
       if (sParameterName[0] === sParam) {
-          return sParameterName[1] === undefined ? true : sParameterName[1];
+          return sParameterName[1] === undefined ? "" : sParameterName[1];
       }
   }
 };
@@ -37,25 +39,14 @@ function getUrlParameter(sParam) {
 var period = getUrlParameter("period") || "current";
 var vfr = getUrlParameter("vfr") || "day";
 var nightVFR = (vfr == "night");
-document.textColor = "#f00"; // day vfr
+
+interface Theme {
+  textColor: string;
+}
+
+declare var theme: Theme;
 
 $(function () {
-  map.on('load', function () {
-    if (!nightVFR) {
-      map.addSource('dem', {
-        "type": "raster-dem",
-        "url": "mapbox://mapbox.terrain-rgb"
-      });
-      map.addLayer({
-          "id": "hillshading",
-          "source": "dem",
-          "type": "hillshade"
-        // insert below waterway-river-canal-shadow;
-        // where hillshading sits in the Mapbox Outdoors style
-      }, 'waterway-river-canal-shadow');
-    }
-  });
-
   map.on("dragend", function(e) {
     updateGAFTableFromVisibleAreas();
   });
@@ -69,12 +60,12 @@ $(function () {
   });
 });
 
-function setupMapForGAFArea(gafAreaCode, data) {
+function setupMapForGAFArea(gafAreaCode : string, data) {
   // TODO: can use gafData instead
   areaData[gafAreaCode] = data;
   mapAreasByAreaCode[gafAreaCode] = [];
 
-  setupGAFBoundary(map, gafAreaCode, data);
+  setupGAFBoundary(gafAreaCode, data);
 
   data["areas"].forEach(area => {
     // TODO: Delegate creation to maparea.js so it can curate global variables
@@ -97,7 +88,7 @@ function setupMapForGAFArea(gafAreaCode, data) {
   updateLSALTFromVisibleAreas(nightVFR);
 }
 
-function setupGAFBoundary(map, areaCode, data) {
+function setupGAFBoundary(areaCode, data) {
   var gafBoundary = data["boundary"]["points"];
 
   map.addSource("gaf-" + areaCode, {
@@ -193,7 +184,7 @@ function setupMapFill(mapArea) {
       "text-anchor": "top"
     },
     "paint": {
-      "text-color": document.textColor
+      "text-color": theme.textColor
     }
   });
 

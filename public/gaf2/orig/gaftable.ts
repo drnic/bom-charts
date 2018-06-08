@@ -1,9 +1,11 @@
+declare var map: mapboxgl.Map;
+
 function gafTable() {
   return $("#gaf-table");
 }
 
-var latestMouseoverArea;
-var combinedMapAreaBoundaryPoints = {};
+let latestMouseoverArea;
+let combinedMapAreaBoundaryPoints = {};
 
 function updateGAFTableFromVisibleAreas() {
   var visibleMajorAreas = majorAreas(mapAreasInCurrentView());

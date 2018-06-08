@@ -5,33 +5,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Graphical Area Forecasts</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-  <script src="js/main.js"></script>
-  <script src="js/lsalt.js"></script>
-  <script src="js/airports.js"></script>
-  <script src="js/gafdata.js"></script>
-  <script src="js/gaftable.js"></script>
-  <script src="js/maparea.js"></script>
-  <script src="js/menu.js"></script>
-  <link href="css/main.css" rel='stylesheet' />
 
-  <script src='https://api.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.js'></script>
+  <link href="css/main.css" rel='stylesheet' />
   <link href='https://api.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css' rel='stylesheet' />
-  <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
 </head>
 <body>
 
   {{template "gaf2/menu"}}
   <div id='map' style='width: 400px; height: 400px;'></div>
-  <script>
-    mapboxgl.accessToken = 'pk.eyJ1IjoiZHJuaWMiLCJhIjoiY2poaWRidWpyMG02dzM3bXBtMmtiMWdjaiJ9.MowHdxFXszibdQ48A255-Q';
-    var map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/cjaudgl840gn32rnrepcb9b9g', // changes via menu.js if night vfr
-      center: [133.5,-24.25],
-      zoom: 2
-    });
-  </script>
 
   {{template "gaf2/color_legend"  }}
 
@@ -42,5 +23,6 @@
   </p>
 
   <div id="gaf-table"></div>
+  <script src="dist/bundle.js"></script>
 </body>
 </html>
