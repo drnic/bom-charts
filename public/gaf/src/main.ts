@@ -15,11 +15,16 @@ interface JQuery {
 
 declare var addToHomescreen: any;
 
+interface GAFAreaCodes {
+  current: string;
+  next: string;
+}
+
 $(function() {
   $("#area-map").maphilight({strokeColor: '297dd3', fade: false});
 
   // Based off http://www.bom.gov.au/scripts/aviation/forecasts/gaf-pub.js
-  function getGAFforArea(area) {
+  function getGAFforArea(area: string) : GAFAreaCodes {
     let WAN    = ['IDY42054', 'IDY42055', 'IDY42056', 'IDY42057']; //area id #0 (WA - North)
     let WAS    = ['IDY42050', 'IDY42051', 'IDY42052', 'IDY42053']; //area id #1 (WA - South)
     let NT     = ['IDY42058', 'IDY42059', 'IDY42060', 'IDY42061']; //area id #2 (NT)
@@ -41,7 +46,7 @@ $(function() {
       'NSW-E': NSWE,
       'VIC':   VIC,
       'TAS':   TAS,
-    }
+    } as any;
     if (areaMapping[area] === undefined) {
       return undefined;
     }
@@ -60,7 +65,7 @@ $(function() {
     }
   }
 
-  function addStatusBar(area) {
+  function addStatusBar(area: string) {
     var statusBar = $("<p/>");
     statusBar.addClass("status-bar");
     statusBar.html('Forecast valid for <span id="forecast-valid" /> | UTC <span id="utc-now" /> | <a href="/gaf2/">Interactive</a></p>');
@@ -84,9 +89,9 @@ $(function() {
     }
   }
 
-  function addHTMLMetadata(area) {
-    $('<link rel="icon" sizes="128x128" href="../images/icons/' + area + '.png">').appendTo("head");
-    $('<link rel="apple-touch-icon" href="../images/icons/' + area + '.png" />').appendTo("head");
+  function addHTMLMetadata(area: string) {
+    $(`<link rel="icon" sizes="128x128" href="../images/icons/${area}.png">`).appendTo("head");
+    $(`<link rel="apple-touch-icon" href="../images/icons/${area}.png" />`).appendTo("head");
 
     $("title").text("GAF " + area);
   }
@@ -95,7 +100,7 @@ $(function() {
     $('<meta http-equiv="Refresh" content="60;">').appendTo($('head'));
   }
 
-  function insertGAFImages(gafImageCodes) {
+  function insertGAFImages(gafImageCodes: GAFAreaCodes) {
     var currentGAF = $("<img>");
     currentGAF.addClass("fullscreen");
     currentGAF.attr("src", "http://www.bom.gov.au/fwo/aviation/" + gafImageCodes.current + ".png");
@@ -107,7 +112,7 @@ $(function() {
     nextGAF.appendTo($("#contents"));
   }
 
-  function fetchAIRMET(area) {
+  function fetchAIRMET(area: string) {
     var airmetDiv = $("<div/>");
     airmetDiv.attr("id", "airmet");
     airmetDiv.addClass("airmet");
@@ -129,7 +134,7 @@ $(function() {
   }
 
   // From https://stackoverflow.com/a/21903119/36170
-  function getUrlParameter(sParam) {
+  function getUrlParameter(sParam: string) : string {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
         sURLVariables = sPageURL.split('&'),
         sParameterName,
@@ -139,14 +144,14 @@ $(function() {
         sParameterName = sURLVariables[i].split('=');
 
         if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : sParameterName[1];
+            return sParameterName[1] === undefined ? "" : sParameterName[1];
         }
     }
   };
 
 
-  var gafArea = getUrlParameter('area');
-  var gafImageCodes = getGAFforArea(gafArea);
+  let gafArea = getUrlParameter('area');
+  let gafImageCodes = getGAFforArea(gafArea);
   if (gafImageCodes === undefined) {
     $("#area-map").show();
   } else {

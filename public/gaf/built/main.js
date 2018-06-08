@@ -73,8 +73,8 @@ $(function () {
         }
     }
     function addHTMLMetadata(area) {
-        $('<link rel="icon" sizes="128x128" href="../images/icons/' + area + '.png">').appendTo("head");
-        $('<link rel="apple-touch-icon" href="../images/icons/' + area + '.png" />').appendTo("head");
+        $("<link rel=\"icon\" sizes=\"128x128\" href=\"../images/icons/" + area + ".png\">").appendTo("head");
+        $("<link rel=\"apple-touch-icon\" href=\"../images/icons/" + area + ".png\" />").appendTo("head");
         $("title").text("GAF " + area);
     }
     function startAutoRefresh() {
@@ -118,7 +118,7 @@ $(function () {
         for (i = 0; i < sURLVariables.length; i++) {
             sParameterName = sURLVariables[i].split('=');
             if (sParameterName[0] === sParam) {
-                return sParameterName[1] === undefined ? true : sParameterName[1];
+                return sParameterName[1] === undefined ? "" : sParameterName[1];
             }
         }
     }
