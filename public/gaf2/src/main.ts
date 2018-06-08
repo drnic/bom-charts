@@ -1,5 +1,6 @@
 import * as mapboxgl from "mapbox-gl";
 import * as menu from "./menu";
+import * as airports from "./airports";
 
 // mapboxgl.accessToken = 'pk.eyJ1IjoiZHJuaWMiLCJhIjoiY2poaWRidWpyMG02dzM3bXBtMmtiMWdjaiJ9.MowHdxFXszibdQ48A255-Q';
 Object.getOwnPropertyDescriptor(mapboxgl, "accessToken").set('pk.eyJ1IjoiZHJuaWMiLCJhIjoiY2poaWRidWpyMG02dzM3bXBtMmtiMWdjaiJ9.MowHdxFXszibdQ48A255-Q');
@@ -12,3 +13,4 @@ var map = new mapboxgl.Map({
 });
 
 menu.init(map);
+airports.init(map);

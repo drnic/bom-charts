@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var mapboxgl = require("mapbox-gl");
 var menu = require("./menu");
+var airports = require("./airports");
 // mapboxgl.accessToken = 'pk.eyJ1IjoiZHJuaWMiLCJhIjoiY2poaWRidWpyMG02dzM3bXBtMmtiMWdjaiJ9.MowHdxFXszibdQ48A255-Q';
 Object.getOwnPropertyDescriptor(mapboxgl, "accessToken").set('pk.eyJ1IjoiZHJuaWMiLCJhIjoiY2poaWRidWpyMG02dzM3bXBtMmtiMWdjaiJ9.MowHdxFXszibdQ48A255-Q');
 var map = new mapboxgl.Map({
@@ -11,3 +12,4 @@ var map = new mapboxgl.Map({
     zoom: 2
 });
 menu.init(map);
+airports.init(map);

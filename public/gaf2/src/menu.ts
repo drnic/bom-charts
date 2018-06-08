@@ -1,14 +1,7 @@
+import * as theme from "./theme";
 import * as url from './helpers/url';
 import * as $ from 'jquery';
 import * as mapboxgl from "mapbox-gl";
-
-interface Theme {
-  textColor: string;
-}
-
-var theme = {
-  textColor: "#eee",
-} as Theme;
 
 export function init(map: mapboxgl.Map) {
   $(function () {
@@ -22,9 +15,9 @@ export function init(map: mapboxgl.Map) {
     if (vfr == "night") {
       console.log(map);
       map.setStyle('mapbox://styles/mapbox/dark-v9');
-      theme.textColor = "#eee";
+      theme.theme.textColor = "#eee";
     } else {
-      theme.textColor = "#000";
+      theme.theme.textColor = "#000";
     }
 
     var menu = $("p#menu")
