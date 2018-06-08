@@ -52,7 +52,7 @@ $(function () {
     function addStatusBar(area) {
         var statusBar = $("<p/>");
         statusBar.addClass("status-bar");
-        statusBar.html('Forecast valid for <span id="forecast-valid" /> | UTC <span id="utc-now" /> | <a href="/gaf2/' + area + '">Interactive</a></p>');
+        statusBar.html('Forecast valid for <span id="forecast-valid" /> | UTC <span id="utc-now" /> | <a href="/gaf2/">Interactive</a></p>');
         statusBar.appendTo($("#contents"));
         var now = new Date();
         $("#utc-now").text(now.getUTCDate().pad(2) + now.getUTCHours().pad(2) + now.getUTCMinutes().pad(2));
