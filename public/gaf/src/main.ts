@@ -8,6 +8,13 @@ Number.prototype.pad = function(size) {
   return s;
 }
 
+// see https://medium.com/@NetanelBasal/typescript-integrate-jquery-plugin-in-your-project-e28c6887d8dc
+interface JQuery {
+  maphilight(options?: any) : any;
+}
+
+declare var addToHomescreen: any;
+
 $(function() {
   $("#area-map").maphilight({strokeColor: '297dd3', fade: false});
 
