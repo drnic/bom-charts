@@ -1,5 +1,5 @@
 import * as mapboxgl from "mapbox-gl";
-import "./menu";
+import * as menu from "./menu";
 
 // mapboxgl.accessToken = 'pk.eyJ1IjoiZHJuaWMiLCJhIjoiY2poaWRidWpyMG02dzM3bXBtMmtiMWdjaiJ9.MowHdxFXszibdQ48A255-Q';
 Object.getOwnPropertyDescriptor(mapboxgl, "accessToken").set('pk.eyJ1IjoiZHJuaWMiLCJhIjoiY2poaWRidWpyMG02dzM3bXBtMmtiMWdjaiJ9.MowHdxFXszibdQ48A255-Q');
@@ -11,3 +11,4 @@ var map = new mapboxgl.Map({
   zoom: 2
 });
 
+menu.init(map);
