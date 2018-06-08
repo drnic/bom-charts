@@ -313,7 +313,33 @@ var _ = Describe("CloudIcingTurbParser", func() {
 
 	})
 
+	var _ = Describe("time limits", func() {
+		// a CloudLayers until 02Z
+		// perhaps EntireAreaCloud is []CloudLayer - one per time slice
+		// what about each Subareas?
+		It("Parses BKN ST 2000/4000FT LAND TL 02Z", func() {
+			text := "BKN ST 2000/4000FT LAND TL 02Z"
+			p, _ := NewCloudIcingTurbParser(text, false)
+			Expect(*p.EntireAreaCloud).To(Equal(CloudLayer{Amount: "BKN", Type: "ST", Base: 2000, Top: 4000}))
+		})
+
+		// effectively two CloudLayers before/after 14Z
+		It("Parses SCT ST 1000/3000FT, BKN FM 14Z", func() {
+			text := "SCT ST 1000/3000FT, BKN FM 14Z"
+			p, _ := NewCloudIcingTurbParser(text, false)
+			Expect(*p.EntireAreaCloud).To(Equal(CloudLayer{Amount: "SCT", Type: "ST", Base: 1000, Top: 3000}))
+		})
+
+	})
 	// TODO:
+	// SCT ST 1000/3000FT C1, BKN FM 14Z
+	// FEW ST 1500/2500FT, BECMG SCT FM 14Z
+	// BKN ST 2000/4000FT LAND TL 02Z (CEASING IN B1 FM 01Z)
+	// SCT ST 1500/3000FT (BKN FM 14Z IN B1 ONLY)
+	// SCT CU 2500/7000FT (A1 TL 09Z, BASE 4000FT)
+	// FEW CU/SC 4000/7000FT (SCT IN B1, B2, AND IN B3 TL 08Z)
+	// BKN ST 3000/5000FT, BECMG SCT FM 02Z
+
 	// SCT SC 2000/4000FT SEA W OF YPPD
 	// SCT CU/SC 3000/10000FT, BKN SEA
 	// SCT CU/SC 3000/6000FT SEA/COAST
@@ -327,15 +353,6 @@ var _ = Describe("CloudIcingTurbParser", func() {
 	// FEW CU/SC 5000/9000FT SEA/LAND WI 20NM OF COAST (BAS ES 3000FT SEA)
 	// SCT CU/SC 3000/ABV10000FT (BKN BASES 2500FT IN B1)
 	// SCT CU/SC 5000/7000FT (BASE 3000FT IN B1 ONLY S OF S2700)
-
-	// FEW ST 1500/2500FT, BECMG SCT FM 14Z
-	// SCT ST 1000/3000FT C1, BKN FM 14Z
-	// BKN ST 2000/4000FT LAND TL 02Z
-	// BKN ST 2000/4000FT LAND TL 02Z (CEASING IN B1 FM 01Z)
-	// SCT ST 1500/3000FT (BKN FM 14Z IN B1 ONLY)
-	// SCT CU 2500/7000FT (A1 TL 09Z, BASE 4000FT)
-	// FEW CU/SC 4000/7000FT (SCT IN B1, B2, AND IN B3 TL 08Z)
-	// BKN ST 3000/5000FT, BECMG SCT FM 02Z
 
 	// FEW CU/SC 4000/7000FT (BKN IN A3 TL 23Z, BASES 3000FT SEA)
 	// FEW CU/SC 2500/4500FT, SCT W OF 144E
