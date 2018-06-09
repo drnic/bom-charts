@@ -1,4 +1,6 @@
 import * as url from './helpers/url';
+import * as menu from './menu';
+import * as gafarea from './data/gafarea';
 import * as mapboxgl from "mapbox-gl";
 
 export enum VFR {
@@ -21,6 +23,8 @@ export var periodChanged = true;
 var map: mapboxgl.Map;
 export function init(_map: mapboxgl.Map) {
   map = _map;
+  menu.update();
+  gafarea.update();
 }
 
 export function setVFR(_vfr: VFR) {
@@ -28,6 +32,8 @@ export function setVFR(_vfr: VFR) {
   vfr = _vfr;
   vfrChanged = (vfrPrevious != vfr);
   periodChanged = false;
+  menu.update();
+  gafarea.update();
 }
 
 export function setPeriod(_period: Period) {
@@ -35,5 +41,7 @@ export function setPeriod(_period: Period) {
   period = _period;
   periodChanged = (periodPrevious == period);
   vfrChanged = false;
+  menu.update();
+  gafarea.update();
 }
 

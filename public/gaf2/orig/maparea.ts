@@ -171,15 +171,3 @@ export function gafAreaCodesFromMapAreas(mapAreas: MapAreaBase[]) {
     return result;
   }, []);
 }
-
-function mapFitBoundsToArea(mapArea: MapAreaBase) {
-  var boundary = mapArea.boundaryPoints();
-
-  var bounds = boundary.reduce(function(bounds, coord) {
-    return bounds.extend(coord);
-  }, new mapboxgl.LngLatBounds(gafBoundary[0], gafBoundary[0]));
-
-  map.fitBounds(bounds, {
-    padding: 20
-  });
-}

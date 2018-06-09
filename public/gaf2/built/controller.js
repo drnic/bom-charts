@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var url = require("./helpers/url");
+var menu = require("./menu");
+var gafarea = require("./data/gafarea");
 var VFR;
 (function (VFR) {
     VFR["day"] = "day";
@@ -18,6 +20,8 @@ exports.periodChanged = true;
 var map;
 function init(_map) {
     map = _map;
+    menu.update();
+    gafarea.update();
 }
 exports.init = init;
 function setVFR(_vfr) {
@@ -25,6 +29,8 @@ function setVFR(_vfr) {
     exports.vfr = _vfr;
     exports.vfrChanged = (exports.vfrPrevious != exports.vfr);
     exports.periodChanged = false;
+    menu.update();
+    gafarea.update();
 }
 exports.setVFR = setVFR;
 function setPeriod(_period) {
@@ -32,5 +38,7 @@ function setPeriod(_period) {
     exports.period = _period;
     exports.periodChanged = (exports.periodPrevious == exports.period);
     exports.vfrChanged = false;
+    menu.update();
+    gafarea.update();
 }
 exports.setPeriod = setPeriod;
