@@ -3,31 +3,60 @@ import * as controller from './controller';
 import * as $ from 'jquery';
 import * as mapboxgl from "mapbox-gl";
 
-export function init(map: mapboxgl.Map) {
-  var vfr = controller.vfr;
-  var period = controller.period;
+var map: mapboxgl.Map;
 
-  $('body').addClass(`vfr-${vfr}`);
-  $('body').addClass(`period-${period}`);
+export function init(_map: mapboxgl.Map) {
+  map = _map;
 
-  if (vfr == "night") {
-    console.log(map);
-    map.setStyle('mapbox://styles/mapbox/dark-v9');
-    theme.theme.textColor = "#eee";
-  } else {
-    theme.theme.textColor = "#000";
+  update();
+}
+
+function update() {
+  updateMapTheme();
+  updateMenuLinks();
+  updateURL();
+}
+
+function updateMapTheme() {
+  if (controller.vfrPrevious !== undefined) {
+    $('body').removeClass(`vfr-${controller.vfrPrevious}`);
   }
+  if (controller.periodPrevious !== undefined) {
+    $('body').removeClass(`period-${controller.periodPrevious}`);
+  }
+  $('body').addClass(`vfr-${controller.vfr}`);
+  $('body').addClass(`period-${controller.period}`);
 
+
+  if (controller.vfrChanged) {
+    if (controller.vfr == "night") {
+      map.setStyle('mapbox://styles/mapbox/dark-v9');
+      theme.theme.textColor = "#eee";
+    } else {
+      map.setStyle('mapbox://styles/mapbox/cjaudgl840gn32rnrepcb9b9g');
+      theme.theme.textColor = "#000";
+    }
+  }
+}
+
+function updateMenuLinks() {
   var menu = $("p#menu")
-  if (vfr == "night") {
-    menu.find("a#day-vfr").attr("href", `?vfr=day&period=${period}`);
-  } else {
-    menu.find("a#night-vfr").attr("href", `?vfr=night&period=${period}`);
-  }
+  menu.find("a#day-vfr").attr("href", `?vfr=day&period=${controller.period}`).click(function() {
+    controller.setVFR("day"); update(); return false;
+  });
+  menu.find("a#night-vfr").attr("href", `?vfr=night&period=${controller.period}`).click(function() {
+    controller.setVFR("night"); update(); return false;
+  });
 
-  if (period == "next") {
-    menu.find("a#period-current").attr("href", `?vfr=${vfr}&period=current`);
-  } else {
-    menu.find("a#period-next").attr("href", `?vfr=${vfr}&period=next`);
-  }
+  menu.find("a#period-current").attr("href", `?vfr=${controller.vfr}&period=current`).click(function() {
+    controller.setPeriod("current"); update(); return false;
+  });
+  menu.find("a#period-next").attr("href", `?vfr=${controller.vfr}&period=next`).click(function() {
+    controller.setPeriod("next"); update(); return false;
+  });
+}
+
+function updateURL() {
+  var query = `?vfr=${controller.vfr}&period=${controller.period}`
+  history.pushState(null, null, window.location.pathname + query)
 }
