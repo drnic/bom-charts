@@ -18,12 +18,14 @@ type CloudIcingTurbParser struct {
 
 // CloudLayer describes a layer of cloud AMSL
 type CloudLayer struct {
-	Amount  string `json:"amount"`
-	Type    string `json:"type"`
-	Base    uint64 `json:"base"`
-	Top     uint64 `json:"top"`
-	Cumulus bool   `json:"cumulus"`
-	SeaOnly bool   `json:"sea-only,omitempty"`
+	Amount        string `json:"amount"`
+	Type          string `json:"type"`
+	Base          uint64 `json:"base"` // ignore if FEW clouds
+	Top           uint64 `json:"top"`  // ignore if FEW clouds
+	NightOnlyBase uint64 `json:"night_only_base"`
+	NightOnlyTop  uint64 `json:"night_only_top"`
+	Cumulus       bool   `json:"cumulus"`
+	SeaOnly       bool   `json:"sea_only,omitempty"`
 }
 
 var inRE string
@@ -104,24 +106,19 @@ func parseNamedRegexp(re *regexp.Regexp, text string) (result map[string]string,
 }
 
 // NewCloudIcingTurbParser parses Cloud/Icing/Turbulance text
-func NewCloudIcingTurbParser(text string, nightVFR bool) (parser *CloudIcingTurbParser, err error) {
+func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err error) {
 	parser = &CloudIcingTurbParser{}
 
 	// SCT CU/SC 3000/5000FT (OVC IN B1, BKN IN B2)
 	if match, ok := parseNamedRegexp(areaAndAltAmountSubareasRE, text); ok {
 		areaCloud := newCloudLayerFromFromRegexpMatch(match, 0)
-		if nightVFR || areaCloud.Amount != "FEW" {
-			parser.EntireAreaCloud = areaCloud
-		}
+		parser.EntireAreaCloud = areaCloud
 		parser.Subareas = map[string]*CloudLayer{}
 
 		for i := 1; i <= 2; i++ {
 			subareaCloud := *areaCloud
 			subareaCloud.Amount = match[matchKey("cloudAmount", i)]
-			if !nightVFR && subareaCloud.Amount == "FEW" {
-				subareaCloud.Base = codes.IgnoreMeCloudBase
-				subareaCloud.Top = codes.IgnoreMeCloudTop
-			}
+			subareaCloud.updateForNightOnly()
 			subarea := match[matchKey("subarea", i)]
 			parser.Subareas[subarea] = &subareaCloud
 		}
@@ -131,16 +128,12 @@ func NewCloudIcingTurbParser(text string, nightVFR bool) (parser *CloudIcingTurb
 	// SCT CU/SC 3000/8000FT (BKN IN A1)
 	if match, ok := parseNamedRegexp(areaAndAltAmountSubareaRE, text); ok {
 		areaCloud := newCloudLayerFromFromRegexpMatch(match, 0)
-		if nightVFR || areaCloud.Amount != "FEW" {
-			parser.EntireAreaCloud = areaCloud
-		}
+		parser.EntireAreaCloud = areaCloud
+
 		subareaCloud := *areaCloud
 		subareaCloud.Amount = match["cloudAmount1"]
+		subareaCloud.updateForNightOnly()
 		subarea := match["subarea1"]
-		if !nightVFR && subareaCloud.Amount == "FEW" {
-			subareaCloud.Base = codes.IgnoreMeCloudBase
-			subareaCloud.Top = codes.IgnoreMeCloudTop
-		}
 
 		parser.Subareas = map[string]*CloudLayer{}
 		parser.Subareas[subarea] = &subareaCloud
@@ -151,19 +144,16 @@ func NewCloudIcingTurbParser(text string, nightVFR bool) (parser *CloudIcingTurb
 	// SCT CU/SC 4000/7000FT (BKN BASE 3000FT A2)
 	if match, ok := parseNamedRegexp(areaAndAltBaseSubareaRE, text); ok {
 		areaCloud := newCloudLayerFromFromRegexpMatch(match, 0)
-		if nightVFR || areaCloud.Amount != "FEW" {
-			parser.EntireAreaCloud = areaCloud
-		}
+		parser.EntireAreaCloud = areaCloud
 
 		subareaCloud := *areaCloud
 		subareaCloud.Base, _ = strconv.ParseUint(match["cloudBase1"], 10, 64)
 		if len(match["cloudAmount1"]) > 0 {
 			subareaCloud.Amount = match["cloudAmount1"]
+			// subarea might be BKN, but main was FEW
+			subareaCloud.Top = areaCloud.NightOnlyTop
 		}
-		if !nightVFR && subareaCloud.Amount == "FEW" {
-			subareaCloud.Base = codes.IgnoreMeCloudBase
-			subareaCloud.Top = codes.IgnoreMeCloudTop
-		}
+		subareaCloud.updateForNightOnly()
 		subarea := match["subarea1"]
 
 		parser.Subareas = map[string]*CloudLayer{}
@@ -174,17 +164,12 @@ func NewCloudIcingTurbParser(text string, nightVFR bool) (parser *CloudIcingTurb
 	// BKN CU/SC 4000/9000FT (3000/ABV10000FT IN A1)
 	if match, ok := parseNamedRegexp(areaAndAltLayersSubareaRE, text); ok {
 		areaCloud := newCloudLayerFromFromRegexpMatch(match, 0)
-		if nightVFR || areaCloud.Amount != "FEW" {
-			parser.EntireAreaCloud = areaCloud
-		}
+		parser.EntireAreaCloud = areaCloud
 
 		subareaCloud := *areaCloud
 		subareaCloud.Base, _ = strconv.ParseUint(match[matchKey("cloudBase", 1)], 10, 64)
 		subareaCloud.Top, _ = strconv.ParseUint(match[matchKey("cloudTop", 1)], 10, 64)
-		if !nightVFR && subareaCloud.Amount == "FEW" {
-			subareaCloud.Base = codes.IgnoreMeCloudBase
-			subareaCloud.Top = codes.IgnoreMeCloudTop
-		}
+		subareaCloud.updateForNightOnly()
 		subarea := match["subarea1"]
 
 		parser.Subareas = map[string]*CloudLayer{}
@@ -199,11 +184,10 @@ func NewCloudIcingTurbParser(text string, nightVFR bool) (parser *CloudIcingTurb
 		subarea1 := match["subarea1"]
 		subarea2 := match["subarea2"]
 
-		if nightVFR || cloud.Amount != "FEW" {
-			parser.Subareas = map[string]*CloudLayer{}
-			parser.Subareas[subarea1] = &cloud
-			parser.Subareas[subarea2] = &cloud
-		}
+		parser.Subareas = map[string]*CloudLayer{}
+		parser.Subareas[subarea1] = &cloud
+		parser.Subareas[subarea2] = &cloud
+
 		return
 	}
 
@@ -212,20 +196,16 @@ func NewCloudIcingTurbParser(text string, nightVFR bool) (parser *CloudIcingTurb
 		cloud := newCloudLayerFromFromRegexpMatch(match, 0)
 		subarea := match["subarea1"]
 
-		if nightVFR || cloud.Amount != "FEW" {
-			parser.Subareas = map[string]*CloudLayer{}
-			parser.Subareas[subarea] = cloud
-		}
+		parser.Subareas = map[string]*CloudLayer{}
+		parser.Subareas[subarea] = cloud
 		return
 	}
 
 	// SCT CU/SC 5000/8000FT
 	if match, ok := parseNamedRegexp(simpleRE, text); ok {
 		cloud := newCloudLayerFromFromRegexpMatch(match, 0)
+		parser.EntireAreaCloud = cloud
 
-		if nightVFR || cloud.Amount != "FEW" {
-			parser.EntireAreaCloud = cloud
-		}
 		return
 	}
 
@@ -236,19 +216,39 @@ func matchKey(key string, i int) string {
 	return fmt.Sprintf(key+"%d", i)
 }
 
-func newCloudLayerFromFromRegexpMatch(match map[string]string, i int) (cloud *CloudLayer) {
-	cloud = &CloudLayer{}
-	cloud.Amount = match[matchKey("cloudAmount", i)]
-	cloud.Type = match[matchKey("cloudType", i)]
-	cloud.Base, _ = strconv.ParseUint(match[matchKey("cloudBase", i)], 10, 64)
-	cloud.Top, _ = strconv.ParseUint(match[matchKey("cloudTop", i)], 10, 64)
-	cloud.Cumulus = cloud.Type == "CB" || cloud.Type == "TCU"
+func newCloudLayerFromFromRegexpMatch(match map[string]string, i int) (cloudLayer *CloudLayer) {
+	cloudLayer = &CloudLayer{}
+	cloudLayer.Amount = match[matchKey("cloudAmount", i)]
+	cloudLayer.Type = match[matchKey("cloudType", i)]
+	cloudLayer.Base, _ = strconv.ParseUint(match[matchKey("cloudBase", i)], 10, 64)
+	cloudLayer.Top, _ = strconv.ParseUint(match[matchKey("cloudTop", i)], 10, 64)
+	cloudLayer.updateForNightOnly()
 
-	cloud.SeaOnly = len(match["sea"]) > 0 && len(match["land"]) == 0
-	if cloud.SeaOnly {
-		cloud.Base = codes.IgnoreMeCloudBase
-		cloud.Top = codes.IgnoreMeCloudTop
+	cloudLayer.Cumulus = cloudLayer.Type == "CB" || cloudLayer.Type == "TCU"
+
+	cloudLayer.SeaOnly = len(match["sea"]) > 0 && len(match["land"]) == 0
+	if cloudLayer.SeaOnly {
+		cloudLayer.Base = codes.IgnoreMeCloudBase
+		cloudLayer.Top = codes.IgnoreMeCloudTop
+		cloudLayer.NightOnlyBase = codes.IgnoreMeCloudBase
+		cloudLayer.NightOnlyTop = codes.IgnoreMeCloudTop
 	}
 
 	return
+}
+
+func (cloudLayer *CloudLayer) updateForNightOnly() {
+	if cloudLayer.Base != codes.IgnoreMeCloudBase {
+		cloudLayer.NightOnlyBase = cloudLayer.Base
+		cloudLayer.NightOnlyTop = cloudLayer.Top
+	}
+	if cloudLayer.Amount == "FEW" {
+		cloudLayer.Base = codes.IgnoreMeCloudBase
+		cloudLayer.Top = codes.IgnoreMeCloudTop
+	} else {
+		if cloudLayer.Base == codes.IgnoreMeCloudBase {
+			cloudLayer.Base = cloudLayer.NightOnlyBase
+			cloudLayer.Top = cloudLayer.NightOnlyTop
+		}
+	}
 }

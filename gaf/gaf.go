@@ -21,49 +21,52 @@ import (
 
 // AreaForecast describes a request/current Graphical Area Forecast (GAF)
 type AreaForecast struct {
-	PageCode          string       `json:"page-code"`
-	GAFAreaID         string       `json:"gaf-area-id"`
-	NightVFR          bool         `json:"night-vfr"`
+	PageCode          string       `json:"page_code"`
+	GAFAreaID         string       `json:"gaf_area_id"`
 	From              string       `json:"from"`
-	IssuedAt          string       `json:"issued-at"`
-	StandardInclusion string       `json:"standard-inclusion"`
+	IssuedAt          string       `json:"issued_at"`
+	StandardInclusion string       `json:"standard_inclusion"`
 	Till              string       `json:"till"`
 	Areas             []*GAFArea   `json:"areas"`
 	Boundary          *GAFBoundary `json:"boundary"`
 }
 
 type GAFArea struct {
-	AreaID        string        `json:"area-id"`
-	WxCond        []*GAFWxCond  `json:"wx-cond"`
-	FreezingLevel string        `json:"freezing-level"`
-	Boundary      *GAFBoundary  `json:"boundary"`
-	CloudBase     uint64        `json:"cloud-base,omitempty"`
-	CloudTop      uint64        `json:"cloud-top,omitempty"`
-	SubAreas      []*GAFSubArea `json:"sub-areas"`
+	AreaID         string        `json:"area_id"`
+	WxCond         []*GAFWxCond  `json:"wx_cond"`
+	FreezingLevel  string        `json:"freezing_level"`
+	Boundary       *GAFBoundary  `json:"boundary"`
+	DayCloudBase   uint64        `json:"day_cloud_base,omitempty"`
+	DayCloudTop    uint64        `json:"day_cloud_top,omitempty"`
+	NightCloudBase uint64        `json:"night_cloud_base,omitempty"`
+	NightCloudTop  uint64        `json:"night_cloud_top,omitempty"`
+	SubAreas       []*GAFSubArea `json:"sub_areas"`
 }
 
 type GAFSubArea struct {
-	AreaID    string       `json:"area-id"`
-	SubAreaID string       `json:"sub-area-id"`
-	Boundary  *GAFBoundary `json:"boundary"`
-	CloudBase uint64       `json:"cloud-base,omitempty"`
-	CloudTop  uint64       `json:"cloud-top,omitempty"`
+	AreaID         string       `json:"area_id"`
+	SubAreaID      string       `json:"sub_area_id"`
+	Boundary       *GAFBoundary `json:"boundary"`
+	DayCloudBase   uint64       `json:"day_cloud_base,omitempty"`
+	DayCloudTop    uint64       `json:"day_cloud_top,omitempty"`
+	NightCloudBase uint64       `json:"night_cloud_base,omitempty"`
+	NightCloudTop  uint64       `json:"night_cloud_top,omitempty"`
 }
 
 type GAFWxCond struct {
-	SurfaceVisWx       GAFSurfaceVisWx          `json:"surface-vis-wx"`
-	CloudIceTurbulence []*GAFCloudIceTurbulence `json:"cloud-ice-turb"`
+	SurfaceVisWx       GAFSurfaceVisWx          `json:"surface_vis_wx"`
+	CloudIceTurbulence []*GAFCloudIceTurbulence `json:"cloud_ice_turb"`
 }
 
 type GAFSurfaceVisWx struct {
 	Text              string   `json:"text"`
-	SurfaceVisibility int64    `json:"surface-vis"`
-	SubAreasMentioned []string `json:"sub-areas-mentioned,omitempty"`
+	SurfaceVisibility int64    `json:"surface_vis"`
+	SubAreasMentioned []string `json:"sub_areas_mentioned,omitempty"`
 }
 
 type GAFCloudIceTurbulence struct {
 	Text              string                       `json:"text"`
-	SubAreasMentioned []string                     `json:"sub-areas-mentioned,omitempty"`
+	SubAreasMentioned []string                     `json:"sub_areas_mentioned,omitempty"`
 	Parsed            *parser.CloudIcingTurbParser `json:"parsed"`
 }
 
@@ -85,7 +88,7 @@ func httpCacheClient() *http.Client {
 }
 
 // NewAreaForecast is the constructor for a AreaForecast
-func NewAreaForecast(pagecode string, nightVFR bool) (forecast *AreaForecast, err error) {
+func NewAreaForecast(pagecode string) (forecast *AreaForecast, err error) {
 	httpClient := httpCacheClient()
 
 	url := fmt.Sprintf("http://www.bom.gov.au/fwo/aviation/%s.xml", pagecode)
@@ -106,7 +109,7 @@ func NewAreaForecast(pagecode string, nightVFR bool) (forecast *AreaForecast, er
 		return forecast, err
 	}
 
-	forecast = &AreaForecast{PageCode: pagecode, NightVFR: nightVFR}
+	forecast = &AreaForecast{PageCode: pagecode}
 	forecast.copyFromRawForecast(rawForecast)
 
 	return forecast, nil
@@ -198,30 +201,42 @@ func (boundary *GAFBoundary) copyFromRawForecast(raw rawGAFBoundary) {
 // DecodeCloudLayers takes the major layer and finds the lowest base and highest top
 func (area *GAFArea) DecodeCloudLayers() {
 	if len(area.WxCond) > 0 && len(area.WxCond[0].CloudIceTurbulence) > 0 {
-		area.CloudBase = codes.IgnoreMeCloudBase
-		area.CloudTop = codes.IgnoreMeCloudTop
+		area.DayCloudBase = codes.IgnoreMeCloudBase
+		area.DayCloudTop = codes.IgnoreMeCloudTop
+		area.NightCloudBase = codes.IgnoreMeCloudBase
+		area.NightCloudTop = codes.IgnoreMeCloudTop
 		for _, cloudLayer := range area.WxCond[0].CloudIceTurbulence {
 			if cloudLayer.Parsed.EntireAreaCloud != nil {
-				if area.CloudBase > cloudLayer.Parsed.EntireAreaCloud.Base {
-					area.CloudBase = cloudLayer.Parsed.EntireAreaCloud.Base
+				if area.DayCloudBase > cloudLayer.Parsed.EntireAreaCloud.Base {
+					area.DayCloudBase = cloudLayer.Parsed.EntireAreaCloud.Base
 				}
-				if area.CloudTop < cloudLayer.Parsed.EntireAreaCloud.Top {
-					area.CloudTop = cloudLayer.Parsed.EntireAreaCloud.Top
+				if area.DayCloudTop < cloudLayer.Parsed.EntireAreaCloud.Top {
+					area.DayCloudTop = cloudLayer.Parsed.EntireAreaCloud.Top
+				}
+				if area.NightCloudBase > cloudLayer.Parsed.EntireAreaCloud.Base {
+					area.NightCloudBase = cloudLayer.Parsed.EntireAreaCloud.Base
+				}
+				if area.NightCloudTop < cloudLayer.Parsed.EntireAreaCloud.Top {
+					area.NightCloudTop = cloudLayer.Parsed.EntireAreaCloud.Top
 				}
 			}
 		}
 
 		for _, subarea := range area.SubAreas {
-			subarea.CloudBase = area.CloudBase
-			subarea.CloudTop = area.CloudTop
+			subarea.DayCloudBase = area.DayCloudBase
+			subarea.DayCloudTop = area.DayCloudTop
+			subarea.NightCloudBase = area.NightCloudBase
+			subarea.NightCloudTop = area.NightCloudTop
 
 			// TODO: the first CloudIceTurbulence might be ignorable
 			// Look in each CloudIceTurbulence for each subarea to find lowest + highest
 			if len(area.WxCond) > 0 && len(area.WxCond[0].CloudIceTurbulence) > 0 {
 				subareasWxCloud := area.WxCond[0].CloudIceTurbulence[0].Parsed.Subareas
 				if subareaWxCloud, ok := subareasWxCloud[subarea.SubAreaID]; ok {
-					subarea.CloudBase = subareaWxCloud.Base
-					subarea.CloudTop = subareaWxCloud.Top
+					subarea.DayCloudBase = subareaWxCloud.Base
+					subarea.DayCloudTop = subareaWxCloud.Top
+					subarea.NightCloudBase = subareaWxCloud.NightOnlyBase
+					subarea.NightCloudTop = subareaWxCloud.NightOnlyTop
 				}
 			}
 		}
@@ -254,5 +269,5 @@ func (cloud *GAFCloudIceTurbulence) Decode(forecast *AreaForecast, area *GAFArea
 	r := regexp.MustCompile(fmt.Sprintf("%s([0-9])", area.AreaID))
 	cloud.SubAreasMentioned = r.FindAllString(cloud.Text, -1)
 
-	cloud.Parsed, _ = parser.NewCloudIcingTurbParser(cloud.Text, forecast.NightVFR)
+	cloud.Parsed, _ = parser.NewCloudIcingTurbParser(cloud.Text)
 }

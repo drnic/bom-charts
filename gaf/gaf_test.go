@@ -39,7 +39,7 @@ var _ = Describe("Page", func() {
 		httpmock.RegisterResponder("GET", "http://www.bom.gov.au/fwo/aviation/IDY42082.xml",
 			httpmock.NewStringResponder(200, string(xmlTestdata)))
 
-		forecast, err := NewAreaForecast("IDY42082", false)
+		forecast, err := NewAreaForecast("IDY42082")
 		Ω(err).ShouldNot(HaveOccurred())
 		Expect(forecast.GAFAreaID).To(Equal("NSW-E"))
 		Expect(forecast.From).To(Equal("2018-05-22T05:00:00Z"))
@@ -55,8 +55,10 @@ var _ = Describe("Page", func() {
 
 		// BKN ST 2000/6000FT IN A1
 		// SCT CU/SC 3000/7000FT
-		Expect(aRegion.CloudBase).To(Equal(uint64(3000))) // main area, not A1
-		Expect(aRegion.CloudTop).To(Equal(uint64(7000)))
+		Expect(aRegion.DayCloudBase).To(Equal(uint64(3000))) // main area, not A1
+		Expect(aRegion.DayCloudTop).To(Equal(uint64(7000)))
+		Expect(aRegion.NightCloudBase).To(Equal(uint64(3000))) // main area, not A1
+		Expect(aRegion.NightCloudTop).To(Equal(uint64(7000)))
 
 		Expect(len(aRegion.WxCond)).To(Equal(4))
 		Expect(int(aRegion.WxCond[0].SurfaceVisWx.SurfaceVisibility)).To(Equal(10000))
@@ -80,12 +82,16 @@ var _ = Describe("Page", func() {
 		Expect(len(aRegion.SubAreas)).To(Equal(2))
 		Expect(aRegion.SubAreas[0].AreaID).To(Equal("A"))
 		Expect(aRegion.SubAreas[0].SubAreaID).To(Equal("A1"))
-		Expect(aRegion.SubAreas[0].CloudBase).To(Equal(uint64(2000))) // BKN ST 2000/6000FT IN A1
-		Expect(aRegion.SubAreas[0].CloudTop).To(Equal(uint64(6000)))
+		Expect(aRegion.SubAreas[0].DayCloudBase).To(Equal(uint64(2000))) // BKN ST 2000/6000FT IN A1
+		Expect(aRegion.SubAreas[0].DayCloudTop).To(Equal(uint64(6000)))
+		Expect(aRegion.SubAreas[0].NightCloudBase).To(Equal(uint64(2000))) // BKN ST 2000/6000FT IN A1
+		Expect(aRegion.SubAreas[0].NightCloudTop).To(Equal(uint64(6000)))
 		Expect(aRegion.SubAreas[0].Boundary.Points[0]).To(Equal([]float64{149.87, -37.47}))
 		Expect(aRegion.SubAreas[1].SubAreaID).To(Equal("A2"))
-		Expect(aRegion.SubAreas[1].CloudBase).To(Equal(uint64(3000))) // SCT CU/SC 3000/7000FT
-		Expect(aRegion.SubAreas[1].CloudTop).To(Equal(uint64(7000)))
+		Expect(aRegion.SubAreas[1].DayCloudBase).To(Equal(uint64(3000))) // SCT CU/SC 3000/7000FT
+		Expect(aRegion.SubAreas[1].DayCloudTop).To(Equal(uint64(7000)))
+		Expect(aRegion.SubAreas[1].NightCloudBase).To(Equal(uint64(3000))) // SCT CU/SC 3000/7000FT
+		Expect(aRegion.SubAreas[1].NightCloudTop).To(Equal(uint64(7000)))
 		Expect(aRegion.SubAreas[1].Boundary.Points[0]).To(Equal([]float64{152.45, -34.78}))
 
 		bRegion := forecast.Areas[1]
@@ -96,8 +102,10 @@ var _ = Describe("Page", func() {
 		Expect(len(bRegion.SubAreas)).To(Equal(0))
 
 		// FEW CU/SC 3000/6000FT - ignore
-		Expect(bRegion.CloudBase).To(Equal(uint64(999999)))
-		Expect(bRegion.CloudTop).To(Equal(uint64(0)))
+		Expect(bRegion.DayCloudBase).To(Equal(uint64(999999)))
+		Expect(bRegion.DayCloudTop).To(Equal(uint64(0)))
+		Expect(bRegion.NightCloudBase).To(Equal(uint64(999999)))
+		Expect(bRegion.NightCloudTop).To(Equal(uint64(0)))
 	})
 })
 
