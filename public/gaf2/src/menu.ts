@@ -1,5 +1,6 @@
 import * as theme from "./theme";
 import * as controller from './controller';
+import * as mapui from './mapui';
 import * as $ from 'jquery';
 import * as mapboxgl from "mapbox-gl";
 
@@ -29,11 +30,10 @@ function updateMapTheme() {
 
 
   if (controller.vfrChanged) {
+    mapui.updateStyle();
     if (controller.vfr == "night") {
-      map.setStyle('mapbox://styles/mapbox/dark-v9');
       theme.theme.textColor = "#eee";
     } else {
-      map.setStyle('mapbox://styles/mapbox/cjaudgl840gn32rnrepcb9b9g');
       theme.theme.textColor = "#000";
     }
   }

@@ -8,6 +8,10 @@ export function init(_map: mapboxgl.Map) {
 }
 
 export function setupGAFBoundary(areaCode: string, boundary: gafarea.Boundary) {
+  if (!map.isStyleLoaded()) {
+    console.log(`Cannot setupGAFBoundary(${areaCode}) - style not loaded yet`);
+    return;
+  }
   map.addSource(`gaf-${areaCode}`, {
     "type": "geojson",
     "data": {

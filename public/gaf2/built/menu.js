@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var theme = require("./theme");
 var controller = require("./controller");
+var mapui = require("./mapui");
 var $ = require("jquery");
 var map;
 function init(_map) {
@@ -25,12 +26,11 @@ function updateMapTheme() {
     $('body').addClass("vfr-" + controller.vfr);
     $('body').addClass("period-" + controller.period);
     if (controller.vfrChanged) {
+        mapui.updateStyle();
         if (controller.vfr == "night") {
-            map.setStyle('mapbox://styles/mapbox/dark-v9');
             theme.theme.textColor = "#eee";
         }
         else {
-            map.setStyle('mapbox://styles/mapbox/cjaudgl840gn32rnrepcb9b9g');
             theme.theme.textColor = "#000";
         }
     }

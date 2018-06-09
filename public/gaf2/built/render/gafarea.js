@@ -6,6 +6,10 @@ function init(_map) {
 }
 exports.init = init;
 function setupGAFBoundary(areaCode, boundary) {
+    if (!map.isStyleLoaded()) {
+        console.log("Cannot setupGAFBoundary(" + areaCode + ") - style not loaded yet");
+        return;
+    }
     map.addSource("gaf-" + areaCode, {
         "type": "geojson",
         "data": {
