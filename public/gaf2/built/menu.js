@@ -37,22 +37,22 @@ function updateMapTheme() {
 function updateMenuLinks() {
     var menu = $("p#menu");
     menu.find("a#day-vfr").attr("href", "?vfr=day&period=" + controller.period).click(function () {
-        controller.setVFR("day");
+        controller.setVFR(controller.VFR.day);
         update();
         return false;
     });
     menu.find("a#night-vfr").attr("href", "?vfr=night&period=" + controller.period).click(function () {
-        controller.setVFR("night");
+        controller.setVFR(controller.VFR.night);
         update();
         return false;
     });
     menu.find("a#period-current").attr("href", "?vfr=" + controller.vfr + "&period=current").click(function () {
-        controller.setPeriod("current");
+        controller.setPeriod(controller.Period.current);
         update();
         return false;
     });
     menu.find("a#period-next").attr("href", "?vfr=" + controller.vfr + "&period=next").click(function () {
-        controller.setPeriod("next");
+        controller.setPeriod(controller.Period.next);
         update();
         return false;
     });

@@ -1,8 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var url = require("./helpers/url");
-exports.vfr = url.getUrlParameter("vfr") || "day";
-exports.period = url.getUrlParameter("period") || "current";
+var VFR;
+(function (VFR) {
+    VFR["day"] = "day";
+    VFR["night"] = "night";
+})(VFR = exports.VFR || (exports.VFR = {}));
+var Period;
+(function (Period) {
+    Period["current"] = "current";
+    Period["next"] = "next";
+})(Period = exports.Period || (exports.Period = {}));
+exports.vfr = url.getUrlParameter("vfr") == "night" ? VFR.night : VFR.day;
+exports.period = url.getUrlParameter("period") == "next" ? Period.next : Period.current;
 exports.vfrChanged = true;
 exports.periodChanged = true;
 var map;
