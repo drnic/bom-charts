@@ -11,7 +11,6 @@ export function fetchAndRender(period) {
     gafAreaCodes.forEach((gafAreaCode) => {
         if (gafData[gafAreaCode] === undefined || gafData[gafAreaCode][period] === undefined) {
             $.get(`/api/gafarea/${gafAreaCode}/${period}.json`, function (forecastData) {
-                console.log(`loaded /api/gafarea/${gafAreaCode}/${period}.json`);
                 gafData[gafAreaCode] = gafData[gafAreaCode] || { current: undefined, next: undefined };
                 if (period == controller.Period.current) {
                     gafData[gafAreaCode].current = forecastData;

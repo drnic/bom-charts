@@ -10,7 +10,13 @@ export function init(_map: mapboxgl.Map) {
 
 export function setupGAFBoundary(areaCode: string, boundary: gafarea.Boundary) {
   wait.delay(100).then(() => {
-    map.addSource(`gaf-${areaCode}`, {
+    let layerID = `gaf-${areaCode}`;
+    if (map.getLayer(layerID)) {
+      map.removeLayer(layerID);
+      map.removeSource(layerID);
+    }
+
+    map.addSource(layerID, {
       "type": "geojson",
       "data": {
         "type": "Feature",
@@ -23,7 +29,7 @@ export function setupGAFBoundary(areaCode: string, boundary: gafarea.Boundary) {
     });
 
     map.addLayer({
-      "id": `gaf-${areaCode}`,
+      "id": layerID,
       "type": "line",
       "source": "gaf-" + areaCode,
       "layout": {
