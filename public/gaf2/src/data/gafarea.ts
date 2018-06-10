@@ -15,6 +15,7 @@ export function fetchAndRender(period: controller.Period) {
   gafAreaCodes.forEach((gafAreaCode: string) => {
     if (gafData[gafAreaCode] === undefined || gafData[gafAreaCode][period] === undefined) {
       $.get(`/api/gafarea/${gafAreaCode}/${period}.json`, function(forecastData: GAFAreaForecast) {
+        console.log(`loaded /api/gafarea/${gafAreaCode}/${period}.json`);
         gafData[gafAreaCode] = gafData[gafAreaCode] || {current: undefined, next: undefined};
         if (period == controller.Period.current) {
           gafData[gafAreaCode].current = forecastData;
@@ -24,12 +25,12 @@ export function fetchAndRender(period: controller.Period) {
         render(forecastData);
       })
     } else {
-      if (period == controller.Period.current) {
-        render(gafData[gafAreaCode].current);
-      } else {
-        render(gafData[gafAreaCode].next);
+      let forecastData = gafData[gafAreaCode].current;
+      if (period == controller.Period.next) {
+        forecastData = gafData[gafAreaCode].next;
       }
-  }
+      render(forecastData);
+    }
   });
 }
 

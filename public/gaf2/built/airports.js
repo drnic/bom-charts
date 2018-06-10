@@ -1,10 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var theme = require("./theme");
-var $ = require("jquery");
-function init(map) {
+import * as theme from "./theme";
+import * as $ from 'jquery';
+export function init(map) {
     $.get("/json/openflights-airports-au.json", function (data) {
-        var airportsCollection = data.reduce(function (result, airport) {
+        var airportsCollection = data.reduce((result, airport) => {
             var feature = {
                 "type": "Feature",
                 "geometry": {
@@ -45,4 +43,3 @@ function init(map) {
         });
     });
 }
-exports.init = init;

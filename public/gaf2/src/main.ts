@@ -6,6 +6,7 @@ import * as gafarearender from "./render/gafarea";
 
 var map = mapui.map;
 map.on("load", function() {
+  console.log("map loaded")
   gafarearender.init(map);
   menu.init(map);
   airports.init(map);
