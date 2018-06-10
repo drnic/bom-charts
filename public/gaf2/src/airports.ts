@@ -46,7 +46,7 @@ export function init(map: mapboxgl.Map) {
             "text-anchor": "top"
           },
           "paint": {
-            "text-color": theme.theme.textColor
+            "text-color": theme.current().textColor
           }
         });
       });

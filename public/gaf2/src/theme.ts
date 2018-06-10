@@ -1,10 +1,15 @@
-interface Theme {
-  textColor: string;
+import * as controller from './controller';
+
+enum ThemeChoice {
+  Day,
+  Night,
 }
 
-export var theme = {
-  textColor: "#eee",
-} as Theme;
+interface Theme {
+  textColor: string;
+  lineColor: string;
+  cssHeightColors: { [height: number]: string };
+}
 
 export var cssHeightColors: { [height: number]: string } = {
   0: "#BB0EC9",
@@ -12,3 +17,23 @@ export var cssHeightColors: { [height: number]: string } = {
   2: "#FCFC00",
   3: "#99DAAA",
 };
+
+var dayTheme = {
+  textColor: "#eee",
+  lineColor: "#99DAAA",
+  cssHeightColors : cssHeightColors,
+} as Theme;
+
+var nightTheme = {
+  textColor: "#111",
+  lineColor: "#eee",
+  cssHeightColors : cssHeightColors,
+} as Theme;
+
+export function current() {
+  if (controller.vfr == controller.VFR.night) {
+    return nightTheme;
+  } else {
+    return dayTheme;
+  }
+}

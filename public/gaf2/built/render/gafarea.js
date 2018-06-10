@@ -1,3 +1,4 @@
+import * as theme from "../theme";
 import * as wait from "../helpers/wait";
 var map;
 export function init(_map) {
@@ -29,7 +30,8 @@ export function setupGAFBoundary(areaCode, boundary) {
                 "line-join": "round", "line-cap": "round"
             },
             "paint": {
-                "line-width": 1
+                "line-width": 1,
+                "line-color": theme.current().lineColor,
             }
         });
     });

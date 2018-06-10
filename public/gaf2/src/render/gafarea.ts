@@ -1,4 +1,5 @@
 import * as mapboxgl from "mapbox-gl";
+import * as theme from "../theme";
 import * as gafarea from "../data/gafarea";
 import * as wait from "../helpers/wait";
 
@@ -36,7 +37,8 @@ export function setupGAFBoundary(areaCode: string, boundary: gafarea.Boundary) {
         "line-join": "round", "line-cap": "round"
       },
       "paint": {
-        "line-width": 1
+        "line-width": 1,
+        "line-color": theme.current().lineColor,
       }
     });
   })

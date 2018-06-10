@@ -1,5 +1,6 @@
 import * as url from './helpers/url';
 import * as menu from './menu';
+import * as mapui from './mapui';
 import * as gafarea from './data/gafarea';
 export var VFR;
 (function (VFR) {
@@ -28,6 +29,7 @@ export function setVFR(_vfr) {
     vfr = _vfr;
     vfrChanged = (vfrPrevious != vfr);
     periodChanged = false;
+    mapui.updateStyle();
     menu.update();
     gafarea.update();
 }

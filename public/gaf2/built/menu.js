@@ -1,6 +1,4 @@
-import * as theme from "./theme";
 import * as controller from './controller';
-import * as mapui from './mapui';
 import * as $ from 'jquery';
 var map;
 export function init(_map) {
@@ -21,15 +19,6 @@ function updateMapTheme() {
     }
     $('body').addClass(`vfr-${controller.vfr}`);
     $('body').addClass(`period-${controller.period}`);
-    if (controller.vfrChanged) {
-        mapui.updateStyle();
-        if (controller.vfr == "night") {
-            theme.theme.textColor = "#eee";
-        }
-        else {
-            theme.theme.textColor = "#000";
-        }
-    }
 }
 function updateMenuLinks() {
     var menu = $("p#menu");

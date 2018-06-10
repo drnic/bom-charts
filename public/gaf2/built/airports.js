@@ -36,7 +36,7 @@ export function init(map) {
                         "text-anchor": "top"
                     },
                     "paint": {
-                        "text-color": theme.theme.textColor
+                        "text-color": theme.current().textColor
                     }
                 });
             });
