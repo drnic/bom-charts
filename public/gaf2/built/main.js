@@ -4,8 +4,8 @@ import * as menu from "./menu";
 import * as airports from "./airports";
 import * as gafarearender from "./render/gafarea";
 var map = mapui.map;
-map.on("load", function () {
-    console.log("map loaded");
+map.once("load", function () {
+    // debug.init();
     gafarearender.init(map);
     menu.init(map);
     airports.init(map);

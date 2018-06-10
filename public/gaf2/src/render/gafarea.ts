@@ -10,7 +10,7 @@ export function init(_map: mapboxgl.Map) {
 }
 
 export function setupGAFBoundary(areaCode: string, boundary: gafarea.Boundary) {
-  wait.delay(100).then(() => {
+  wait.until(() => map.isStyleLoaded, () => {
     let layerID = `gaf-${areaCode}`;
     if (map.getLayer(layerID)) {
       map.removeLayer(layerID);

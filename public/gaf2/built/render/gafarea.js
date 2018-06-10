@@ -5,7 +5,7 @@ export function init(_map) {
     map = _map;
 }
 export function setupGAFBoundary(areaCode, boundary) {
-    wait.delay(100).then(() => {
+    wait.until(() => map.isStyleLoaded, () => {
         let layerID = `gaf-${areaCode}`;
         if (map.getLayer(layerID)) {
             map.removeLayer(layerID);

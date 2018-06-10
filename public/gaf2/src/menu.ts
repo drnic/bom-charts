@@ -1,4 +1,5 @@
 import * as controller from './controller';
+import * as debug from './debug';
 import * as $ from 'jquery';
 import * as mapboxgl from "mapbox-gl";
 

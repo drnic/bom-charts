@@ -34,9 +34,11 @@ export function setVFR(_vfr: VFR) {
   vfr = _vfr;
   vfrChanged = (vfrPrevious != vfr);
   periodChanged = false;
-  mapui.updateStyle();
   menu.update();
-  gafarea.update();
+  if (vfrChanged) {
+    mapui.updateStyle();
+    gafarea.update();
+  }
 }
 
 export function setPeriod(_period: Period) {
@@ -45,6 +47,8 @@ export function setPeriod(_period: Period) {
   periodChanged = (periodPrevious == period);
   vfrChanged = false;
   menu.update();
-  gafarea.update();
+  // Style not changing, so do not need to re-do:
+  // * mapui.updateStyle();
+  // * gafarea.update();
 }
 
