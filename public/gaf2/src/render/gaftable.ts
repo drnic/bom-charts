@@ -156,3 +156,7 @@ export function addGAFArea(mapMajorArea: maparea.MajorArea) {
     row.appendTo(tbody);
   });
 }
+
+export function removeAll() {
+  $("#gaf-table").text("");
+}

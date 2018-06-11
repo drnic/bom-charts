@@ -105,7 +105,7 @@ export function setupMapFill(mapArea: mapareadata.MapArea) {
   });
 }
 
-export function removeAllLayers() {
+export function removeAll() {
   allOutlineLayerIDs.forEach(layerID => {
     mapui.map.removeLayer(layerID);
   });

@@ -16,7 +16,8 @@ export function update() {
 
 // Just an idea for loading data into gafData structure
 export function fetchAndRender(period: controller.Period) {
-  maparearender.removeAllLayers();
+  maparearender.removeAll();
+  gaftablerender.removeAll();
 
   gafAreaCodes.forEach((gafAreaCode: string) => {
     if (gafData[gafAreaCode] === undefined || gafData[gafAreaCode][period] === undefined) {
