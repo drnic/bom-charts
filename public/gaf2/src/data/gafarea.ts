@@ -1,6 +1,7 @@
 import * as $ from 'jquery';
 import * as maparea from "./maparea";
 import * as gafarearender from "../render/gafarea";
+import * as gaftablerender from "../render/gaftable";
 import * as maparearender from "../render/maparea";
 import * as controller from '../controller';
 import { MapAreaBase } from './maparea';
@@ -39,9 +40,10 @@ export function fetchAndRender(period: controller.Period) {
 function render(areaForecast: GAFAreaForecast) {
   gafarearender.setupGAFBoundary(areaForecast.gaf_area_id, areaForecast.boundary);
 
-  areaForecast.areas.forEach((area: Area) => {
-    let majorArea = new maparea.MajorArea(areaForecast.gaf_area_id, area);
+  areaForecast.areas.forEach((gafarea: Area) => {
+    let majorArea = new maparea.MajorArea(areaForecast.gaf_area_id, gafarea);
 
+    gaftablerender.addGAFArea(majorArea);
     maparearender.setupMapFill(majorArea);
 
     majorArea.gafMajorArea.sub_areas.forEach((subarea: SubArea) => {
