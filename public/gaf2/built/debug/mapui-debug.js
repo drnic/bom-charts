@@ -1,7 +1,9 @@
-import * as mapui from '../mapui';
-import * as $ from 'jquery';
-import * as wait from "../helpers/wait";
-export function init() {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const mapui = require("../mapui");
+const $ = require("jquery");
+const wait = require("../helpers/wait");
+function init() {
     let styleloaded = $('<span/>');
     styleloaded.text(`-`);
     styleloaded.appendTo($('body'));
@@ -14,3 +16,4 @@ export function init() {
         }
     });
 }
+exports.init = init;

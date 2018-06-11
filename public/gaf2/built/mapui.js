@@ -1,5 +1,7 @@
-import * as mapboxgl from "mapbox-gl";
-import * as controller from './controller';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const mapboxgl = require("mapbox-gl");
+const controller = require("./controller");
 // mapboxgl.accessToken = 'pk.eyJ1IjoiZHJuaWMiLCJhIjoiY2poaWRidWpyMG02dzM3bXBtMmtiMWdjaiJ9.MowHdxFXszibdQ48A255-Q';
 Object.getOwnPropertyDescriptor(mapboxgl, "accessToken").set('pk.eyJ1IjoiZHJuaWMiLCJhIjoiY2poaWRidWpyMG02dzM3bXBtMmtiMWdjaiJ9.MowHdxFXszibdQ48A255-Q');
 function mapStyle() {
@@ -10,10 +12,11 @@ function mapStyle() {
         return 'mapbox://styles/mapbox/dark-v9';
     }
 }
-export function updateStyle() {
-    map.setStyle(mapStyle());
+function updateStyle() {
+    exports.map.setStyle(mapStyle());
 }
-export var map = new mapboxgl.Map({
+exports.updateStyle = updateStyle;
+exports.map = new mapboxgl.Map({
     container: 'map',
     style: mapStyle(),
     center: [133.5, -24.25],

@@ -1,9 +1,12 @@
-export function delay(ms) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
+exports.delay = delay;
 // until(() => window.waitForMe, () => console.log('got you'))
 // from https://stackoverflow.com/a/48178043/36170
-export function until(condition, callback, description) {
+function until(condition, callback, description) {
     if (!condition()) {
         if (description !== undefined) {
             console.log(`wait.until("${description}"`);
@@ -17,6 +20,8 @@ export function until(condition, callback, description) {
         callback();
     }
 }
-export function runEvery(ms, callback) {
+exports.until = until;
+function runEvery(ms, callback) {
     setInterval(callback, ms);
 }
+exports.runEvery = runEvery;

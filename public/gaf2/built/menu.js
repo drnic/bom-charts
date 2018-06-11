@@ -1,15 +1,19 @@
-import * as controller from './controller';
-import * as $ from 'jquery';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const controller = require("./controller");
+const $ = require("jquery");
 var map;
-export function init(_map) {
+function init(_map) {
     map = _map;
     update();
 }
-export function update() {
+exports.init = init;
+function update() {
     updateMapTheme();
     updateMenuLinks();
     updateURL();
 }
+exports.update = update;
 function updateMapTheme() {
     if (controller.vfrPrevious !== undefined) {
         $('body').removeClass(`vfr-${controller.vfrPrevious}`);

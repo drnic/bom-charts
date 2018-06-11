@@ -1,8 +1,10 @@
-import * as mapui from './mapui';
-import * as controller from './controller';
-import * as menu from "./menu";
-import * as airports from "./airports";
-import * as gafarearender from "./render/gafarea";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const mapui = require("./mapui");
+const controller = require("./controller");
+const menu = require("./menu");
+const airports = require("./airports");
+const gafarearender = require("./render/gafarea");
 var map = mapui.map;
 map.once("load", function () {
     // debug.init();

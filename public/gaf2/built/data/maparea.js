@@ -1,6 +1,8 @@
-import * as theme from '../theme';
-import * as turf from "@turf/helpers";
-export class MapAreaBase {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const turf = require("@turf/helpers");
+const theme = require("../theme");
+class MapAreaBase {
     constructor(gafAreaCode, gafArea) {
         this.gafAreaCode = gafAreaCode;
         this.gafArea = gafArea;
@@ -37,7 +39,8 @@ export class MapAreaBase {
         return theme.current().cssHeightColors[colorIndex];
     }
 }
-export class MapMajorArea extends MapAreaBase {
+exports.MapAreaBase = MapAreaBase;
+class MapMajorArea extends MapAreaBase {
     // gafAreaCode - "QLD-S"
     // gafArea - "{"area-id":"A","wx-cond":[{"surface-vis-wx":{"text":">10KM NIL","surface-vis":10000},"cloud-ice-turb":[{"text":"BKN ST 1500/2500FT LAND A1 ONLY TL 02Z","sub-areas-mentioned":["A1"],"parsed":{"cloud":{"amount":"BKN","type":"ST","base":1500,"top":2500}}},{"text":"SCT CU/SC 3000/10000FT, BKN A1 TL 02Z","sub-areas-mentioned":["A1"],"parsed":{"cloud":{"amount":"SCT","type":"CU/SC","base":3000,"top":10000}}}]},{"surface-vis-wx":{"text":"5000M ISOL FU BLW 8000FT LAND","surface-vis":5000},"cloud-ice-turb":[]},{"surface-vis-wx":{"text":"3000M ISOL SHRA, SCT SEA","surface-vis":3000},"cloud-ice-turb":[{"text":"ISOL TCU 2500/ABV10000FT SEA","parsed":{"cumulus":{"amount":"ISOL","type":"TCU","base":2500,"top":10000}}},{"text":"BKN ST 0800/2500FT","parsed":{"cloud":{"amount":"BKN","type":"ST","base":800,"top":2500}}},{"text":"BKN CU/SC 2500/10000FT","parsed":{"cloud":{"amount":"BKN","type":"CU/SC","base":2500,"top":10000}}}]},{"surface-vis-wx":{"text":"2000M SCT DZ LAND S OF YMIM TL 02Z","surface-vis":2000},"cloud-ice-turb":[{"text":"SCT ST 1000/3000FT","parsed":{"cloud":{"amount":"SCT","type":"ST","base":1000,"top":3000}}},{"text":"OVC SC 2000/9000FT","parsed":{"cloud":{"amount":"OVC","type":"SC","base":2000,"top":9000}}}]}],"freezing-level":"10000FT","boundary":{"points":[[152.4,-23.16],...,[152.87,-23.16]]},"cloud-base":1500,"cloud-top":10000,"sub-areas":[{"area-id":"A","sub-area-id":"A1","boundary":{"points":[[153.27,-24.28],...,[153.31,-24.38]]},"cloud-base":1500,"cloud-top":10000}]}"
     constructor(gafAreaCode, gafArea) {
@@ -60,7 +63,8 @@ export class MapMajorArea extends MapAreaBase {
     // Specific to MapMajorArea
     wxConds() { return this.gafArea["wx-cond"]; }
 }
-export class MapSubArea extends MapAreaBase {
+exports.MapMajorArea = MapMajorArea;
+class MapSubArea extends MapAreaBase {
     // mapArea - instance of MapMajorArea
     // gafSubArea - {"area-id":"A","sub-area-id":"A1","boundary":{"points":[[153.27,-24.28],...,[153.31,-24.38]]},"cloud-base":1500,"cloud-top":10000}"
     constructor(mapArea, gafSubArea) {
@@ -81,3 +85,4 @@ export class MapSubArea extends MapAreaBase {
     // returns "QLD-S-A", "TAS-B"
     groupLabel() { return this.mapArea.groupLabel(); }
 }
+exports.MapSubArea = MapSubArea;

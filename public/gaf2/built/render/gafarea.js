@@ -1,10 +1,13 @@
-import * as theme from "../theme";
-import * as wait from "../helpers/wait";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const theme = require("../theme");
+const wait = require("../helpers/wait");
 var map;
-export function init(_map) {
+function init(_map) {
     map = _map;
 }
-export function setupGAFBoundary(areaCode, boundary) {
+exports.init = init;
+function setupGAFBoundary(areaCode, boundary) {
     wait.until(() => map.isStyleLoaded, () => {
         let layerID = `gaf-${areaCode}`;
         if (map.getLayer(layerID)) {
@@ -36,3 +39,4 @@ export function setupGAFBoundary(areaCode, boundary) {
         });
     });
 }
+exports.setupGAFBoundary = setupGAFBoundary;

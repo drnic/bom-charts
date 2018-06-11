@@ -1,10 +1,12 @@
-import * as controller from './controller';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const controller = require("./controller");
 var ThemeChoice;
 (function (ThemeChoice) {
     ThemeChoice[ThemeChoice["Day"] = 0] = "Day";
     ThemeChoice[ThemeChoice["Night"] = 1] = "Night";
 })(ThemeChoice || (ThemeChoice = {}));
-export var cssHeightColors = {
+exports.cssHeightColors = {
     0: "#BB0EC9",
     1: "#DF8211",
     2: "#FCFC00",
@@ -13,14 +15,14 @@ export var cssHeightColors = {
 var dayTheme = {
     textColor: "#eee",
     lineColor: "#99DAAA",
-    cssHeightColors: cssHeightColors,
+    cssHeightColors: exports.cssHeightColors,
 };
 var nightTheme = {
     textColor: "#111",
     lineColor: "#eee",
-    cssHeightColors: cssHeightColors,
+    cssHeightColors: exports.cssHeightColors,
 };
-export function current() {
+function current() {
     if (controller.vfr == controller.VFR.night) {
         return nightTheme;
     }
@@ -28,3 +30,4 @@ export function current() {
         return dayTheme;
     }
 }
+exports.current = current;
