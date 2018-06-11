@@ -1,4 +1,6 @@
 import * as $ from 'jquery';
+import * as mapboxgl from "mapbox-gl";
+
 import * as mapui from "../mapui";
 import * as gafarea from "../data/gafarea";
 import * as maparea from "../data/maparea";
@@ -54,7 +56,7 @@ export function update() {
         // requires areaBoundaryPoints all the coordinates with the extend method.
         let bounds = areaBoundaryPoints.reduce((bounds, coord) => {
           return bounds.extend(coord);
-        }, [areaBoundaryPoints[0], areaBoundaryPoints[0]]);
+        }, new mapboxgl.LngLatBounds(areaBoundaryPoints[0], areaBoundaryPoints[0]));
 
         combinedMapAreaBoundaryPoints[showGAFArea] = bounds;
 
