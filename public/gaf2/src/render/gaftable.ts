@@ -18,7 +18,7 @@ export function init() {
 export function update() {
   let map = mapui.map;
 
-  let visibleMajorAreas = maparea.majorAreas(maparea.mapAreasInCurrentView());
+  let visibleMajorAreas = maparea.majorAreas(maparea.inCurrentView());
   let visibleAreaGroupClasses : { [s: string] : boolean } = {};
   visibleMajorAreas.forEach((mapMajorArea : maparea.MajorArea) => {
     visibleAreaGroupClasses[`gaf-${mapMajorArea.gafAreaCodeAndGroup()}`] = true;

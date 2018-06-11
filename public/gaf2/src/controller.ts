@@ -53,3 +53,6 @@ export function setPeriod(_period: Period) {
   // * mapui.updateStyle();
 }
 
+export function isNightVFR() : boolean {
+  return vfr == VFR.night;
+}

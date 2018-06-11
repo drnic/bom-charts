@@ -5,10 +5,13 @@ import * as gaftablerender from "../render/gaftable";
 import * as maparearender from "../render/maparea";
 import * as controller from '../controller';
 
-export var gafAreaCodes = ["WA-N", "WA-S", "NT", "QLD-N", "QLD-S", "SA", "NSW-W", "NSW-E", "VIC", "TAS"];
+export let gafAreaCodes = ["WA-N", "WA-S", "NT", "QLD-N", "QLD-S", "SA", "NSW-W", "NSW-E", "VIC", "TAS"];
 
-export var gafData: { [gafAreaCode: string]: GAFPeriods} = {};
-export var combinedMapArea : { [s: string] : maparea.MapArea[] } = {};
+export let gafData: { [gafAreaCode: string]: GAFPeriods} = {};
+
+// TODO: these are currently specific to day/night at time calculated
+export let combinedMapArea : { [s: string] : maparea.MapArea[] } = {};
+export let mapAreasByAreaCode : { [gafAreaCode: string] : maparea.MapArea[] } = {};
 
 export function update() {
   fetchAndRender(controller.period);
@@ -20,6 +23,8 @@ export function fetchAndRender(period: controller.Period) {
   gaftablerender.removeAll();
 
   gafAreaCodes.forEach((gafAreaCode: string) => {
+    mapAreasByAreaCode[gafAreaCode] = [];
+
     if (gafData[gafAreaCode] === undefined || gafData[gafAreaCode][period] === undefined) {
       $.get(`/api/gafarea/${gafAreaCode}/${period}.json`, function(forecastData: GAFAreaForecast) {
         gafData[gafAreaCode] = gafData[gafAreaCode] || {current: undefined, next: undefined};
@@ -28,6 +33,7 @@ export function fetchAndRender(period: controller.Period) {
         } else {
           gafData[gafAreaCode].next = forecastData;
         }
+
         render(forecastData);
       })
     } else {
@@ -41,11 +47,15 @@ export function fetchAndRender(period: controller.Period) {
 }
 
 function render(areaForecast: GAFAreaForecast) {
-  gafarearender.setupGAFBoundary(areaForecast.gaf_area_id, areaForecast.boundary);
+  let gafAreaCode = areaForecast.gaf_area_id;
+  mapAreasByAreaCode[gafAreaCode] = [];
+
+  gafarearender.setupGAFBoundary(gafAreaCode, areaForecast.boundary);
 
   areaForecast.areas.forEach((gafarea: Area) => {
-    let majorArea = new maparea.MajorArea(areaForecast.gaf_area_id, gafarea);
+    let majorArea = new maparea.MajorArea(gafAreaCode, gafarea);
     combinedMapArea[majorArea.gafAreaCodeAndGroup()] = [majorArea];
+    mapAreasByAreaCode[gafAreaCode].push(majorArea);
 
     gaftablerender.addGAFArea(majorArea);
     maparearender.setupMapFill(majorArea);
@@ -53,6 +63,7 @@ function render(areaForecast: GAFAreaForecast) {
     majorArea.gafMajorArea.sub_areas.forEach((subarea: SubArea) => {
       let mapSubArea = new maparea.SubArea(majorArea, subarea);
       combinedMapArea[majorArea.gafAreaCodeAndGroup()].push(mapSubArea);
+      mapAreasByAreaCode[gafAreaCode].push(mapSubArea);
 
       maparearender.setupMapFill(mapSubArea);
     });

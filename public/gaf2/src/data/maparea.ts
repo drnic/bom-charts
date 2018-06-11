@@ -127,7 +127,7 @@ export class SubArea extends MapAreaBase {
 }
 
 // Returns MapArea objects that are in current map view
-export function mapAreasInCurrentView() : MapArea[] {
+export function inCurrentView() : MapArea[] {
   let map = mapui.map;
 
   let mapBounds = map.getBounds();
@@ -155,6 +155,20 @@ export function majorAreas(mapAreas : MapArea[]) : MajorArea[] {
     if (!majorAreasFound[mapLayerID]) {
       majorAreasFound[mapLayerID] = true;
       result.push(mapMajorArea);
+    }
+    return result;
+  }, []);
+}
+
+// gafAreaCodesFromMapAreas returns a unique list of GAF areas (QLD-S, NSW-E etc) for
+// a list of MapMajorAreas + MapSubAreas
+export function gafAreaCodesFromMapAreas(mapAreas: MapArea[]) {
+  var gafAreaCodesFound: { [gafAreaCode: string]: boolean } = {};
+  return mapAreas.reduce((result, mapArea) => {
+    var gafAreaCode = mapArea.gafAreaCode;
+    if (!gafAreaCodesFound[gafAreaCode]) {
+      gafAreaCodesFound[gafAreaCode] = true;
+      result.push(gafAreaCode);
     }
     return result;
   }, []);
