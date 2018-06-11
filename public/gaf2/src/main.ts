@@ -3,7 +3,7 @@ import * as mapui from './mapui';
 import * as controller from './controller';
 import * as menu from "./menu";
 import * as airports from "./airports";
-import * as gafarearender from "./render/gafarea";
+import * as gaftable from "./render/gaftable";
 
 var map = mapui.map;
 map.once("load", function() {
@@ -11,4 +11,6 @@ map.once("load", function() {
   menu.init(map);
   airports.init(map);
   controller.init(map);
+
+  gaftable.init();
 })

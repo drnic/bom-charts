@@ -8,6 +8,7 @@ const maparearender = require("../render/maparea");
 const controller = require("../controller");
 exports.gafAreaCodes = ["WA-N", "WA-S", "NT", "QLD-N", "QLD-S", "SA", "NSW-W", "NSW-E", "VIC", "TAS"];
 exports.gafData = {};
+exports.combinedMapArea = {};
 function update() {
     fetchAndRender(controller.period);
 }
@@ -41,10 +42,12 @@ function render(areaForecast) {
     gafarearender.setupGAFBoundary(areaForecast.gaf_area_id, areaForecast.boundary);
     areaForecast.areas.forEach((gafarea) => {
         let majorArea = new maparea.MajorArea(areaForecast.gaf_area_id, gafarea);
+        exports.combinedMapArea[majorArea.gafAreaCodeAndGroup()] = [majorArea];
         gaftablerender.addGAFArea(majorArea);
         maparearender.setupMapFill(majorArea);
         majorArea.gafMajorArea.sub_areas.forEach((subarea) => {
             let mapSubArea = new maparea.SubArea(majorArea, subarea);
+            exports.combinedMapArea[majorArea.gafAreaCodeAndGroup()].push(mapSubArea);
             maparearender.setupMapFill(mapSubArea);
         });
     });

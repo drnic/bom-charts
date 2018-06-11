@@ -4,11 +4,11 @@ import * as gafarearender from "../render/gafarea";
 import * as gaftablerender from "../render/gaftable";
 import * as maparearender from "../render/maparea";
 import * as controller from '../controller';
-import { MapAreaBase } from './maparea';
 
 export var gafAreaCodes = ["WA-N", "WA-S", "NT", "QLD-N", "QLD-S", "SA", "NSW-W", "NSW-E", "VIC", "TAS"];
 
 export var gafData: { [gafAreaCode: string]: GAFPeriods} = {};
+export var combinedMapArea : { [s: string] : maparea.MapArea[] } = {};
 
 export function update() {
   fetchAndRender(controller.period);
@@ -42,12 +42,15 @@ function render(areaForecast: GAFAreaForecast) {
 
   areaForecast.areas.forEach((gafarea: Area) => {
     let majorArea = new maparea.MajorArea(areaForecast.gaf_area_id, gafarea);
+    combinedMapArea[majorArea.gafAreaCodeAndGroup()] = [majorArea];
 
     gaftablerender.addGAFArea(majorArea);
     maparearender.setupMapFill(majorArea);
 
     majorArea.gafMajorArea.sub_areas.forEach((subarea: SubArea) => {
       let mapSubArea = new maparea.SubArea(majorArea, subarea);
+      combinedMapArea[majorArea.gafAreaCodeAndGroup()].push(mapSubArea);
+
       maparearender.setupMapFill(mapSubArea);
     });
   });

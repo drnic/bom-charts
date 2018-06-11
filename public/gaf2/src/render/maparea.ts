@@ -1,19 +1,24 @@
+import * as gaftablerender from "./gaftable";
 import * as theme from "../theme";
 import * as mapareadata from '../data/maparea';
 import * as mapui from "../mapui";
+import * as wait from "../helpers/wait";
 import * as turfcenter from "../turf/center";
 
+export let byLayerID : { [s: string] : mapareadata.MapArea } = {};
+export let allOutlineLayerIDs : string[] = [];
+
 // mapArea is MapMajorArea or MapSubArea
-export function setupMapFill(mapArea: mapareadata.MapAreaBase) {
+export function setupMapFill(mapArea: mapareadata.MapArea) {
   let map = mapui.map;
 
   let baseID = mapArea.uuid();
   let layerID = mapArea.mapLayerID();
-  // mapAreasByLayerID[layerID] = mapArea;
+  byLayerID[layerID] = mapArea;
 
-  let labelID = "label-" + baseID;
-  let outlineID = "outline-" + baseID;
-  // mapAreasOutlineIDs.push(outlineID);
+  let labelID = "label" + baseID;
+  let outlineID = "outline" + baseID;
+  allOutlineLayerIDs.push(outlineID);
 
   // 1000ft AGL matches to .height-1 in main.css
   let fillColor = mapArea.cloudBaseColor();
@@ -66,7 +71,9 @@ export function setupMapFill(mapArea: mapareadata.MapAreaBase) {
     }
   });
 
-//   updateGAFTableFromVisibleAreas();
+  wait.delay(500).then(() => {
+    gaftablerender.update();
+  });
 
 //   let gafPageCode = document.gafPageCode
 //   map.on("mousemove", layerID, function(e) {

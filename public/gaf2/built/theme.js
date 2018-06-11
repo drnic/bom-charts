@@ -13,12 +13,12 @@ exports.cssHeightColors = {
     3: "#99DAAA",
 };
 var dayTheme = {
-    textColor: "#eee",
+    textColor: "#111",
     lineColor: "#99DAAA",
     cssHeightColors: exports.cssHeightColors,
 };
 var nightTheme = {
-    textColor: "#111",
+    textColor: "#eee",
     lineColor: "#eee",
     cssHeightColors: exports.cssHeightColors,
 };

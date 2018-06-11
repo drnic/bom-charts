@@ -1,8 +1,12 @@
 import * as gafarea from './gafarea';
+import * as mapui from '../mapui';
 import * as theme from '../theme';
+import * as maparearender from '../render/maparea';
 import * as turf from "@turf/helpers";
 
-export abstract class MapAreaBase {
+export type MapArea = MajorArea | SubArea;
+
+abstract class MapAreaBase {
   // QLD-S, NSW-E
   gafAreaCode: string;
   gafArea: gafarea.CommonArea;
@@ -120,5 +124,39 @@ export class SubArea extends MapAreaBase {
 
   // returns "QLD-S-A", "TAS-B"
   groupLabel() { return this.mapArea.groupLabel(); }
+}
+
+// Returns MapArea objects that are in current map view
+export function mapAreasInCurrentView() : MapArea[] {
+  let map = mapui.map;
+
+  let mapBounds = map.getBounds();
+  let view = [map.project(mapBounds.getSouthWest()), map.project(mapBounds.getNorthEast())];
+  let featuresInCurrentView = map.queryRenderedFeatures(view, {layers: maparearender.allOutlineLayerIDs});
+
+  var layerIDsFound : { [s: string]: boolean} = {};
+  return featuresInCurrentView.reduce((r, a) => {
+    var mapLayerID = a.properties.mapLayerID;
+    if (!layerIDsFound[mapLayerID]) {
+      r.push(maparearender.byLayerID[mapLayerID]);
+      layerIDsFound[mapLayerID] = true;
+    }
+    return r;
+  }, [])
+}
+
+// majorAreas returns a unique list of MapMajorAreas for
+// a list of MapMajorAreas + MapSubAreas
+export function majorAreas(mapAreas : MapArea[]) : MajorArea[] {
+  var majorAreasFound : { [s: string]: boolean } = {};
+  return mapAreas.reduce((result, mapArea) => {
+    var mapMajorArea = mapArea.majorArea();
+    var mapLayerID = mapMajorArea.mapLayerID();
+    if (!majorAreasFound[mapLayerID]) {
+      majorAreasFound[mapLayerID] = true;
+      result.push(mapMajorArea);
+    }
+    return result;
+  }, []);
 }
 

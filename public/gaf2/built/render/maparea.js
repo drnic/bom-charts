@@ -1,17 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const gaftablerender = require("./gaftable");
 const theme = require("../theme");
 const mapui = require("../mapui");
+const wait = require("../helpers/wait");
 const turfcenter = require("../turf/center");
+exports.byLayerID = {};
+exports.allOutlineLayerIDs = [];
 // mapArea is MapMajorArea or MapSubArea
 function setupMapFill(mapArea) {
     let map = mapui.map;
     let baseID = mapArea.uuid();
     let layerID = mapArea.mapLayerID();
-    // mapAreasByLayerID[layerID] = mapArea;
-    let labelID = "label-" + baseID;
-    let outlineID = "outline-" + baseID;
-    // mapAreasOutlineIDs.push(outlineID);
+    exports.byLayerID[layerID] = mapArea;
+    let labelID = "label" + baseID;
+    let outlineID = "outline" + baseID;
+    exports.allOutlineLayerIDs.push(outlineID);
     // 1000ft AGL matches to .height-1 in main.css
     let fillColor = mapArea.cloudBaseColor();
     let areaLayerFeature = mapArea.asFeature();
@@ -57,7 +61,9 @@ function setupMapFill(mapArea) {
             "text-color": theme.current().textColor,
         }
     });
-    //   updateGAFTableFromVisibleAreas();
+    wait.delay(500).then(() => {
+        gaftablerender.update();
+    });
     //   let gafPageCode = document.gafPageCode
     //   map.on("mousemove", layerID, function(e) {
     //     table = gafTable();

@@ -19,13 +19,13 @@ export var cssHeightColors: { [height: number]: string } = {
 };
 
 var dayTheme = {
-  textColor: "#eee",
+  textColor: "#111",
   lineColor: "#99DAAA",
   cssHeightColors : cssHeightColors,
 } as Theme;
 
 var nightTheme = {
-  textColor: "#111",
+  textColor: "#eee",
   lineColor: "#eee",
   cssHeightColors : cssHeightColors,
 } as Theme;
