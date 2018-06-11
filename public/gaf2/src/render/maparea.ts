@@ -7,19 +7,23 @@ import * as wait from "../helpers/wait";
 import * as turfcenter from "../turf/center";
 
 export let byLayerID : { [s: string] : mapareadata.MapArea } = {};
+export let allLayerIDs : string[] = [];
 export let allOutlineLayerIDs : string[] = [];
+export let allLabelLayerIDs : string[] = [];
 
 // mapArea is MapMajorArea or MapSubArea
 export function setupMapFill(mapArea: mapareadata.MapArea) {
   let map = mapui.map;
 
-  let baseID = mapArea.uuid();
   let layerID = mapArea.mapLayerID();
   byLayerID[layerID] = mapArea;
+  allLayerIDs.push(layerID);
 
-  let labelID = "label" + baseID;
-  let outlineID = "outline" + baseID;
-  allOutlineLayerIDs.push(outlineID);
+  let outlineLayerID = `outline_${layerID}`;
+  allOutlineLayerIDs.push(outlineLayerID);
+
+  let labelLayerID = `label_${layerID}`;
+  allLabelLayerIDs.push(labelLayerID);
 
   // 1000ft AGL matches to .height-1 in main.css
   let fillColor = mapArea.cloudBaseColor();
@@ -42,7 +46,7 @@ export function setupMapFill(mapArea: mapareadata.MapArea) {
   });
 
   map.addLayer({
-    "id": outlineID,
+    "id": outlineLayerID,
     "type": "line",
     "source": layerID,
     "layout": {
@@ -56,7 +60,7 @@ export function setupMapFill(mapArea: mapareadata.MapArea) {
   let areaCenter = turfcenter.center(areaLayerFeature, 1);
   areaCenter.properties = {"title": mapArea.mapLabel()}
   map.addLayer({
-    "id": labelID,
+    "id": labelLayerID,
     "type": "symbol",
     "source": {
       "type": "geojson",
@@ -99,13 +103,20 @@ export function setupMapFill(mapArea: mapareadata.MapArea) {
     }
     $('#mouseover-summary-area').text(text);
   });
+}
 
-//   let initialZoom = true;
-//   map.on('moveend', () => {
-//     if(initialZoom){
-//       initialZoom = false;
-//       updateGAFTableFromVisibleAreas();
-//       updateLSALTFromVisibleAreas(nightVFR);
-//     }
-//  });
+export function removeAllLayers() {
+  allOutlineLayerIDs.forEach(layerID => {
+    mapui.map.removeLayer(layerID);
+  });
+  allLabelLayerIDs.forEach(layerID => {
+    mapui.map.removeLayer(layerID);
+  });
+  allLayerIDs.forEach(layerID => {
+    mapui.map.removeLayer(layerID);
+    mapui.map.removeSource(layerID);
+  });
+  allLayerIDs = [];
+  allOutlineLayerIDs = [];
+  allLabelLayerIDs = [];
 }

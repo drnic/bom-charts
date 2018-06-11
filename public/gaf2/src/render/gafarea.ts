@@ -33,8 +33,7 @@ export function setupGAFBoundary(areaCode: string, boundary: gafarea.Boundary) {
         "line-join": "round", "line-cap": "round"
       },
       "paint": {
-        "line-width": 1,
-        "line-color": theme.current().lineColor,
+        "line-width": 0,
       }
     });
   })

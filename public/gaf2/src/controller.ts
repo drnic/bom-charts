@@ -47,8 +47,9 @@ export function setPeriod(_period: Period) {
   periodChanged = (periodPrevious == period);
   vfrChanged = false;
   menu.update();
+  gafarea.update();
+
   // Style not changing, so do not need to re-do:
   // * mapui.updateStyle();
-  // * gafarea.update();
 }
 

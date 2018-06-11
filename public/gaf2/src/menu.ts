@@ -13,7 +13,7 @@ export function init(_map: mapboxgl.Map) {
 
 export function update() {
   updateMapTheme();
-  updateMenuLinks();
+  updateController();
   updateURL();
 }
 
@@ -28,7 +28,7 @@ function updateMapTheme() {
   $('body').addClass(`period-${controller.period}`);
 }
 
-function updateMenuLinks() {
+function updateController() {
   var menu = $("p#menu")
   menu.find("a#day-vfr").attr("href", `?vfr=day&period=${controller.period}`).click(function() {
     controller.setVFR(controller.VFR.day); return false;
