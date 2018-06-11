@@ -4,7 +4,7 @@ import * as theme from "../theme";
 import * as mapareadata from '../data/maparea';
 import * as mapui from "../mapui";
 import * as wait from "../helpers/wait";
-import * as turfcenter from "../turf/center";
+import * as polylabel from 'polylabel';
 
 export let byLayerID : { [s: string] : mapareadata.MapArea } = {};
 export let allLayerIDs : string[] = [];
@@ -57,14 +57,24 @@ export function setupMapFill(mapArea: mapareadata.MapArea) {
     }
   });
 
-  let areaCenter = turfcenter.center(areaLayerFeature, 1);
-  areaCenter.properties = {"title": mapArea.mapLabel()}
+  let polygon : number[][][] = areaLayerFeature.geometry.coordinates;
+  let labelPos = polylabel.default(polygon, 1);
+
   map.addLayer({
     "id": labelLayerID,
     "type": "symbol",
     "source": {
       "type": "geojson",
-      "data": areaCenter
+      "data": {
+        "type": "Feature",
+        "properties": {
+          "title": mapArea.mapLabel()
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": labelPos
+        }
+      }
     },
     "layout": {
       "text-field": "{title}",

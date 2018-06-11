@@ -98,6 +98,10 @@
   dependencies:
     "@types/geojson" "*"
 
+"@types/polylabel@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/polylabel/-/polylabel-1.0.5.tgz#9262f269de36f1e9248aeb9dee0ee9d10065e043"
+
 acorn@^5.0.0:
   version "5.6.2"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.6.2.tgz#b1da1d7be2ac1b4a327fb9eab851702c5045b4e7"
@@ -861,6 +865,12 @@ pbf@^3.0.5:
   dependencies:
     ieee754 "^1.1.6"
     resolve-protobuf-schema "^2.0.0"
+
+polylabel@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/polylabel/-/polylabel-1.0.2.tgz#90c11602fb217a65b78ac2110ac5fcb00b652560"
+  dependencies:
+    tinyqueue "^1.1.0"
 
 posix-character-classes@^0.1.0:
   version "0.1.1"
