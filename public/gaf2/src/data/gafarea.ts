@@ -40,9 +40,14 @@ function render(areaForecast: GAFAreaForecast) {
   gafarearender.setupGAFBoundary(areaForecast.gaf_area_id, areaForecast.boundary);
 
   areaForecast.areas.forEach((area: Area) => {
-    let mapArea = new maparea.MajorArea(areaForecast.gaf_area_id, area);
+    let majorArea = new maparea.MajorArea(areaForecast.gaf_area_id, area);
 
-    maparearender.setupMapFill(mapArea);
+    maparearender.setupMapFill(majorArea);
+
+    majorArea.gafMajorArea.sub_areas.forEach((subarea: SubArea) => {
+      let mapSubArea = new maparea.SubArea(majorArea, subarea);
+      maparearender.setupMapFill(mapSubArea);
+    });
   });
 }
 
@@ -112,6 +117,15 @@ export interface Area {
 export interface SubArea {
   area_id: string;
   sub_area_id: string;
+  boundary: Boundary;
+  day_cloud_base: number;
+  day_cloud_top: number;
+  night_cloud_base: number;
+  night_cloud_top: number;
+}
+
+export interface CommonArea {
+  area_id: string;
   boundary: Boundary;
   day_cloud_base: number;
   day_cloud_top: number;

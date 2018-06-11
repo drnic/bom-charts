@@ -39,7 +39,11 @@ exports.fetchAndRender = fetchAndRender;
 function render(areaForecast) {
     gafarearender.setupGAFBoundary(areaForecast.gaf_area_id, areaForecast.boundary);
     areaForecast.areas.forEach((area) => {
-        let mapArea = new maparea.MajorArea(areaForecast.gaf_area_id, area);
-        maparearender.setupMapFill(mapArea);
+        let majorArea = new maparea.MajorArea(areaForecast.gaf_area_id, area);
+        maparearender.setupMapFill(majorArea);
+        majorArea.gafMajorArea.sub_areas.forEach((subarea) => {
+            let mapSubArea = new maparea.SubArea(majorArea, subarea);
+            maparearender.setupMapFill(mapSubArea);
+        });
     });
 }
