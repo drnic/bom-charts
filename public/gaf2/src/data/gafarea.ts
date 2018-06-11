@@ -1,6 +1,9 @@
 import * as $ from 'jquery';
+import * as maparea from "./maparea";
 import * as gafarearender from "../render/gafarea";
+import * as maparearender from "../render/maparea";
 import * as controller from '../controller';
+import { MapAreaBase } from './maparea';
 
 export var gafAreaCodes = ["WA-N", "WA-S", "NT", "QLD-N", "QLD-S", "SA", "NSW-W", "NSW-E", "VIC", "TAS"];
 
@@ -35,6 +38,12 @@ export function fetchAndRender(period: controller.Period) {
 
 function render(areaForecast: GAFAreaForecast) {
   gafarearender.setupGAFBoundary(areaForecast.gaf_area_id, areaForecast.boundary);
+
+  areaForecast.areas.forEach((area: Area) => {
+    let mapArea = new maparea.MajorArea(areaForecast.gaf_area_id, area);
+
+    maparearender.setupMapFill(mapArea);
+  });
 }
 
 export interface GAFPeriods {

@@ -1,15 +1,11 @@
-import * as mapboxgl from "mapbox-gl";
 import * as theme from "../theme";
+import * as mapui from "../mapui";
 import * as gafarea from "../data/gafarea";
 import * as wait from "../helpers/wait";
 
-var map: mapboxgl.Map;
-
-export function init(_map: mapboxgl.Map) {
-  map = _map;
-}
-
 export function setupGAFBoundary(areaCode: string, boundary: gafarea.Boundary) {
+  let map = mapui.map;
+
   wait.until(() => map.isStyleLoaded, () => {
     let layerID = `gaf-${areaCode}`;
     if (map.getLayer(layerID)) {

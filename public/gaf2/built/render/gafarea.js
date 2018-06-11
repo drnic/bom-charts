@@ -1,13 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const theme = require("../theme");
+const mapui = require("../mapui");
 const wait = require("../helpers/wait");
-var map;
-function init(_map) {
-    map = _map;
-}
-exports.init = init;
 function setupGAFBoundary(areaCode, boundary) {
+    let map = mapui.map;
     wait.until(() => map.isStyleLoaded, () => {
         let layerID = `gaf-${areaCode}`;
         if (map.getLayer(layerID)) {
