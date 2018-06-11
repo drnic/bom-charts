@@ -51,7 +51,7 @@ function update() {
                 // requires areaBoundaryPoints all the coordinates with the extend method.
                 let bounds = areaBoundaryPoints.reduce((bounds, coord) => {
                     return bounds.extend(coord);
-                }, new mapboxgl.LngLatBounds(areaBoundaryPoints[0], areaBoundaryPoints[0]));
+                }, [areaBoundaryPoints[0], areaBoundaryPoints[0]]);
                 combinedMapAreaBoundaryPoints[showGAFArea] = bounds;
                 let mapSource = `combined-area-boundary-${showGAFArea}`;
                 map.addSource(mapSource, {

@@ -22,3 +22,13 @@ export var map = new mapboxgl.Map({
   center: [133.5,-24.25],
   zoom: 2
 });
+
+map.on("load", () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+      var long = position.coords.longitude;
+      var lat = position.coords.latitude;
+      map.jumpTo({zoom: 6, center: [long, lat]});
+    });
+  }
+});

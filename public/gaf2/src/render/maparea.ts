@@ -100,7 +100,8 @@ export function setupMapFill(mapArea: mapareadata.MapArea) {
     $('#mouseover-summary-area').text(text);
   });
 
-//   map.on('moveend', function(e){
+//   let initialZoom = true;
+//   map.on('moveend', () => {
 //     if(initialZoom){
 //       initialZoom = false;
 //       updateGAFTableFromVisibleAreas();
