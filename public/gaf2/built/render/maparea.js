@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const $ = require("jquery");
 const gaftablerender = require("./gaftable");
 const theme = require("../theme");
 const mapui = require("../mapui");
@@ -64,30 +65,28 @@ function setupMapFill(mapArea) {
     wait.delay(500).then(() => {
         gaftablerender.update();
     });
-    //   let gafPageCode = document.gafPageCode
-    //   map.on("mousemove", layerID, function(e) {
-    //     table = gafTable();
-    //     table.find(`tr.gaf-${mapArea.gafAreaCodeAndGroup()}`).addClass("area-selected");
-    //     if (mapArea.isSubArea()) {
-    //       table.find(`tr.gaf-${mapArea.gafAreaCodeAndGroup()} .subarea-mentioned-${mapArea.subAreaID()}`).addClass("sub-area-selected");
-    //     }
-    //   });
-    //   map.on("mouseleave", layerID, function() {
-    //     table = gafTable();
-    //     table.find(`tr.gaf-${mapArea.gafAreaCodeAndGroup()}`).removeClass("area-selected");
-    //     if (mapArea.isSubArea()) {
-    //       table.find(`tr.gaf-${mapArea.gafAreaCodeAndGroup()} .subarea-mentioned-${mapArea.subAreaID()}`).removeClass("sub-area-selected");
-    //     }
-    //   });
-    //   map.on("mouseover", layerID, function(e) {
-    //     let text = mapArea.mapLabel();
-    //     if (mapArea.cloudBase() === undefined || mapArea.cloudBase() === 999999) {
-    //       text += " has N/A clouds";
-    //     } else {
-    //       text += " has cloud base " + mapArea.cloudBase() + "MSL";
-    //     }
-    //     $('#mouseover-summary-area').text(text);
-    //   });
+    map.on("mousemove", layerID, () => {
+        $(`#gaf-table tr.gaf-${mapArea.gafAreaCodeAndGroup()}`).addClass("area-selected");
+        if (mapArea.isSubArea()) {
+            $(`#gaf-table tr.gaf-${mapArea.gafAreaCodeAndGroup()} .subarea-mentioned-${mapArea.mapLabel()}`).addClass("sub-area-selected");
+        }
+    });
+    map.on("mouseleave", layerID, () => {
+        $(`#gaf-table tr.gaf-${mapArea.gafAreaCodeAndGroup()}`).removeClass("area-selected");
+        if (mapArea.isSubArea()) {
+            $(`#gaf-table tr.gaf-${mapArea.gafAreaCodeAndGroup()} .subarea-mentioned-${mapArea.mapLabel()}`).removeClass("sub-area-selected");
+        }
+    });
+    map.on("mouseover", layerID, () => {
+        let text = mapArea.mapLabel();
+        if (mapArea.cloudBase() === undefined || mapArea.cloudBase() === 999999) {
+            text += " has N/A clouds";
+        }
+        else {
+            text += " has cloud base " + mapArea.cloudBase() + "MSL";
+        }
+        $('#mouseover-summary-area').text(text);
+    });
     //   map.on('moveend', function(e){
     //     if(initialZoom){
     //       initialZoom = false;

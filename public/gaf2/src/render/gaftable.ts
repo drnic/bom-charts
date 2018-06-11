@@ -11,6 +11,8 @@ export function init() {
   mapui.map.on("zoomend", update);
 }
 
+// TODO: prioritize entire areas that are entirely within map bounds; then MapAreas entirely within map bounds; then others
+// TODO: prioritize area underneath cursor or recently clicked
 export function update() {
   let map = mapui.map;
 
