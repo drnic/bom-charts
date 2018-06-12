@@ -38,6 +38,11 @@ function updateLSALTFromVisibleAreas() {
 
 var layerIDsForLSALT : { [gafAreaCode: string]: string[] } = {};
 
+// TODO: could this be done once on the server for each GAF area/period?
+// Perhaps server needs rewriting in nodejs so can use turfjs.intersect?
+// Or perhaps golang calls out to nodejs CLIs to carve up XML + LSALT and cache on disk
+// Schedule task that fetches XML -> S3 could also perform the carving with LSALT and store to S3
+// Golang app can then fetch XML + carve up from S3 and cache in memory; rather than from BOM.
 function updateLSALT(gafAreaCode: string) {
   return;
   let map = mapui.map;
