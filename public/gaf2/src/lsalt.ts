@@ -39,12 +39,13 @@ function updateLSALTFromVisibleAreas() {
 var layerIDsForLSALT : { [gafAreaCode: string]: string[] } = {};
 
 function updateLSALT(gafAreaCode: string) {
+  return;
   let map = mapui.map;
   let nightVFR = controller.isNightVFR();
 
   var mapAreas = gafarea.mapAreasByAreaCode[gafAreaCode];
   var lsaltGridsForArea = lsaltData[gafAreaCode];
-  if (mapAreas === undefined || mapAreas.length === 0 || 
+  if (mapAreas === undefined || mapAreas.length === 0 ||
     lsaltGridsForArea === undefined || lsaltGridsForArea.length === 0) {
     return;
   }
