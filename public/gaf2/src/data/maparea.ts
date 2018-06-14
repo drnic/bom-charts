@@ -1,4 +1,4 @@
-import * as gafarea from './gafarea';
+import * as gafarea from './oldgafarea';
 import * as mapui from '../mapui';
 import * as theme from '../theme';
 import * as maparearender from '../render/maparea';

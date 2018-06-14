@@ -1,9 +1,7 @@
-import * as theme from "../theme";
 import * as mapui from "../mapui";
-import * as gafarea from "../data/gafarea";
 import * as wait from "../helpers/wait";
 
-export function setupGAFBoundary(areaCode: string, boundary: gafarea.Boundary) {
+export function update(areaCode: string, boundaryPoints: number[][]) {
   let map = mapui.map;
 
   wait.until(() => map.isStyleLoaded, () => {
@@ -20,7 +18,7 @@ export function setupGAFBoundary(areaCode: string, boundary: gafarea.Boundary) {
         "properties": {},
         "geometry": {
           "type": "LineString",
-          "coordinates": boundary.points
+          "coordinates": boundaryPoints
         }
       }
     });

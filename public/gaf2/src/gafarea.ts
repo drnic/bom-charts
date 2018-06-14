@@ -1,33 +1,24 @@
 import * as $ from 'jquery';
-import * as controller from "./controller";
 import * as mapui from "./mapui";
 import * as theme from "./theme";
 import * as wait from "./helpers/wait";
 import { GeoJSONSource } from 'mapbox-gl';
 
-export interface LSALTGrid {
-  grid: number[][];
-  lsalt_100ft: number;
-}
-
-let sourceID = `lsalt`;
+let sourceID = `gafareas`;
 
 export function init() {
   setupLayer();
-
   update();
   wait.runEvery(1000 * 60 * 60, update);
   // wait.runEvery(1000, update);
 }
 
-function update() {
+export function update() {
   let map = mapui.map;
-  let vfr = controller.vfr;
-
-  $.getJSON(`/lsalt?vfr=${vfr}`, (data) => {
+  $.getJSON(`/lsalt/gafareas`, (data) => {
     let source = <GeoJSONSource>map.getSource(sourceID);
     source.setData(data);
-    console.log("update lsalt")
+    console.log("update gafareas")
   });
 }
 
@@ -42,7 +33,7 @@ function setupLayer() {
   });
 
   map.addLayer({
-    "id": `lsalt`,
+    "id": `gafareas`,
     "type": "fill",
     "source": sourceID,
     "paint": {
@@ -54,4 +45,5 @@ function setupLayer() {
       "fill-opacity": 0.5
     }
   });
+
 }

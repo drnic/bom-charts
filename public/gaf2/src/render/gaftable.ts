@@ -2,7 +2,7 @@ import * as $ from 'jquery';
 import * as mapboxgl from "mapbox-gl";
 
 import * as mapui from "../mapui";
-import * as gafarea from "../data/gafarea";
+import * as gafarea from "../data/oldgafarea";
 import * as maparea from "../data/maparea";
 
 let latestMouseoverArea : string;

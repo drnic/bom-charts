@@ -92,6 +92,7 @@ func main() {
 		api.Get("/airmet", getAIRMET)
 	})
 	m.Get("/lsalt", forwardLSALTHandler())
+	m.Get("/lsalt/gafareas", forwardLSALTHandler())
 
 	m.Run()
 }

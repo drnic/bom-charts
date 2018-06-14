@@ -1,8 +1,7 @@
 import * as url from './helpers/url';
 import * as menu from './menu';
 import * as mapui from './mapui';
-import * as gafarea from './data/gafarea';
-// import * as maparea from './data/maparea';
+import * as gafarea from './gafarea';
 import * as mapboxgl from "mapbox-gl";
 
 export enum VFR {

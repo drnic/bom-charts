@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 import * as maparea from "./maparea";
-import * as gafarearender from "../render/gafarea";
+import * as gafboundary from "../render/gafboundary";
 import * as gaftablerender from "../render/gaftable";
 import * as maparearender from "../render/maparea";
 import * as controller from '../controller';
@@ -50,7 +50,7 @@ function render(areaForecast: GAFAreaForecast) {
   let gafAreaCode = areaForecast.gaf_area_id;
   mapAreasByAreaCode[gafAreaCode] = [];
 
-  gafarearender.setupGAFBoundary(gafAreaCode, areaForecast.boundary);
+  gafboundary.update(gafAreaCode, areaForecast.boundary.points);
 
   areaForecast.areas.forEach((gafarea: Area) => {
     let majorArea = new maparea.MajorArea(gafAreaCode, gafarea);
