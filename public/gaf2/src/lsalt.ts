@@ -60,7 +60,10 @@ function setupLayer() {
     "type": "fill",
     "source": `lsalt-${vfr}`,
     "paint": {
-      "fill-color": '#050',
+      "fill-color": {
+        property: "lsalt_color_level",
+        stops: theme.cssHeightColorsStops,
+      },
       "fill-antialias": false,
       "fill-opacity": 0.5
     }

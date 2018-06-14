@@ -18,6 +18,14 @@ export var cssHeightColors: { [height: number]: string } = {
   3: "#99DAAA",
 };
 
+// https://blog.mapbox.com/introducing-data-driven-styling-in-mapbox-gl-js-f273121143c3
+export var cssHeightColorsStops: [number, string][] = [
+  [0, "#BB0EC9"],
+  [1, "#DF8211"],
+  [2, "#FCFC00"],
+  [3, "#99DAAA"],
+]
+
 var dayTheme = {
   textColor: "#111",
   lineColor: "#99DAAA",
