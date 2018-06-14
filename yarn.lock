@@ -64,20 +64,6 @@
   version "6.1.4"
   resolved "https://registry.yarnpkg.com/@turf/helpers/-/helpers-6.1.4.tgz#d6fd7ebe6782dd9c87dca5559bda5c48ae4c3836"
 
-"@turf/intersect@^6.1.2":
-  version "6.1.2"
-  resolved "https://registry.yarnpkg.com/@turf/intersect/-/intersect-6.1.2.tgz#eaf5e8915af601978a8b65851bc73db57cf5919c"
-  dependencies:
-    "@turf/helpers" "6.x"
-    "@turf/invariant" "6.x"
-    martinez-polygon-clipping "*"
-
-"@turf/invariant@6.x":
-  version "6.1.2"
-  resolved "https://registry.yarnpkg.com/@turf/invariant/-/invariant-6.1.2.tgz#6013ed6219f9ac2edada9b31e1dfa5918eb0a2f7"
-  dependencies:
-    "@turf/helpers" "6.x"
-
 "@turf/meta@6.x":
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/@turf/meta/-/meta-6.0.2.tgz#eb92951126d24a613ac1b7b99d733fcc20fd30cf"
@@ -734,13 +720,6 @@ mapbox-gl@^0.45.0:
     tinyqueue "^1.1.0"
     vt-pbf "^3.0.1"
 
-martinez-polygon-clipping@*:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/martinez-polygon-clipping/-/martinez-polygon-clipping-0.4.3.tgz#a3971ddf1da147104b5d0fbbf68f728bb62885c1"
-  dependencies:
-    splaytree "^0.1.4"
-    tinyqueue "^1.2.0"
-
 memory-fs@^0.4.0:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/memory-fs/-/memory-fs-0.4.1.tgz#3a9a20b8462523e447cfbc7e8bb80ed667bfc552"
@@ -1091,10 +1070,6 @@ source-map@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
 
-splaytree@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/splaytree/-/splaytree-0.1.4.tgz#fc35475248edcc29d4938c9b67e43c6b7e55a659"
-
 split-string@^3.0.1, split-string@^3.0.2:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/split-string/-/split-string-3.1.0.tgz#7cb09dda3a86585705c64b39a6466038682e8fe2"
@@ -1190,7 +1165,7 @@ through@2, through@~2.3.4:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
-tinyqueue@^1.1.0, tinyqueue@^1.2.0:
+tinyqueue@^1.1.0:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/tinyqueue/-/tinyqueue-1.2.3.tgz#b6a61de23060584da29f82362e45df1ec7353f3d"
 

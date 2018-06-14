@@ -2,12 +2,7 @@ import * as $ from 'jquery';
 import * as controller from "./controller";
 import * as mapui from "./mapui";
 import * as theme from "./theme";
-import * as gafarea from "./data/gafarea";
-import * as maparea from "./data/maparea";
-import * as random from "./helpers/random";
 import * as wait from "./helpers/wait";
-import * as turf from "@turf/helpers";
-import * as turfintersect from "@turf/intersect";
 import { GeoJSONSource } from 'mapbox-gl';
 
 export interface LSALTGrid {
@@ -25,7 +20,6 @@ export function init() {
 
 function update() {
   let vfr = controller.vfr;
-  let url = `/lsalt?vfr=${vfr}`;
 
   setupLayer();
 
