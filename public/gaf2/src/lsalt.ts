@@ -17,22 +17,14 @@ export interface LSALTGrid {
 let lsaltData: { [gafAreaCode: string]: LSALTGrid[] } = {}
 
 export function init() {
-  gafarea.gafAreaCodes.forEach(gafAreaCode => {
-    // $.get(`/json/lsalt-${gafAreaCode}.json?${new Date().getTime()}`, function (data) {
-    $.get(`/json/lsalt-${gafAreaCode}.json`, function (data) {
-      lsaltData[gafAreaCode] = data;
-
-      updateLSALT(gafAreaCode);
-    });
-  });
-
-  mapui.map.on("dragend", updateLSALTFromVisibleAreas);
-  mapui.map.on("zoomend", updateLSALTFromVisibleAreas);
+  update();
+  wait.runEvery(1000 * 60 * 60, update);
 }
 
-function updateLSALTFromVisibleAreas() {
-  maparea.gafAreaCodesFromMapAreas(maparea.inCurrentView()).forEach(gafAreaCode => {
-    updateLSALT(gafAreaCode);
+function update() {
+  let vfr = controller.vfr;
+  $.getJSON(`/lsalt?vfr=${vfr}`, (data) => {
+    console.log(data);
   });
 }
 

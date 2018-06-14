@@ -1,6 +1,11 @@
 package main
 
 import (
+	"net/http"
+	"net/http/httputil"
+	"net/url"
+	"os"
+
 	"github.com/drnic/bom-charts/airmet"
 
 	"github.com/drnic/bom-charts/gaf"
@@ -62,6 +67,17 @@ func getAIRMET(r render.Render) {
 	r.JSON(200, airmet)
 }
 
+func forwardLSALTHandler() func(http.ResponseWriter, *http.Request) {
+	url, err := url.Parse(os.Getenv("LSALT_URL"))
+	if err != nil {
+		panic(err)
+	}
+	p := httputil.NewSingleHostReverseProxy(url)
+	return func(w http.ResponseWriter, r *http.Request) {
+		p.ServeHTTP(w, r)
+	}
+}
+
 func main() {
 	m := martini.Classic()
 	m.Use(martini.Static("public"))
@@ -75,6 +91,7 @@ func main() {
 		api.Get("/gafarea/:area/next.json", getNextAreaForecastByAreaCode)
 		api.Get("/airmet", getAIRMET)
 	})
+	m.Get("/lsalt", forwardLSALTHandler())
 
 	m.Run()
 }
