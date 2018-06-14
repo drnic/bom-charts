@@ -13,6 +13,8 @@ export interface LSALTGrid {
 let map = mapui.map;
 
 export function init() {
+  setupLayer();
+
   update();
   wait.runEvery(1000 * 60 * 60, update);
   // wait.runEvery(1000, update);
@@ -21,26 +23,15 @@ export function init() {
 function update() {
   let vfr = controller.vfr;
 
-  setupLayer();
-
   $.getJSON(`/lsalt?vfr=${vfr}`, (data) => {
-    let sourceID = `lsalt-${vfr}`;
-    let source = <GeoJSONSource>map.getSource(sourceID);
+    let source = <GeoJSONSource>map.getSource(`lsalt`);
     source.setData(data);
     console.log("update lsalt")
   });
 }
 
 function setupLayer() {
-  map.addSource(`lsalt-day`, {
-    type: "geojson",
-    data: {
-      type: "FeatureCollection",
-      features: []
-    }
-  });
-
-  map.addSource(`lsalt-night`, {
+  map.addSource(`lsalt`, {
     type: "geojson",
     data: {
       type: "FeatureCollection",
@@ -52,10 +43,10 @@ function setupLayer() {
   map.addLayer({
     "id": `lsalt`,
     "type": "fill",
-    "source": `lsalt-${vfr}`,
+    "source": `lsalt`,
     "paint": {
       "fill-color": {
-        property: "lsalt_color_level",
+        property: "lsaltColorLevel",
         stops: theme.cssHeightColorsStops,
       },
       "fill-antialias": false,
