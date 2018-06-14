@@ -46,6 +46,6 @@ function updateController() {
 }
 
 function updateURL() {
-  var query = `?vfr=${controller.vfr}&period=${controller.period}`
+  var query = `?vfr=${controller.vfr}&period=${controller.period}&zoom=${controller.zoom}`
   history.pushState(null, null, window.location.pathname + query)
 }

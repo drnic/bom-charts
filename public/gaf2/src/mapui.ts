@@ -28,7 +28,7 @@ map.on("load", () => {
     navigator.geolocation.getCurrentPosition(position => {
       var long = position.coords.longitude;
       var lat = position.coords.latitude;
-      map.jumpTo({zoom: 6, center: [long, lat]});
+      map.jumpTo({zoom: controller.zoom, center: [long, lat]});
     });
   }
 });
