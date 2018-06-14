@@ -7,16 +7,19 @@ import { GeoJSONSource } from 'mapbox-gl';
 let sourceID = `gafareas`;
 
 export function init() {
-  setupLayer();
   update();
-  wait.runEvery(1000 * 60 * 60, update);
-  // wait.runEvery(1000, update);
+  // wait.runEvery(1000 * 60 * 60, update);
+  wait.runEvery(1000, update);
 }
 
 export function update() {
   let map = mapui.map;
   $.getJSON(`/lsalt/gafareas`, (data) => {
     let source = <GeoJSONSource>map.getSource(sourceID);
+    if (source === undefined) {
+      setupLayer();
+      source = <GeoJSONSource>map.getSource(sourceID);
+    }
     source.setData(data);
     console.log("update gafareas")
   });

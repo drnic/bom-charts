@@ -13,11 +13,9 @@ export interface LSALTGrid {
 let sourceID = `lsalt`;
 
 export function init() {
-  setupLayer();
-
   update();
-  wait.runEvery(1000 * 60 * 60, update);
-  // wait.runEvery(1000, update);
+  // wait.runEvery(1000 * 60 * 60, update);
+  wait.runEvery(1000, update);
 }
 
 function update() {
@@ -26,6 +24,10 @@ function update() {
 
   $.getJSON(`/lsalt?vfr=${vfr}`, (data) => {
     let source = <GeoJSONSource>map.getSource(sourceID);
+    if (source === undefined) {
+      setupLayer();
+      source = <GeoJSONSource>map.getSource(sourceID);
+    }
     source.setData(data);
     console.log("update lsalt")
   });
