@@ -83,11 +83,15 @@ function setupLayer() {
   map.on("mousemove", "gafareas", function(e: FeatureCollection) {
     let feature = e.features[0];
     map.setFilter("gafareas-hover", ["==", "mapLayerID", feature.properties.mapLayerID]);
+
+    $('#mouseover-summary-area').text(feature.properties.wxSummary);
   });
 
   // Reset the gafareas-hover layer's filter when the mouse leaves the layer.
   map.on("mouseleave", "gafareas", function() {
-      map.setFilter("gafareas-hover", ["==", "mapLayerID", ""]);
+    map.setFilter("gafareas-hover", ["==", "mapLayerID", ""]);
+
+    $('#mouseover-summary-area').text('');
   });
 
 }
