@@ -48,7 +48,7 @@ function setupLayer() {
         stops: theme.cssHeightColorsStops,
       },
       "fill-antialias": false,
-      "fill-opacity": 0.5
+      "fill-opacity": 0.2
     }
   });
 

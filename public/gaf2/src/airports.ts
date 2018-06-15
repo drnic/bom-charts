@@ -33,23 +33,19 @@ export function init(map: mapboxgl.Map) {
       }
     } as mapboxgl.GeoJSONSourceRaw;
 
-    $(function () {
-      map.on('load', function () {
-        map.addLayer({
-          "id": "airports",
-          "type": "symbol",
-          "source": airportsGeoJSON,
-          "layout": {
-            "text-field": "{title}",
-            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-            "text-offset": [0, 0],
-            "text-anchor": "top"
-          },
-          "paint": {
-            "text-color": theme.current().textColor
-          }
-        });
-      });
+    map.addLayer({
+      "id": "airports",
+      "type": "symbol",
+      "source": airportsGeoJSON,
+      "layout": {
+        "text-field": "{title}",
+        "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+        "text-offset": [0, 0],
+        "text-anchor": "top"
+      },
+      "paint": {
+        "text-color": theme.current().textColor
+      }
     });
   });
 }
