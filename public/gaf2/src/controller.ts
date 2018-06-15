@@ -26,7 +26,6 @@ var map: mapboxgl.Map;
 export function init(_map: mapboxgl.Map) {
   map = _map;
   menu.update();
-  gafarea.update();
 }
 
 export function setVFR(_vfr: VFR) {
@@ -37,7 +36,8 @@ export function setVFR(_vfr: VFR) {
   menu.update();
   if (vfrChanged) {
     mapui.updateStyle();
-    gafarea.update();
+    // lsalt.update();
+    // gafarea.update();
   }
 }
 
@@ -47,7 +47,7 @@ export function setPeriod(_period: Period) {
   periodChanged = (periodPrevious == period);
   vfrChanged = false;
   menu.update();
-  gafarea.update();
+  // gafarea.update();
 
   // Style not changing, so do not need to re-do:
   // * mapui.updateStyle();

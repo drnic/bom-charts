@@ -14,8 +14,8 @@ let sourceID = `lsalt`;
 
 export function init() {
   update();
-  // wait.runEvery(1000 * 60 * 60, update);
-  wait.runEvery(1000, update);
+  wait.runEvery(1000 * 60 * 60, update);
+  // wait.runEvery(1000, update);
 }
 
 function update() {
@@ -29,7 +29,8 @@ function update() {
       source = <GeoJSONSource>map.getSource(sourceID);
     }
     source.setData(data);
-    console.log("update lsalt")
+    console.log(`update ${sourceID} - ${data.features.length} features, example:`);
+    console.log(data.features[0]);
   });
 }
 
