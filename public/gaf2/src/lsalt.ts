@@ -4,6 +4,7 @@ import * as mapui from "./mapui";
 import * as theme from "./theme";
 import * as wait from "./helpers/wait";
 import { GeoJSONSource } from 'mapbox-gl';
+import { FeatureCollection } from 'geojson';
 
 export interface LSALTGrid {
   grid: number[][];
@@ -29,8 +30,10 @@ function update() {
       source = <GeoJSONSource>map.getSource(sourceID);
     }
     source.setData(data);
-    console.log(`update ${sourceID} - ${data.features.length} features, example:`);
+    console.log(`update ${sourceID} - ${data.features.length} features, examples:`);
     console.log(data.features[0]);
+    console.log(data.features[1]);
+    console.log(data.features[2]);
   });
 }
 
@@ -45,7 +48,7 @@ function setupLayer() {
   });
 
   map.addLayer({
-    "id": `lsalt`,
+    "id": "lsalt",
     "type": "fill",
     "source": sourceID,
     "paint": {
@@ -59,5 +62,30 @@ function setupLayer() {
         stops: [[0, 0.5], [1, 0.1]]
       }
     }
+  });
+
+  map.addLayer({
+    "id": "lsalt-hover",
+    "type": "fill",
+    "source": sourceID,
+    "paint": {
+      "fill-color": {
+        property: "lsaltColorLevel",
+        stops: theme.cssHeightColorsStops,
+      },
+      "fill-antialias": false,
+      "fill-opacity": 0.5
+    },
+    "filter": ["==", "id", ""]
+  });
+
+  map.on("mousemove", "lsalt", function(e: FeatureCollection) {
+    let feature = e.features[0];
+    map.setFilter("lsalt-hover", ["==", "id", feature.properties.id]);
+  });
+
+  // Reset the lsalt-hover layer's filter when the mouse leaves the layer.
+  map.on("mouseleave", "lsalt", function() {
+      map.setFilter("lsalt-hover", ["==", "id", ""]);
   });
 }

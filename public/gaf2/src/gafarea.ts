@@ -3,7 +3,6 @@ import * as mapui from "./mapui";
 import * as theme from "./theme";
 import * as wait from "./helpers/wait";
 import { GeoJSONSource } from 'mapbox-gl';
-import { Feature } from '@turf/helpers';
 import { FeatureCollection } from 'geojson';
 
 let sourceID = `gafareas`;
@@ -76,7 +75,7 @@ function setupLayer() {
         stops: theme.cssHeightColorsStops,
       },
       "fill-antialias": false,
-      "fill-opacity": 0.5 // combines with 0.5 from original layer
+      "fill-opacity": 0.2 // combines with 0.5 from original layer
     },
     "filter": ["==", "mapLayerID", ""]
   });
@@ -86,7 +85,7 @@ function setupLayer() {
     map.setFilter("gafareas-hover", ["==", "mapLayerID", feature.properties.mapLayerID]);
   });
 
-  // Reset the state-fills-hover layer's filter when the mouse leaves the layer.
+  // Reset the gafareas-hover layer's filter when the mouse leaves the layer.
   map.on("mouseleave", "gafareas", function() {
       map.setFilter("gafareas-hover", ["==", "mapLayerID", ""]);
   });
