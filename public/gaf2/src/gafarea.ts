@@ -15,7 +15,7 @@ export function init() {
 
 function update() {
   let map = mapui.map;
-  $.getJSON(`/gafareas-features`, (data) => {
+  $.getJSON(`/api2/gafareas-features`, (data) => {
     let source = <GeoJSONSource>map.getSource(sourceID);
     if (source === undefined) {
       setupLayer();

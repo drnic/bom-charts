@@ -25,17 +25,28 @@ function updateMapTheme() {
   $('body').addClass(`period-${controller.period}`);
 }
 
+export interface DateRange {
+  from: string | Date;
+  until: string | Date;
+}
+export let dateRanges : DateRange[];
+
 function updateController() {
   var menu = $("p#menu")
   menu.find("a#day-vfr").attr("href", `?vfr=day&period=${controller.period}y&zoom=${controller.zoom}`);
   menu.find("a#night-vfr").attr("href", `?vfr=night&period=${controller.period}&zoom=${controller.zoom}`);
 
-  menu.find("a#period-current").attr("href", `?vfr=${controller.vfr}&period=current`).click(function() {
-    controller.setPeriod(controller.Period.current); return false;
-  });
-  menu.find("a#period-next").attr("href", `?vfr=${controller.vfr}&period=next`).click(function() {
-    controller.setPeriod(controller.Period.next); return false;
-  });
+  $.get(`/api2/gafareas-dates`, (dates) => {
+    let dateRanges : DateRange[] = dates;
+    console.log(dateRanges[0].from);
+    console.log(new Date(dateRanges[0].from).toString());
+  })
+  // menu.find("a#period-current").attr("href", `?vfr=${controller.vfr}&period=current`).click(function() {
+  //   controller.setPeriod(controller.Period.current); return false;
+  // });
+  // menu.find("a#period-next").attr("href", `?vfr=${controller.vfr}&period=next`).click(function() {
+  //   controller.setPeriod(controller.Period.next); return false;
+  // });
 }
 
 function updateURL() {

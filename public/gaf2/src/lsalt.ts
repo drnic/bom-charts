@@ -23,7 +23,7 @@ function update() {
   let map = mapui.map;
   let vfr = controller.vfr;
 
-  $.getJSON(`/lsalt-features?vfr=${vfr}`, (data) => {
+  $.getJSON(`/api2/lsalt-features?vfr=${vfr}`, (data) => {
     let source = <GeoJSONSource>map.getSource(sourceID);
     if (source === undefined) {
       setupLayer();
@@ -82,10 +82,18 @@ function setupLayer() {
   map.on("mousemove", "lsalt", function(e: FeatureCollection) {
     let feature = e.features[0];
     map.setFilter("lsalt-hover", ["==", "id", feature.properties.id]);
+
+    let lsalt = Math.max(0, feature.properties["lsalt"]);
+    let text = `High point est: ${lsalt}ft`;
+    if (controller.isNightVFR()) {
+      text = `LSALT: ${lsalt}ft`;
+    }
+    $('#mouseover-summary-lsalt-grid').text(text);
   });
 
   // Reset the lsalt-hover layer's filter when the mouse leaves the layer.
   map.on("mouseleave", "lsalt", function() {
       map.setFilter("lsalt-hover", ["==", "id", ""]);
-  });
+      $('#mouseover-summary-lsalt-grid').text('');
+    });
 }
