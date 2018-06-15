@@ -91,9 +91,9 @@ func main() {
 		api.Get("/gafarea/:area/next.json", getNextAreaForecastByAreaCode)
 		api.Get("/airmet", getAIRMET)
 	})
-	m.Get("/lsalt/features", forwardLSALTHandler())
-	m.Get("/gafareas/features", forwardLSALTHandler())
-	m.Get("/gafareas/dates", forwardLSALTHandler())
+	m.Get("/lsalt-features", forwardLSALTHandler())
+	m.Get("/gafareas-features", forwardLSALTHandler())
+	m.Get("/gafareas-dates", forwardLSALTHandler())
 
 	m.Run()
 }
