@@ -30,12 +30,8 @@ function updateMapTheme() {
 
 function updateController() {
   var menu = $("p#menu")
-  menu.find("a#day-vfr").attr("href", `?vfr=day&period=${controller.period}`).click(function() {
-    controller.setVFR(controller.VFR.day); return false;
-  });
-  menu.find("a#night-vfr").attr("href", `?vfr=night&period=${controller.period}`).click(function() {
-    controller.setVFR(controller.VFR.night); return false;
-  });
+  menu.find("a#day-vfr").attr("href", `?vfr=day&period=${controller.period}y&zoom=${controller.zoom}`);
+  menu.find("a#night-vfr").attr("href", `?vfr=night&period=${controller.period}&zoom=${controller.zoom}`);
 
   menu.find("a#period-current").attr("href", `?vfr=${controller.vfr}&period=current`).click(function() {
     controller.setPeriod(controller.Period.current); return false;
