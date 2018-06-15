@@ -54,7 +54,10 @@ function setupLayer() {
         stops: theme.cssHeightColorsStops,
       },
       "fill-antialias": false,
-      "fill-opacity": 0.5
+      "fill-opacity": {
+        property: "lsaltColorLevelSameAsArea",
+        stops: [[0, 0.5], [1, 0.1]]
+      }
     }
   });
 }
