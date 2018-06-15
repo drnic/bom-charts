@@ -23,7 +23,7 @@ function update() {
   let map = mapui.map;
   let vfr = controller.vfr;
 
-  $.getJSON(`/lsalt?vfr=${vfr}`, (data) => {
+  $.getJSON(`/lsalt/features?vfr=${vfr}`, (data) => {
     let source = <GeoJSONSource>map.getSource(sourceID);
     if (source === undefined) {
       setupLayer();
