@@ -71,6 +71,7 @@ export function addGAFArea(majorArea: maparea.MapAreaImport) {
     surfaceVisCol.text(surfaceVis["text"]);
     (surfaceVis.sub_areas_mentioned || []).forEach(subareaLabel => {
       surfaceVisCol.addClass(`subarea-mentioned-${subareaLabel}`);
+      surfaceVisCol.addClass(`subarea-mentioned`);
     })
     surfaceVisCol.appendTo(row);
 
@@ -79,6 +80,7 @@ export function addGAFArea(majorArea: maparea.MapAreaImport) {
       let cloudIcePart = $(`<div>`);
       (cloudIce.sub_areas_mentioned || []).forEach(subareaLabel => {
         cloudIcePart.addClass(`subarea-mentioned-${subareaLabel}`);
+        cloudIcePart.addClass(`subarea-mentioned`);
       })
       cloudIcePart.text(cloudIce["text"]);
       cloudIcePart.appendTo(cloudIceCol);

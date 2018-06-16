@@ -86,13 +86,19 @@ function setupLayer() {
     let groupLabel = feature.properties["groupLabel"];
     $(`#gaf-table tbody tr`).hide();
     $(`#gaf-table tbody tr.gaf-${groupLabel}`).show();
-  });
+
+    $(`#gaf-table tbody tr .subarea-mentioned`).removeClass("sub-area-selected");
+    if (feature.properties.subAreaID) {
+      $(`#gaf-table tbody tr.gaf-${feature.properties.groupLabel} .subarea-mentioned-${feature.properties.subAreaID}`).addClass("sub-area-selected");
+    }
+});
 
   // Reset the gafareas-hover layer's filter when the mouse leaves the layer.
   map.on("mouseleave", "gafareas", function() {
     map.setFilter("gafareas-hover", ["==", "mapLayerID", ""]);
 
     $('#mouseover-summary-area').text('');
+    $(`#gaf-table tbody tr .subarea-mentioned`).removeClass("sub-area-selected");
   });
 
 }
