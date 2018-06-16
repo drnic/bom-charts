@@ -51,9 +51,9 @@ export function addGAFArea(majorArea: maparea.MapAreaImport) {
     </table>`);
     table.appendTo($("#gaf-table"));
   }
-  let wxCondsCount = majorArea.wxConds.length;
-  console.log(`${majorArea.gafAreaCodeAndGroup} - ${wxCondsCount}`);
   let tbody = $("#gaf-table table tbody");
+
+  let wxCondsCount = majorArea.wxConds.length;
   majorArea.wxConds.forEach((wxCond, index) => {
     let row = $(`<tr>`);
     row.addClass(`gaf-${majorArea.gafAreaCodeAndGroup}`);
