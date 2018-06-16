@@ -45,14 +45,20 @@ function updateController() {
     let nextFrom = new Date(dateRanges[1].from);
     menu.find("a#period-current")
       .text(dateformat(currentFrom, "HH'Z'"))
-      .attr("href", `?vfr=${controller.vfr}&period=current`);
+      .data({"from": dateRanges[0].from, "till": dateRanges[0].until})
+      .attr("href", `?vfr=${controller.vfr}&period=current&from=${dateformat(currentFrom, "HH")}&zoom=${controller.zoom}`);
     menu.find("a#period-next")
       .text(dateformat(nextFrom, "HH'Z'"))
-      .attr("href", `?vfr=${controller.vfr}&period=next`);
+      .data({"from": dateRanges[1].from, "till": dateRanges[1].until})
+      .attr("href", `?vfr=${controller.vfr}&period=next&from=${dateformat(currentFrom, "HH")}&zoom=${controller.zoom}`);
   })
 }
 
 function updateURL() {
-  var query = `?vfr=${controller.vfr}&period=${controller.period}&zoom=${controller.zoom}`
+  var query = buildURLQuery();
   history.pushState(null, null, window.location.pathname + query)
+}
+
+function buildURLQuery() {
+  return `?vfr=${controller.vfr}&period=${controller.period}&from=${controller.from}&zoom=${controller.zoom}`;
 }
