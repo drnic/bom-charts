@@ -93,6 +93,7 @@ func main() {
 	})
 	m.Get("/api2/lsalt-features", forwardLSALTHandler())
 	m.Get("/api2/gafareas-features", forwardLSALTHandler())
+	m.Get("/api2/gafareas-envelopes", forwardLSALTHandler())
 	m.Get("/api2/gafareas-dates", forwardLSALTHandler())
 	m.Get("/api2/mapareas", forwardLSALTHandler())
 	m.Get("/api2/mapareas/major", forwardLSALTHandler())

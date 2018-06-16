@@ -1,5 +1,5 @@
 import * as $ from 'jquery';
-import * as mapboxgl from "mapbox-gl";
+import * as turf from '@turf/helpers';
 
 import * as mapui from "./mapui";
 import * as maparea from "./data/maparea";
@@ -10,12 +10,32 @@ export function init() {
   wait.runEvery(1000 * 60 * 60, load);
   // mapui.map.on("dragend", update);
   // mapui.map.on("zoomend", update);
+
 }
 
 function load() {
-  $.getJSON(`/api2/mapareas/major`, (data: maparea.MapAreaImport[]) => {
-    data.forEach((majorArea: maparea.MapAreaImport) => {
+  let map = mapui.map;
+
+  $.getJSON(`/api2/mapareas/major`, (majorAreas: maparea.MapAreaImport[]) => {
+    majorAreas.forEach((majorArea: maparea.MapAreaImport) => {
       addGAFArea(majorArea);
+    });
+
+    $.getJSON(`/api2/gafareas-envelopes`, (envelopes: turf.FeatureCollection) => {
+      $("#gaf-table table tr td.area-label").mouseover((evt) => {
+        var gafArea = $(evt.target).parent().data()["gafArea"];
+        var areaFeature = envelopes.features.find((feature: turf.Feature) => {
+          return feature.properties["groupLabel"] == gafArea;
+        });
+
+        let coordinates = (areaFeature as turf.Feature<turf.Geometry>).geometry.coordinates;
+        let points = (coordinates[0] as turf.Coord[]);
+        let corner1 = (points[0] as number[]);
+        let corner2 = (points[1] as number[]);
+        map.fitBounds([corner1, corner2], {
+          padding: 20
+        });
+      });
     })
   });
 }
