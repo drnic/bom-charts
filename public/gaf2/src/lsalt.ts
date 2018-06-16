@@ -30,10 +30,6 @@ function update() {
       source = <GeoJSONSource>map.getSource(sourceID);
     }
     source.setData(data);
-    console.log(`update ${sourceID} - ${data.features.length} features, examples:`);
-    console.log(data.features[0]);
-    console.log(data.features[1]);
-    console.log(data.features[2]);
   });
 }
 

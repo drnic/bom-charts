@@ -1,5 +1,4 @@
 import * as controller from './controller';
-import * as debug from './debug';
 import * as $ from 'jquery';
 import * as mapboxgl from "mapbox-gl";
 
@@ -38,8 +37,8 @@ function updateController() {
 
   $.get(`/api2/gafareas-dates`, (dates) => {
     let dateRanges : DateRange[] = dates;
-    console.log(dateRanges[0].from);
-    console.log(new Date(dateRanges[0].from).toString());
+    // console.log(dateRanges[0].from);
+    // console.log(new Date(dateRanges[0].from).toString());
   })
   // menu.find("a#period-current").attr("href", `?vfr=${controller.vfr}&period=current`).click(function() {
   //   controller.setPeriod(controller.Period.current); return false;

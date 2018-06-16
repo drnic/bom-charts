@@ -5,7 +5,7 @@ import * as wait from "./helpers/wait";
 import { GeoJSONSource } from 'mapbox-gl';
 import { FeatureCollection } from 'geojson';
 
-let sourceID = `gafareas`;
+export let sourceID = `gafareas`;
 
 export function init() {
   update();
@@ -22,8 +22,6 @@ function update() {
       source = <GeoJSONSource>map.getSource(sourceID);
     }
     source.setData(data);
-    console.log(`update ${sourceID} - ${data.features.length} features, example:`);
-    console.log(data.features[0]);
   });
 }
 
