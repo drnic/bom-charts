@@ -83,6 +83,9 @@ function setupLayer() {
     map.setFilter("gafareas-hover", ["==", "mapLayerID", feature.properties.mapLayerID]);
 
     $('#mouseover-summary-area').text(feature.properties.wxSummary);
+    let groupLabel = feature.properties["groupLabel"];
+    $(`#gaf-table tbody tr`).hide();
+    $(`#gaf-table tbody tr.gaf-${groupLabel}`).show();
   });
 
   // Reset the gafareas-hover layer's filter when the mouse leaves the layer.

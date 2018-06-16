@@ -92,97 +92,11 @@ export function addGAFArea(majorArea: maparea.MapAreaImport) {
       freezingLevelCol.appendTo(row);
     }
 
-    // row.hide();
+    row.hide();
     row.appendTo(tbody);
-  });  
-}  
-
-
-
-
-//     row.hide();
-//     row.appendTo(tbody);
-//   });
-// }
+  });
+}
 
 // export function removeAll() {
 //   $("#gaf-table").text("");
 // }
-
-// // TODO: prioritize entire areas that are entirely within map bounds; then MapAreas entirely within map bounds; then others
-// // TODO: prioritize area underneath cursor or recently clicked
-// // export function update() {
-// //   let map = mapui.map;
-
-// //   $("#gaf-table table tr").each(function() {
-// //     let classes = $(this).attr("class");
-// //     if (classes !== undefined) {
-// //       classes.split(/\s+/).forEach(className => {
-// //         if (className.startsWith(`gaf-`)) {
-// //           $(this).show();
-// //         }
-// //       });
-// //     }
-// //   });
-
-// //   $("#gaf-table table tr td.area-label").mouseover(function() {
-// //     let showGAFArea = $(this).parent().data()["gafArea"];
-// //     if (showGAFArea !== undefined && latestMouseoverArea != showGAFArea) {
-// //       latestMouseoverArea = showGAFArea;
-// //       if (combinedMapAreaBoundaryPoints[showGAFArea] === undefined) {
-// //         let areas = gafarea.combinedMapArea[showGAFArea];
-// //         let areaBoundaryPoints = areas.reduce((points, area) => {
-// //           return points.concat(area.boundaryPoints());
-// //         }, []);
-
-// //         // Pass the first coordinates in the LineString to `lngLatBounds` &
-// //         // wrap each coordinate pair in `extend` to include them in the bounds
-// //         // result. A letiation of this technique could be applied to zooming
-// //         // to the bounds of multiple Points or Polygon geomteries - it just
-// //         // requires areaBoundaryPoints all the coordinates with the extend method.
-// //         let bounds = areaBoundaryPoints.reduce((bounds, coord) => {
-// //           return bounds.extend(coord);
-// //         }, new mapboxgl.LngLatBounds(areaBoundaryPoints[0], areaBoundaryPoints[0]));
-
-// //         combinedMapAreaBoundaryPoints[showGAFArea] = bounds;
-
-// //         let mapSource = `combined-area-boundary-${showGAFArea}`;
-// //         map.addSource(mapSource, {
-// //           "type": "geojson",
-// //           "data": {
-// //             "type": "Feature",
-// //             "properties": {},
-// //             "geometry": {
-// //               "type": "LineString",
-// //               "coordinates": bounds
-// //             }
-// //           }
-// //         });
-// //       }
-
-// //       // let gafAreaCode = gafarea.combinedMapArea[showGAFArea][0].gafAreaCode;
-
-// //       // TODO: no idea why this layer line doesn't appear
-// //       // if (map.getLayer("mouseover-area-highlight")) {
-// //       //   map.removeLayer("mouseover-area-highlight");
-// //       // }
-// //       // map.addLayer({
-// //       //   "id": "mouseover-area-highlight",
-// //       //   "type": "line",
-// //       //   "source": `combined-area-boundary-${showGAFArea}`,
-// //       //   "layout": {
-// //       //     "line-join": "round", "line-cap": "round"
-// //       //   },
-// //       //   "paint": {
-// //       //     "line-color": "#333", "line-width": 10, "line-offset": 50
-// //       //   }
-// //       // });
-// //       // }, `gaf-${gafAreaCode}`);
-
-// //       map.fitBounds(combinedMapAreaBoundaryPoints[latestMouseoverArea], {
-// //         padding: 20
-// //       });
-// //     }
-// //   })
-// // }
-
