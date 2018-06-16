@@ -2,9 +2,11 @@
   "dependencies": {
     "@turf/center": "^6.0.1",
     "@turf/helpers": "^6.1.4",
+    "@types/dateformat": "^1.0.1",
     "@types/jquery": "^3.3.2",
     "@types/mapbox-gl": "^0.45.0",
     "@types/polylabel": "^1.0.5",
+    "dateformat": "^3.0.3",
     "jquery": "^3.3.1",
     "mapbox-gl": "^0.45.0",
     "polylabel": "^1.0.2",

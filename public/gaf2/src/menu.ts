@@ -1,6 +1,7 @@
 import * as controller from './controller';
 import * as $ from 'jquery';
 import * as mapboxgl from "mapbox-gl";
+import * as dateformat from "dateformat";
 
 var map: mapboxgl.Map;
 
@@ -35,17 +36,20 @@ function updateController() {
   menu.find("a#day-vfr").attr("href", `?vfr=day&period=${controller.period}y&zoom=${controller.zoom}`);
   menu.find("a#night-vfr").attr("href", `?vfr=night&period=${controller.period}&zoom=${controller.zoom}`);
 
+  menu.find("#timenow")
+    .text(dateformat(new Date(), "HH'Z'"));
   $.get(`/api2/gafareas-dates`, (dates) => {
     let dateRanges : DateRange[] = dates;
-    // console.log(dateRanges[0].from);
-    // console.log(new Date(dateRanges[0].from).toString());
+
+    let currentFrom = new Date(dateRanges[0].from);
+    let nextFrom = new Date(dateRanges[1].from);
+    menu.find("a#period-current")
+      .text(dateformat(currentFrom, "HH'Z'"))
+      .attr("href", `?vfr=${controller.vfr}&period=current`);
+    menu.find("a#period-next")
+      .text(dateformat(nextFrom, "HH'Z'"))
+      .attr("href", `?vfr=${controller.vfr}&period=next`);
   })
-  // menu.find("a#period-current").attr("href", `?vfr=${controller.vfr}&period=current`).click(function() {
-  //   controller.setPeriod(controller.Period.current); return false;
-  // });
-  // menu.find("a#period-next").attr("href", `?vfr=${controller.vfr}&period=next`).click(function() {
-  //   controller.setPeriod(controller.Period.next); return false;
-  // });
 }
 
 function updateURL() {
