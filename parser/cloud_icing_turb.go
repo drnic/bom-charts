@@ -35,6 +35,7 @@ var areaAndAltAmountSubareasRE *regexp.Regexp
 var areaAndAltAmountSubareaRE *regexp.Regexp
 var subareasOnlyRE *regexp.Regexp
 var subareaOnlyRE *regexp.Regexp
+var subareaOnlyWithAltSubareaRE *regexp.Regexp
 var simpleRE *regexp.Regexp
 
 func cloudAmountRE(i int) string {
@@ -55,6 +56,7 @@ func subareaLabelRE(i int) string {
 	return fmt.Sprintf(`(?P<subarea%d>\w\d+)`, i)
 }
 
+// BKN IN A2
 func cloudAmountInSubareaRE(i int) string {
 	return cloudAmountRE(i) + " +" + inRE + subareaLabelRE(i)
 }
@@ -84,6 +86,9 @@ func init() {
 
 	// BKN ST 1000/4000FT B1, B2
 	subareasOnlyRE = regexp.MustCompile(commonCloudRE(0) + " +" + subareasOnlyFilters)
+
+	// BKN SC 6000/ABV10000FT IN B2, SCT IN B1
+	subareaOnlyWithAltSubareaRE = regexp.MustCompile(commonCloudRE(0) + " +" + inRE + subareaLabelRE(1) + `, *` + cloudAmountInSubareaRE(2))
 
 	// SCT CU/SC 5000/8000FT IN A1 ONLY
 	subareaOnlyRE = regexp.MustCompile(commonCloudRE(0) + " +" + subareaOnlyFilters)
@@ -187,6 +192,22 @@ func NewCloudIcingTurbParser(text string) (parser *CloudIcingTurbParser, err err
 		parser.Subareas = map[string]*CloudLayer{}
 		parser.Subareas[subarea1] = &cloud
 		parser.Subareas[subarea2] = &cloud
+
+		return
+	}
+
+	// BKN SC 6000/ABV10000FT IN B2, SCT IN B1
+	if match, ok := parseNamedRegexp(subareaOnlyWithAltSubareaRE, text); ok {
+		cloud := *newCloudLayerFromFromRegexpMatch(match, 0)
+		subarea1 := match["subarea1"]
+		subarea2 := match["subarea2"]
+
+		parser.Subareas = map[string]*CloudLayer{}
+		parser.Subareas[subarea1] = &cloud
+
+		cloud2 := cloud
+		cloud2.Amount = match["cloudAmount2"]
+		parser.Subareas[subarea2] = &cloud2
 
 		return
 	}
