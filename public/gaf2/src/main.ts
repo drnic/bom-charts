@@ -8,8 +8,7 @@ import * as gaftable from "./gaftable";
 
 var map = mapui.map;
 map.once("load", function() {
-  // debug.init();
-  menu.init(map);
+  menu.init();
 
   airports.init(map);
   gafarea.init();
