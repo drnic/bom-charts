@@ -38,13 +38,13 @@ function updateController() {
     let currentFrom = new Date(dateRanges[0].from).getUTCHours();
     let nextFrom = new Date(dateRanges[1].from).getUTCHours();
     menu.find("a#period-current")
-      .text(`${currentFrom}Z`)
+      .text(`current`)
       .data({"from": dateRanges[0].from, "till": dateRanges[0].until})
-      .attr("href", `?vfr=${controller.vfr}&period=current&from=${currentFrom}&zoom=${controller.zoom}`);
+      .attr("href", `?vfr=${controller.vfr}&period=current&zoom=${controller.zoom}`);
     menu.find("a#period-next")
-    .text(`${nextFrom}Z`)
+    .text(`next`)
     .data({"from": dateRanges[1].from, "till": dateRanges[1].until})
-      .attr("href", `?vfr=${controller.vfr}&period=next&from=${nextFrom}&zoom=${controller.zoom}`);
+      .attr("href", `?vfr=${controller.vfr}&period=next&zoom=${controller.zoom}`);
   })
 }
 
@@ -54,5 +54,5 @@ function updateURL() {
 }
 
 function buildURLQuery() {
-  return `?vfr=${controller.vfr}&period=${controller.period}&from=${controller.from}&zoom=${controller.zoom}`;
+  return `?vfr=${controller.vfr}&period=${controller.period}&zoom=${controller.zoom}`;
 }

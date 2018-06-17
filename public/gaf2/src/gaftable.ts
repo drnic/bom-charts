@@ -1,6 +1,7 @@
 import * as $ from 'jquery';
 import * as turf from '@turf/helpers';
 
+import * as controller from "./controller";
 import * as mapui from "./mapui";
 import * as maparea from "./data/maparea";
 import * as wait from "./helpers/wait";
@@ -16,12 +17,12 @@ export function init() {
 function load() {
   let map = mapui.map;
 
-  $.getJSON(`/api2/mapareas/major`, (majorAreas: maparea.MapAreaImport[]) => {
+  $.getJSON(`/api2/mapareas/major?period=${controller.period}`, (majorAreas: maparea.MapAreaImport[]) => {
     majorAreas.forEach((majorArea: maparea.MapAreaImport) => {
       addGAFArea(majorArea);
     });
 
-    $.getJSON(`/api2/gafareas-envelopes`, (envelopes: turf.FeatureCollection) => {
+    $.getJSON(`/api2/gafareas-envelopes?period=${controller.period}`, (envelopes: turf.FeatureCollection) => {
       $("#gaf-table table tr td.area-label").mouseover((evt) => {
         var gafArea = $(evt.target).parent().data()["gafArea"];
         var areaFeature = envelopes.features.find((feature: turf.Feature) => {
