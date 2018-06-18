@@ -7,8 +7,8 @@ meta:
   url:      (( param "Please specify the full url of the target Concourse CI" ))
 
   image:
-    name: (( concat "starkandwayne/" meta.name "-ci" ))
-    tag: latest
+    name: starkandwayne/concourse-nodejs
+    tag: "8"
 
   github:
     uri:          (( concat "git@github.com:" meta.github.owner "/" meta.github.repo ))
@@ -54,9 +54,23 @@ jobs:
         - get: app
           resource: app-master
           trigger: true
+      - task: asset-pipeline
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: (( grab meta.image.name ))
+              tag:        (( grab meta.image.tag ))
+          inputs:
+            - name: app
+          outputs:
+            - name: app-with-assets
+          run:
+            path: app/ci/scripts/asset-pipeline.sh
       - put: cf-push-production
         params:
-          manifest: app/manifest-production.yml
+          manifest: app-with-assets/manifest-production.yml
           path: app
           current_app_name: (( grab meta.cf.appname ))
           show_app_log: true
