@@ -9,7 +9,8 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/
       }
-    ]
+    ],
+    noParse: /(mapbox-gl)\.js$/
   },
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ]

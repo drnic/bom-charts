@@ -4,6 +4,9 @@ import * as lsalt from './lsalt';
 import * as mapui from './mapui';
 import * as menu from './menu';
 import * as wait from './helpers/wait';
+import * as addtohomescreen from "./addtohomescreen";
+
+import { GeoJSONSource, GeoJSONGeometry } from 'mapbox-gl';
 import * as turf from '@turf/helpers';
 
 export enum VFR {
@@ -21,6 +24,7 @@ export var vfr = url.getUrlParameter("vfr") == "night" ? VFR.night : VFR.day;
 export var period = url.getUrlParameter("period") == "next" ? Period.next : Period.current;
 
 export var currentLocation : turf.Position;
+export var currentMapAreaFeature : GeoJSON.Feature<GeoJSONGeometry>;
 
 export function init() {
   menu.update();
@@ -35,16 +39,16 @@ export function setCurrentLocation(lat: number, long: number) {
 
   // TODO: need a better way to run #selectFeature after gafarea/lsalt ready
   wait.until(() => {
-    var feature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["gafareas"] })[0];
-    return !!feature;
+    return !!mapui.map.queryRenderedFeatures(currentLocation, { layers: ["gafareas"] })[0];
   }, () => {
-    var feature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["gafareas"] })[0];
-    gafarea.selectFeature(feature);
+    currentMapAreaFeature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["gafareas"] })[0];
+    gafarea.selectFeature(currentMapAreaFeature);
+
+    addtohomescreen.update();
   });
 
   wait.until(() => {
-    var feature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["lsalt"] })[0];
-    return !!feature;
+    return !!mapui.map.queryRenderedFeatures(currentLocation, { layers: ["lsalt"] })[0];
   }, () => {
     var feature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["lsalt"] })[0];
     lsalt.selectFeature(feature);
