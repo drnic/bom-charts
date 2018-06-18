@@ -96,6 +96,9 @@ function setupLayer() {
 }
 
 export function selectFeature(feature: GeoJSON.Feature<GeoJSONGeometry>) {
+  if (feature === undefined) {
+    return;
+  }
   mapui.map.setFilter("gafareas-hover", ["==", "mapLayerID", feature.properties.mapLayerID]);
 
   $('#mouseover-summary-area').text(feature.properties.wxSummary);

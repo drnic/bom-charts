@@ -88,6 +88,10 @@ function setupLayer() {
 }
 
 export function selectFeature(feature: GeoJSON.Feature<GeoJSONGeometry>) {
+  if (feature === undefined) {
+    return;
+  }
+
   mapui.map.setFilter("lsalt-hover", ["==", "id", feature.properties.id]);
 
   let lsalt = Math.max(0, feature.properties["lsalt"]);
