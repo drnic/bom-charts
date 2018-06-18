@@ -26,9 +26,8 @@ export var map = new mapboxgl.Map({
 map.on("load", () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position => {
-      var long = position.coords.longitude;
-      var lat = position.coords.latitude;
-      map.jumpTo({zoom: controller.zoom, center: [long, lat]});
+      controller.setCurrentLocation(position.coords.latitude, position.coords.longitude);
+      controller.zoomToCurrentLocation();
     });
   }
 });
