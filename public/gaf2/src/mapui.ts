@@ -23,11 +23,22 @@ export var map = new mapboxgl.Map({
   zoom: 2
 });
 
+var geolocate = new mapboxgl.GeolocateControl({
+  positionOptions: {
+      enableHighAccuracy: false
+  },
+  fitBoundsOptions: {
+    maxZoom: controller.zoom
+  },
+  trackUserLocation: false,
+  showUserLocation: true
+});
+map.addControl(geolocate);
+
+geolocate.on("geolocate", (position: any) => {
+  controller.setCurrentLocation(position.coords.latitude, position.coords.longitude);
+})
+
 map.on("load", () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
-      controller.setCurrentLocation(position.coords.latitude, position.coords.longitude);
-      controller.zoomToCurrentLocation();
-    });
-  }
+  geolocate.trigger();
 });

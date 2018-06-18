@@ -1,5 +1,4 @@
 import * as url from './helpers/url';
-import * as currentlocation from './currentlocation';
 import * as gafarea from './gafarea';
 import * as lsalt from './lsalt';
 import * as mapui from './mapui';
@@ -34,10 +33,10 @@ export function isNightVFR() : boolean {
 export function setCurrentLocation(lat: number, long: number) {
   currentLocation = [long, lat];
 
-  currentlocation.update();
-
-  wait.delay(100).then(() => {
+  // TODO: need a better way to run #selectFeature after gafarea/lsalt ready
+  wait.delay(1000).then(() => {
     var gafareaFeature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["gafareas"] })[0];
+    console.log(gafareaFeature)
     gafarea.selectFeature(gafareaFeature);
 
     var lsaltFeature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["lsalt"] })[0];
