@@ -35,11 +35,11 @@ function updateController() {
     let currentFrom = new Date(dateRanges[0].from).getUTCHours();
     let nextFrom = new Date(dateRanges[1].from).getUTCHours();
     menu.find("a#period-current")
-      .text(`current`)
+      .text(`Current (${currentFrom}Z)`)
       .data({"from": dateRanges[0].from, "till": dateRanges[0].until})
       .attr("href", `?vfr=${controller.vfr}&period=current&zoom=${controller.zoom}`);
     menu.find("a#period-next")
-    .text(`next`)
+    .text(`Next (${nextFrom}Z)`)
     .data({"from": dateRanges[1].from, "till": dateRanges[1].until})
       .attr("href", `?vfr=${controller.vfr}&period=next&zoom=${controller.zoom}`);
   })
