@@ -13,5 +13,5 @@ pushd public/gaf
 popd
 
 pushd public/gaf2
-  webpack --mode production
+  webpack --mode development
 popd
