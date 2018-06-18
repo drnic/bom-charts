@@ -71,7 +71,7 @@ jobs:
       - put: cf-push-production
         params:
           manifest: app-with-assets/manifest-production.yml
-          path: app
+          path: app-with-assets
           current_app_name: (( grab meta.cf.appname ))
           show_app_log: true
 
