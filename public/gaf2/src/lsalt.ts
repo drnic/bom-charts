@@ -3,7 +3,7 @@ import * as controller from "./controller";
 import * as mapui from "./mapui";
 import * as theme from "./theme";
 import * as wait from "./helpers/wait";
-import { GeoJSONSource } from 'mapbox-gl';
+import { GeoJSONSource, GeoJSONGeometry } from 'mapbox-gl';
 import { FeatureCollection } from 'geojson';
 
 export interface LSALTGrid {
@@ -77,19 +77,23 @@ function setupLayer() {
 
   map.on("mousemove", "lsalt", function(e: FeatureCollection) {
     let feature = e.features[0];
-    map.setFilter("lsalt-hover", ["==", "id", feature.properties.id]);
-
-    let lsalt = Math.max(0, feature.properties["lsalt"]);
-    let text = `High point est: ${lsalt}ft`;
-    if (controller.isNightVFR()) {
-      text = `LSALT: ${lsalt}ft`;
-    }
-    $('#mouseover-summary-lsalt-grid').text(text);
+    selectFeature(feature);
   });
 
   // Reset the lsalt-hover layer's filter when the mouse leaves the layer.
   map.on("mouseleave", "lsalt", function() {
-      map.setFilter("lsalt-hover", ["==", "id", ""]);
-      $('#mouseover-summary-lsalt-grid').text('');
-    });
+    map.setFilter("lsalt-hover", ["==", "id", ""]);
+    $('#mouseover-summary-lsalt-grid').text('');
+  });
+}
+
+export function selectFeature(feature: GeoJSON.Feature<GeoJSONGeometry>) {
+  mapui.map.setFilter("lsalt-hover", ["==", "id", feature.properties.id]);
+
+  let lsalt = Math.max(0, feature.properties["lsalt"]);
+  let text = `High point est: ${lsalt}ft`;
+  if (controller.isNightVFR()) {
+    text = `LSALT: ${lsalt}ft`;
+  }
+  $('#mouseover-summary-lsalt-grid').text(text);
 }

@@ -1,6 +1,7 @@
 import * as url from './helpers/url';
 import * as currentlocation from './currentlocation';
 import * as gafarea from './gafarea';
+import * as lsalt from './lsalt';
 import * as mapui from './mapui';
 import * as menu from './menu';
 import * as wait from './helpers/wait';
@@ -37,8 +38,10 @@ export function setCurrentLocation(lat: number, long: number) {
 
   wait.delay(100).then(() => {
     var gafareaFeature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["gafareas"] })[0];
-    // var features = mapui.map.queryRenderedFeatures(currentLocation, { layers: [lsalt"] });
     gafarea.selectFeature(gafareaFeature);
+
+    var lsaltFeature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["lsalt"] })[0];
+    lsalt.selectFeature(lsaltFeature);
   })
 }
 
