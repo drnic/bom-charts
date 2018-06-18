@@ -5,6 +5,9 @@ import { Marker } from 'mapbox-gl';
 
 let marker: Marker;
 
+/**
+ *  TODO: replace with https://www.mapbox.com/mapbox-gl-js/api/#geolocatecontrol
+ */
 export function update() {
   if (marker === undefined) {
     setupMarker();

@@ -1,7 +1,9 @@
 import * as url from './helpers/url';
-import * as menu from './menu';
 import * as currentlocation from './currentlocation';
-import * as mapboxgl from 'mapbox-gl';
+import * as gafarea from './gafarea';
+import * as mapui from './mapui';
+import * as menu from './menu';
+import * as wait from './helpers/wait';
 import * as turf from '@turf/helpers';
 
 export enum VFR {
@@ -20,9 +22,7 @@ export var period = url.getUrlParameter("period") == "next" ? Period.next : Peri
 
 export var currentLocation : turf.Position;
 
-var map: mapboxgl.Map;
-export function init(_map: mapboxgl.Map) {
-  map = _map;
+export function init() {
   menu.update();
 }
 
@@ -34,8 +34,14 @@ export function setCurrentLocation(lat: number, long: number) {
   currentLocation = [long, lat];
 
   currentlocation.update();
+
+  wait.delay(100).then(() => {
+    var gafareaFeature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["gafareas"] })[0];
+    // var features = mapui.map.queryRenderedFeatures(currentLocation, { layers: [lsalt"] });
+    gafarea.selectFeature(gafareaFeature);
+  })
 }
 
 export function zoomToCurrentLocation() {
-  map.jumpTo({zoom: zoom, center: currentLocation});
+  mapui.map.jumpTo({zoom: zoom, center: currentLocation});
 }

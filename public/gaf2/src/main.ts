@@ -14,7 +14,7 @@ map.once("load", function() {
   gafarea.init();
   lsalt.init();
 
-  controller.init(map);
+  controller.init();
 
   gaftable.init();
 })

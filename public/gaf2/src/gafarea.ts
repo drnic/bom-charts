@@ -3,8 +3,9 @@ import * as controller from "./controller";
 import * as mapui from "./mapui";
 import * as theme from "./theme";
 import * as wait from "./helpers/wait";
-import { GeoJSONSource } from 'mapbox-gl';
+import { GeoJSONSource, GeoJSONGeometry } from 'mapbox-gl';
 import { FeatureCollection } from 'geojson';
+import { Feature, Geometry } from '@turf/helpers';
 
 export let sourceID = `gafareas`;
 
@@ -37,7 +38,7 @@ function setupLayer() {
   });
 
   map.addLayer({
-    "id": "gafareas",
+    "id": sourceID,
     "type": "fill",
     "source": sourceID,
     "paint": {
@@ -81,18 +82,8 @@ function setupLayer() {
 
   map.on("mousemove", "gafareas", function(e: FeatureCollection) {
     let feature = e.features[0];
-    map.setFilter("gafareas-hover", ["==", "mapLayerID", feature.properties.mapLayerID]);
-
-    $('#mouseover-summary-area').text(feature.properties.wxSummary);
-    let groupLabel = feature.properties["groupLabel"];
-    $(`#gaf-table tbody tr`).hide();
-    $(`#gaf-table tbody tr.gaf-${groupLabel}`).show();
-
-    $(`#gaf-table tbody tr .subarea-mentioned`).removeClass("sub-area-selected");
-    if (feature.properties.subAreaID) {
-      $(`#gaf-table tbody tr.gaf-${feature.properties.groupLabel} .subarea-mentioned-${feature.properties.subAreaID}`).addClass("sub-area-selected");
-    }
-});
+    selectFeature(feature);
+  });
 
   // Reset the gafareas-hover layer's filter when the mouse leaves the layer.
   map.on("mouseleave", "gafareas", function() {
@@ -102,4 +93,18 @@ function setupLayer() {
     $(`#gaf-table tbody tr .subarea-mentioned`).removeClass("sub-area-selected");
   });
 
+}
+
+export function selectFeature(feature: GeoJSON.Feature<GeoJSONGeometry>) {
+  mapui.map.setFilter("gafareas-hover", ["==", "mapLayerID", feature.properties.mapLayerID]);
+
+  $('#mouseover-summary-area').text(feature.properties.wxSummary);
+  let groupLabel = feature.properties["groupLabel"];
+  $(`#gaf-table tbody tr`).hide();
+  $(`#gaf-table tbody tr.gaf-${groupLabel}`).show();
+
+  $(`#gaf-table tbody tr .subarea-mentioned`).removeClass("sub-area-selected");
+  if (feature.properties.subAreaID) {
+    $(`#gaf-table tbody tr.gaf-${feature.properties.groupLabel} .subarea-mentioned-${feature.properties.subAreaID}`).addClass("sub-area-selected");
+  }
 }
