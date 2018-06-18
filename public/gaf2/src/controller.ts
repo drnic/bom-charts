@@ -34,14 +34,21 @@ export function setCurrentLocation(lat: number, long: number) {
   currentLocation = [long, lat];
 
   // TODO: need a better way to run #selectFeature after gafarea/lsalt ready
-  wait.delay(1000).then(() => {
-    var gafareaFeature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["gafareas"] })[0];
-    console.log(gafareaFeature)
-    gafarea.selectFeature(gafareaFeature);
+  wait.until(() => {
+    var feature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["gafareas"] })[0];
+    return !!feature;
+  }, () => {
+    var feature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["gafareas"] })[0];
+    gafarea.selectFeature(feature);
+  });
 
-    var lsaltFeature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["lsalt"] })[0];
-    lsalt.selectFeature(lsaltFeature);
-  })
+  wait.until(() => {
+    var feature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["lsalt"] })[0];
+    return !!feature;
+  }, () => {
+    var feature = mapui.map.queryRenderedFeatures(currentLocation, { layers: ["lsalt"] })[0];
+    lsalt.selectFeature(feature);
+  });
 }
 
 export function zoomToCurrentLocation() {
