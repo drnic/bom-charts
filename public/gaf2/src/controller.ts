@@ -17,8 +17,6 @@ export enum Period {
 export var zoom = parseInt(url.getUrlParameter("zoom") || "6", 10);
 export var vfr = url.getUrlParameter("vfr") == "night" ? VFR.night : VFR.day;
 export var period = url.getUrlParameter("period") == "next" ? Period.next : Period.current;
-export var periodPrevious : Period;
-export var periodChanged = true;
 
 var map: mapboxgl.Map;
 export function init(_map: mapboxgl.Map) {

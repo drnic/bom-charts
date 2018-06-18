@@ -12,9 +12,6 @@ export function update() {
 }
 
 function updateMapTheme() {
-  if (controller.periodPrevious !== undefined) {
-    $('body').removeClass(`period-${controller.periodPrevious}`);
-  }
   $('body').addClass(`vfr-${controller.vfr}`);
   $('body').addClass(`period-${controller.period}`);
 }
